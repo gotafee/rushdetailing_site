@@ -1,0 +1,41 @@
+---
+import { siteConfig } from '../data/site';
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="logo footer-logo" href="/">
+        <img class="logo-image logo-image-footer" src="/images/logo.png" alt={siteConfig.brand.name} />
+      </a>
+      <p class="footer-copy" set:html={siteConfig.brand.tagline}></p>
+    </div>
+
+    <div>
+      <h2 class="footer-title">Навигация</h2>
+      <ul class="footer-list">
+        {siteConfig.navigation.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+        <li><a href="/politika-konfidencialnosti">Политика конфиденциальности</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="footer-title">Контакты</h2>
+      <ul class="footer-list">
+        <li><a href={`tel:${siteConfig.contacts.phone}`}>{siteConfig.contacts.phoneDisplay}</a></li>
+        <li><a href={siteConfig.social.telegram} target="_blank" rel="noreferrer">Telegram</a></li>
+        <li><a href={siteConfig.social.whatsapp} target="_blank" rel="noreferrer">WhatsApp</a></li>
+        <li>{siteConfig.location.fullAddress}</li>
+        <li>{siteConfig.location.openingHoursHuman}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-meta">
+    <p class="developer-credit">
+      <span>© Rush Detailing. Все права защищены</span>
+      <a href="https://t.me/bakeev_ai" target="_blank" rel="noreferrer">Разработка сайта — @bakeev_ai</a>
+    </p>
+  </div>
+</footer>

@@ -1,0 +1,7 @@
+---
+const currentLeadHref = Astro.url.pathname === '/' ? '/#lead-form' : `${Astro.url.pathname}#lead-form`;
+---
+
+<div class="mobile-cta-bar">
+  <a href={currentLeadHref} data-analytics="cta-mobile">Оставить заявку</a>
+</div>

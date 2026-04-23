@@ -1,0 +1,41 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import HeroSection from '../../components/HeroSection.astro';
+import ServiceGrid from '../../components/ServiceGrid.astro';
+import CTASection from '../../components/CTASection.astro';
+import PriceTables from '../../components/PriceTables.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import { siteConfig } from '../../data/site';
+---
+
+<Layout
+  title="Услуги детейлинга в Москве — полировка, керамика, пленка, химчистка | Rush Detailing"
+  description="Основные услуги детейлинга в Москве: полировка авто, керамика, антигравийная пленка, химчистка салона, детейлинг-мойка, полировка фар и подготовка автомобиля к продаже. Rush Detailing, Строгино."
+  pagePath="/uslugi"
+  image="/images/hero-uslugi.jpg"
+  keywords={[
+    ...siteConfig.seo.defaultKeywords,
+    'услуги детейлинга москва',
+    'детейлинг услуги москва',
+    'полировка керамика пленка москва',
+  ]}
+  breadcrumbs={[
+    { label: 'Главная', href: '/' },
+    { label: 'Услуги', href: '/uslugi' },
+  ]}
+>
+  <HeroSection
+    eyebrow="Услуги"
+    title="Услуги детейлинга в Москве — от регулярного ухода до защиты кузова и салона"
+    description="Здесь собраны основные направления Rush Detailing: полировка кузова, керамика, антигравийная пленка, химчистка салона, мойка, локальный уход и подготовка автомобиля к продаже."
+    image="/images/hero-uslugi.jpg"
+    compact={true}
+  />
+  <ServiceGrid />
+  <CTASection
+    title="Нужно подобрать услугу под ваш автомобиль?"
+    text="Оставьте заявку — подскажем, какие работы действительно подойдут под вашу задачу, и сориентируем по срокам и стоимости."
+  />
+  <PriceTables />
+  <LeadForm compact={true} />
+</Layout>

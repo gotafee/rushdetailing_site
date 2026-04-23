@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import CasesGrid from '../components/CasesGrid.astro';
+import CTASection from '../components/CTASection.astro';
+import LeadForm from '../components/LeadForm.astro';
+---
+
+<Layout
+  title="Работы, которые показывают задачу, ход работ и итоговый результат"
+  description="Показываем реальные автомобили, с какими задачами к нам обращаются, что именно делаем в процессе и к какому результату приходим."
+  pagePath="/kejsy"
+  breadcrumbs={[
+    { label: 'Главная', href: '/' },
+    { label: 'Работы', href: '/kejsy' },
+  ]}
+>
+  <HeroSection
+    eyebrow="Работы"
+    title="Работы, которые показывают задачу,<br />выполненные работы и итог<br />без лишних обещаний"
+    description="Показываем реальные автомобили, с какими задачами к нам обращаются, что именно делаем в процессе и к какому результату приходим."
+    image="/images/hero-kejsy.jpg"
+    compact={true}
+    mobileDim={true}
+  />
+  <CasesGrid />
+  <CTASection
+    title="Хотите такой же сценарий под ваш автомобиль?"
+    text="Напишите нам — подскажем, какие работы подойдут именно под вашу задачу, и сориентируем по стоимости и срокам."
+  />
+  <LeadForm compact={true} />
+</Layout>

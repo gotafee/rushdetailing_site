@@ -1,0 +1,81 @@
+---
+import { cases } from '../data/cases';
+import SectionHeading from './SectionHeading.astro';
+
+interface Props {
+  limit?: number;
+}
+
+const { limit } = Astro.props;
+const items = typeof limit === 'number' ? cases.slice(0, limit) : cases;
+const filters = ['Все', ...new Set(items.map((item) => item.category))];
+---
+
+<section class="section">
+  <div class="container">
+    <SectionHeading
+      label="Работы"
+      title="Показываем реальные задачи, выполненные работы и итог без лишних обещаний"
+      description="Показываем, с какой задачей приехал автомобиль, что было сделано и какой результат получил владелец после работ."
+    />
+
+    <div class="case-filters" data-case-filters>
+      {filters.map((filter, index) => (
+        <button
+          type="button"
+          class:list={['filter-chip', index === 0 && 'is-active']}
+          data-filter={filter}
+        >
+          {filter}
+        </button>
+      ))}
+    </div>
+
+    <div class="case-grid" data-case-grid>
+      {items.map((item) => (
+        <article class="surface-card case-card reveal" data-category={item.category}>
+          <div class="case-gallery" data-case-gallery>
+            {item.images.length > 1 && (
+              <button class:list={['case-gallery-arrow', 'case-gallery-arrow-prev', item.images.length <= 3 && 'case-gallery-arrow-mobile-only']} type="button" aria-label="Предыдущие фото" data-case-gallery-prev>
+                ←
+              </button>
+            )}
+            <div class="case-media-rail" data-case-gallery-track>
+              {item.images.map((image, index) => (
+                <img
+                  src={image}
+                  alt={item.car ? `${item.title} - ${item.car} - фото ${index + 1}` : `${item.title} - фото ${index + 1}`}
+                  loading="lazy"
+                />
+              ))}
+            </div>
+            {item.images.length > 1 && (
+              <button class:list={['case-gallery-arrow', 'case-gallery-arrow-next', item.images.length <= 3 && 'case-gallery-arrow-mobile-only']} type="button" aria-label="Следующие фото" data-case-gallery-next>
+                →
+              </button>
+            )}
+          </div>
+          <div class="case-card-copy">
+            <p class="eyebrow">{item.category}</p>
+            <h3>{item.title}</h3>
+            {item.car && <p class="case-car">{item.car}</p>}
+            <div class="case-meta-list">
+              <div>
+                <span>Услуга</span>
+                <p>{item.service}</p>
+              </div>
+              <div>
+                <span>Что сделали</span>
+                <p>{item.work}</p>
+              </div>
+              <div>
+                <span>Результат</span>
+                <p>{item.result}</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

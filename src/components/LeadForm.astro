@@ -1,0 +1,63 @@
+---
+import { services } from '../data/services';
+import { siteConfig } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  selectedService?: string;
+  compact?: boolean;
+}
+
+const {
+  title = 'Получите расчет по вашему автомобилю и задаче',
+  description = 'Оставьте контакт — уточним задачу, подскажем, какие работы подойдут именно вашему автомобилю,<br />и сориентируем по стоимости и срокам.',
+  selectedService = '',
+  compact = false,
+} = Astro.props;
+---
+
+<section class:list={['section', compact && 'section-compact']}>
+  <div class="container">
+    <div class="surface-card form-shell" id="lead-form">
+      <div>
+        <p class="eyebrow">Оставить заявку</p>
+        <h2>{title}</h2>
+        <p set:html={description}></p>
+        <ul class="contact-points">
+          {siteConfig.contactPoints.map((point) => <li>{point}</li>)}
+        </ul>
+      </div>
+
+      <form
+        class="lead-form"
+        data-lead-form
+        data-endpoint={siteConfig.forms.endpoint}
+        data-submit-mode={siteConfig.forms.submitMode}
+        data-thank-you={siteConfig.forms.thankYouPath}
+      >
+        <label>
+          <span>Ваше имя</span>
+          <input type="text" name="name" placeholder="Как к вам обращаться" required />
+        </label>
+        <label>
+          <span>Телефон или Telegram</span>
+          <input type="text" name="contact" placeholder="+7 или @username" required />
+        </label>
+        <label>
+          <span>Интересующая услуга</span>
+          <select name="service" aria-label="Интересующая услуга">
+            <option value="">Выберите услугу</option>
+            {services.map((service) => (
+              <option value={service.name} selected={selectedService === service.name}>{service.name}</option>
+            ))}
+          </select>
+        </label>
+        <button type="submit" class="button button-primary" data-analytics="form-submit">
+          Отправить заявку
+        </button>
+        <p class="form-note">{siteConfig.forms.consentText}</p>
+      </form>
+    </div>
+  </div>
+</section>

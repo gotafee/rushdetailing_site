@@ -1,0 +1,28 @@
+---
+const steps = [
+  { title: 'Заявка', text: 'Оставляете контакт и кратко описываете задачу.' },
+  { title: 'Консультация', text: 'Уточняем сценарий эксплуатации, состояние автомобиля и желаемый результат.' },
+  { title: 'Осмотр и смета', text: 'Фиксируем фронт работ и согласовываем сроки.' },
+  { title: 'Выполнение', text: 'Проводим все этапы без спешки и с промежуточным контролем.' },
+  { title: 'Выдача', text: 'Показываем результат, объясняем уход и дальнейшие рекомендации.' },
+];
+---
+
+<section class="section">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">Как проходит работа</p>
+      <h2>Понятный процесс без<br /><span class="timeline-title-line">сюрпризов и лишних услуг</span></h2>
+      <p>На каждом этапе понятно, что делаем, зачем это нужно,<br />сколько это займет времени и какой результат вы получите.</p>
+    </div>
+    <div class="timeline-grid timeline-grid-steps">
+      {steps.map((step, index) => (
+        <article class="surface-card timeline-card reveal">
+          <span class="timeline-index">0{index + 1}</span>
+          <h3>{step.title}</h3>
+          <p>{step.text}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

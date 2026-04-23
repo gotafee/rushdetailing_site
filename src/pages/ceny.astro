@@ -1,0 +1,41 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import PriceTables from '../components/PriceTables.astro';
+import CTASection from '../components/CTASection.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { siteConfig } from '../data/site';
+---
+
+<Layout
+  title="Цены на детейлинг в Москве | Полировка, керамика, химчистка — Rush Detailing"
+  description="Стартовые цены на детейлинг в Москве: полировка кузова, керамика, пленка, химчистка салона, мойка и другие услуги. Rush Detailing, Строгино. Точный расчет после осмотра автомобиля."
+  pagePath="/ceny"
+  image="/images/hero-ceny.jpg"
+  keywords={[
+    ...siteConfig.seo.defaultKeywords,
+    'цены на детейлинг москва',
+    'стоимость полировки авто москва',
+    'цена керамики на авто москва',
+  ]}
+  breadcrumbs={[
+    { label: 'Главная', href: '/' },
+    { label: 'Цены', href: '/ceny' },
+  ]}
+>
+  <HeroSection
+    eyebrow="Цены"
+    title="Цены на детейлинг в Москве — стартовые ориентиры по основным услугам"
+    description="Показываем базовые цены на полировку кузова, керамику, антигравийную пленку, химчистку салона, детейлинг-мойку и другие работы. Точный расчет зависит от состояния автомобиля и объема задач."
+    image="/images/hero-ceny.jpg"
+    mobileImage="/images/hero-ceny-mob.jpg"
+    compact={true}
+    mobileDim={true}
+  />
+  <PriceTables />
+  <CTASection
+    title="Нужен точный расчет под конкретный автомобиль?"
+    text="Напишите нам — подскажем, какие работы действительно нужны, и сориентируем по стоимости до записи."
+  />
+  <LeadForm compact={true} />
+</Layout>

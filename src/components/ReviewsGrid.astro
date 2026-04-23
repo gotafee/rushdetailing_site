@@ -1,0 +1,29 @@
+---
+import { siteConfig } from '../data/site';
+import SectionHeading from './SectionHeading.astro';
+---
+
+<section class="section">
+  <div class="container">
+    <SectionHeading
+      label="Отзывы"
+      title="Нас ценят за результат,<br />аккуратную работу и<br />профессиональный подход"
+      description="Реальные отзывы помогают понять, как мы работаем, что важно для клиентов и<br />за что нас выбирают снова."
+    />
+    <div class="review-grid">
+      {siteConfig.reviews.map((review) => (
+        <a
+          href={review.href}
+          target="_blank"
+          rel="noreferrer"
+          class="surface-card review-card reveal review-card-link"
+          aria-label={`Открыть отзыв ${review.name} на Яндекс Картах`}
+        >
+          <h3>{review.name}</h3>
+          <p class="review-meta">{review.meta}</p>
+          <p>{review.text}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

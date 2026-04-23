@@ -1,0 +1,70 @@
+---
+import { siteConfig } from '../data/site';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description: string;
+  image: string;
+  mobileImage?: string;
+  primaryLabel?: string;
+  primaryHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+  badges?: string[];
+  compact?: boolean;
+  mobileDim?: boolean;
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  image,
+  mobileImage = image,
+  primaryLabel = 'Получить расчет',
+  primaryHref = '#lead-form',
+  secondaryLabel = 'Записаться',
+  secondaryHref = siteConfig.social.telegram,
+  badges = [],
+  compact = false,
+  mobileDim = false,
+} = Astro.props;
+---
+
+<section class="hero-section">
+  <div class="container">
+    <div
+      class:list={[
+        'hero-card',
+        compact && 'hero-card-compact',
+        badges.length === 0 && 'hero-card-no-badges',
+        mobileDim && 'hero-card-mobile-dim',
+      ]}
+      style={`--hero-image:url('${image}'); --hero-image-mobile:url('${mobileImage}')`}
+    >
+      <div class:list={['hero-content', badges.length === 0 && 'hero-content-no-badges']}>
+        {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+        <h1 set:html={title}></h1>
+        <p class="hero-description" set:html={description}></p>
+        <div class="hero-actions">
+          <a href={primaryHref} class="button button-primary" data-analytics="cta-hero-primary">{primaryLabel}</a>
+          <a
+            href={secondaryHref}
+            target={secondaryHref.startsWith('http') ? '_blank' : undefined}
+            rel={secondaryHref.startsWith('http') ? 'noreferrer' : undefined}
+            class="button button-secondary"
+            data-analytics="cta-hero-secondary"
+          >
+            {secondaryLabel}
+          </a>
+        </div>
+        {badges.length > 0 && (
+          <ul class="hero-badges">
+            {badges.map((badge) => <li>{badge}</li>)}
+          </ul>
+        )}
+      </div>
+    </div>
+  </div>
+</section>

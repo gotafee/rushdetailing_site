@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import CTASection from '../components/CTASection.astro';
+import { siteConfig } from '../data/site';
+---
+
+<Layout
+  title="Закрываем частые вопросы до записи: сроки, стоимость, уход и выбор услуг"
+  description="Собрали ответы на вопросы, которые чаще всего мешают быстро принять решение: сколько занимает работа, что подойдет именно вашему автомобилю и от чего зависит итоговая стоимость."
+  pagePath="/faq"
+  breadcrumbs={[
+    { label: 'Главная', href: '/' },
+    { label: 'FAQ', href: '/faq' },
+  ]}
+  faqSchema={siteConfig.homeFaq}
+>
+  <HeroSection
+    eyebrow="FAQ"
+    title="Закрываем частые вопросы до записи: сроки, стоимость, уход и выбор услуг"
+    description="Собрали ответы на вопросы, которые чаще всего мешают быстро принять решение: сколько занимает работа, что подойдет именно вашему автомобилю и от чего зависит итоговая стоимость."
+    image="/images/hero-faq.jpg"
+    mobileImage="/images/hero-faq-mob.jpg"
+    compact={true}
+    mobileDim={true}
+  />
+  <FAQAccordion items={siteConfig.homeFaq} />
+  <CTASection
+    title="Не нашли ответ на свой вопрос?"
+    text="Напишите нам — подскажем по услугам, срокам и стоимости под ваш автомобиль."
+  />
+</Layout>

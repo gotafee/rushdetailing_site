@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { siteConfig } from '../data/site';
+---
+
+<Layout
+  title="Спасибо за заявку - Rush Detailing"
+  description="Спасибо за обращение в Rush Detailing. Мы свяжемся с вами в ближайшее время для уточнения задачи и расчета стоимости."
+  pagePath="/spasibo"
+  noindex={true}
+  breadcrumbs={[
+    { label: 'Главная', href: '/' },
+    { label: 'Спасибо', href: '/spasibo' },
+  ]}
+>
+  <section class="section">
+    <div class="container">
+      <div class="surface-card thank-you-card">
+        <p class="eyebrow">Заявка отправлена</p>
+        <h1>Спасибо, мы уже получили ваше обращение</h1>
+        <p>Свяжемся с вами в ближайшее время, уточним задачу и предложим оптимальный сценарий работ под ваш автомобиль.</p>
+        <div class="hero-actions">
+          <a href={siteConfig.social.telegram} class="button button-primary" target="_blank" rel="noreferrer">Написать в Telegram</a>
+          <a href={siteConfig.social.whatsapp} class="button button-secondary" target="_blank" rel="noreferrer">Написать в WhatsApp</a>
+        </div>
+        <p class="thank-you-phone">
+          Или позвоните нам: <a href={`tel:${siteConfig.contacts.phone}`}>{siteConfig.contacts.phoneDisplay}</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>

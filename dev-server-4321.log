@@ -1,0 +1,16 @@
+
+> rushdetailing-site@0.0.1 dev
+> astro dev --host 127.0.0.1 --port 4321
+
+[vite] connected.
+[2m20:43:24[22m [34m[types][39m Generated [2m2ms[22m
+[33m[1m20:43:24[22m [WARN] [content][39m Content config not loaded
+[2m20:43:24[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[42m[1m astro [22m[49m [32mv6.1.8[39m [2mready in[22m 1268 [2mms[22m
+[2m┃[22m Local    [36mhttp://127.0.0.1:4321/[39m
+[2m20:43:25[22m [32mwatching for file changes...[39m
+[2m20:43:25[22m [34m[200][39m / [2m67ms[22m
+[2m20:43:26[22m [34m[vite][39m [32m✨ new dependencies optimized: [33mastro/runtime/client/dev-toolbar/entrypoint.js[32m[39m
+[2m20:43:26[22m [34m[vite][39m [32m✨ optimized dependencies changed. reloading[39m
+[2m20:43:34[22m [34m[200][39m / [2m5ms[22m
+[2m20:43:40[22m [33m[404][39m /@id/astro/runtime/client/dev-toolbar/astro_runtime_client_dev-toolbar_entrypoint__js.js.map [2m3ms[22m

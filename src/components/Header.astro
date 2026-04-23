@@ -1,0 +1,64 @@
+---
+import { siteConfig } from '../data/site';
+import SocialIcon from './SocialIcon.astro';
+
+---
+
+<header class="site-header" data-site-header>
+  <div class="container">
+    <div class="header-shell">
+      <a class="logo" href="/" aria-label={siteConfig.brand.name}>
+        <img class="logo-image" src="/images/logo.png" alt={siteConfig.brand.name} />
+      </a>
+
+      <nav class="desktop-nav" aria-label="Основная навигация">
+        {siteConfig.navigation.map((item) => (
+          <a href={item.href} class="nav-link">
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
+      <div class="header-actions">
+        <a href={`tel:${siteConfig.contacts.phone}`} class="contact-chip" data-analytics="phone-click">
+          {siteConfig.contacts.phoneDisplay}
+        </a>
+        <a href={siteConfig.social.telegram} target="_blank" rel="noreferrer" class="icon-link" aria-label="Telegram" data-analytics="telegram-click">
+          <SocialIcon name="telegram" />
+        </a>
+        <a href={siteConfig.social.whatsapp} target="_blank" rel="noreferrer" class="icon-link" aria-label="WhatsApp" data-analytics="whatsapp-click">
+          <SocialIcon name="whatsapp" />
+        </a>
+        <a href={siteConfig.social.telegram} target="_blank" rel="noreferrer" class="button button-primary" data-analytics="cta-header">
+          Записаться
+        </a>
+      </div>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" data-nav-toggle>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-nav" class="mobile-nav" data-mobile-nav hidden>
+    <div class="container mobile-nav-inner">
+      {siteConfig.navigation.map((item) => (
+        <a href={item.href} class="mobile-nav-link">
+          {item.label}
+        </a>
+      ))}
+      <a href={`tel:${siteConfig.contacts.phone}`} class="mobile-nav-link" data-analytics="phone-click">
+        {siteConfig.contacts.phoneDisplay}
+      </a>
+      <div class="mobile-nav-contacts">
+        <a href={siteConfig.social.telegram} target="_blank" rel="noreferrer" class="button button-secondary">
+          Telegram
+        </a>
+        <a href={siteConfig.social.whatsapp} target="_blank" rel="noreferrer" class="button button-secondary">
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</header>

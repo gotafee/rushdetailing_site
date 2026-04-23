@@ -1,0 +1,189 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import HeroSection from '../../components/HeroSection.astro';
+import CTASection from '../../components/CTASection.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import ServiceGrid from '../../components/ServiceGrid.astro';
+import { services } from '../../data/services';
+import { siteConfig } from '../../data/site';
+
+export function getStaticPaths() {
+  return services.map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+
+const pageTitle = `${service.seoTitle} | Rush Detailing, Москва`;
+const pageDescription = `${service.seoDescription} Rush Detailing — студия детейлинга в Москве, ${siteConfig.location.neighborhood}. Запись ежедневно с 10:00 до 21:00.`;
+const pageKeywords = [
+  service.name,
+  `${service.shortName} Москва`,
+  `${service.shortName} Строгино`,
+  `${service.shortName} СЗАО`,
+  'rush detailing',
+  'детейлинг москва',
+];
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: service.name,
+  serviceType: service.name,
+  description: service.teaser,
+  areaServed: [
+    {
+      '@type': 'City',
+      name: 'Москва',
+    },
+    {
+      '@type': 'AdministrativeArea',
+      name: `${siteConfig.location.district}, ${siteConfig.location.neighborhood}`,
+    },
+  ],
+  provider: {
+    '@type': 'LocalBusiness',
+    name: siteConfig.brand.name,
+    url: siteConfig.siteUrl,
+    telephone: siteConfig.contacts.phoneDisplay,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: siteConfig.location.street,
+      addressLocality: siteConfig.location.city,
+      addressRegion: siteConfig.location.region,
+      addressCountry: 'RU',
+    },
+  },
+};
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  pagePath={`/uslugi/${service.slug}`}
+  image={service.image}
+  keywords={pageKeywords}
+  breadcrumbs={[
+    { label: 'Главная', href: '/' },
+    { label: 'Услуги', href: '/uslugi' },
+    { label: service.name, href: `/uslugi/${service.slug}` },
+  ]}
+  faqSchema={service.faq}
+  extraSchemas={[serviceSchema]}
+>
+  <HeroSection
+    eyebrow={`Услуга · Москва · ${siteConfig.location.neighborhood}`}
+    title={service.heroTitle}
+    description={service.heroSubtitle}
+    image={service.image}
+    primaryHref="#lead-form"
+    primaryLabel="Получить расчет"
+    secondaryLabel="Записаться"
+    compact={true}
+  />
+
+  <section class="section">
+    <div class="container two-column">
+      <article class="surface-card info-card">
+        <p class="eyebrow">Что это за услуга</p>
+        <h2 class="card-headline">{service.name}</h2>
+        <p>{service.teaser}</p>
+      </article>
+      <article class="surface-card info-card">
+        <p class="eyebrow">Для кого подходит</p>
+        <ul class="check-list">
+          {service.audience.map((item) => <li>{item}</li>)}
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section-compact">
+    <div class="container three-column">
+      <article class="surface-card info-card">
+        <p class="eyebrow">Какие задачи решает</p>
+        <ul class="check-list">
+          {service.problems.map((item) => <li>{item}</li>)}
+        </ul>
+      </article>
+      <article class="surface-card info-card">
+        <p class="eyebrow">Что входит</p>
+        <ul class="check-list">
+          {service.includes.map((item) => <li>{item}</li>)}
+        </ul>
+      </article>
+      <article class="surface-card info-card">
+        <p class="eyebrow">Стоимость</p>
+        <h2 class="card-headline card-price">{service.priceFrom}</h2>
+        <p>Итоговая цена зависит от состояния автомобиля, объема работ и нужного результата. До начала работ объясняем, из чего складывается расчет.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow">Как проходит работа</p>
+        <h2>Понятный процесс без сюрпризов и навязанных услуг</h2>
+        <p>На каждом этапе понятно, что именно делаем, зачем это нужно и к какому результату придем.</p>
+      </div>
+      <div class="timeline-grid timeline-grid-service">
+        {service.steps.map((step, index) => (
+          <article class="surface-card timeline-card reveal">
+            <span class="timeline-index">0{index + 1}</span>
+            <h3>{step}</h3>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-compact">
+    <div class="container">
+      <div class="surface-card case-highlight">
+        <div class="case-media-rail case-media-rail-inline">
+          <img src={service.image} alt={service.caseSummary.title} loading="lazy" />
+          <img src={service.image} alt={`${service.caseSummary.title} - фото 2`} loading="lazy" />
+          <img src={service.image} alt={`${service.caseSummary.title} - фото 3`} loading="lazy" />
+        </div>
+        <div class="service-card-copy">
+          <p class="eyebrow">Работа по услуге</p>
+          <h2 class="card-headline">{service.caseSummary.title}</h2>
+          <p class="case-car"><strong>{service.caseSummary.car}</strong></p>
+          <div class="case-meta-list">
+            <div>
+              <span>Услуга</span>
+              <p>{service.name}</p>
+            </div>
+            <div>
+              <span>Что сделали</span>
+              <p>{service.includes[0]}</p>
+            </div>
+            <div>
+              <span>Результат</span>
+              <p>{service.caseSummary.result}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    title="Нужно подобрать решение под ваш автомобиль?"
+    text="Оставьте заявку — подскажем, какие работы подойдут именно в вашем случае, и сориентируем по стоимости и срокам."
+  />
+  <FAQAccordion
+    items={service.faq}
+    title="Ответы на частые вопросы по услуге"
+    description="Собрали ответы на основные вопросы о сроках, результате, стоимости и подготовке автомобиля."
+  />
+  <LeadForm selectedService={service.name} />
+  <ServiceGrid
+    title="Другие услуги детейлинга"
+    description="Если ваша задача шире одной услуги, можно сразу посмотреть соседние направления и подобрать подходящий сценарий ухода и защиты."
+  />
+</Layout>

@@ -1,0 +1,39 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  items: FaqItem[];
+  title?: string;
+  description?: string;
+}
+
+const {
+  items,
+  title = 'Ответы на часто задаваемые вопросы',
+  description = 'Отвечаем на главные вопросы об услугах, сроках и стоимости под ваш автомобиль.',
+} = Astro.props;
+---
+
+<section class="section">
+  <div class="container">
+    <SectionHeading label="Вопросы и ответы" title={title} description={description} />
+    <div class="faq-list">
+      {items.map((item) => (
+        <details class="surface-card faq-item reveal" data-faq-item>
+          <summary class="faq-summary">
+            <span>{item.question}</span>
+            <span class="faq-chevron" aria-hidden="true"></span>
+          </summary>
+          <div class="faq-answer" data-faq-answer>
+            <p>{item.answer}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

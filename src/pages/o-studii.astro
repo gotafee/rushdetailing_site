@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import CTASection from '../components/CTASection.astro';
+import LeadForm from '../components/LeadForm.astro';
+---
+
+<Layout
+  title="Детейлинг студия, в которой делают акцент на результате, аккуратности и понятном подходе"
+  description="Рассказываем, как подходим к работе с автомобилем, на что обращаем внимание в процессе и почему для нас важны не только внешний эффект, но и аккуратность на каждом этапе."
+  pagePath="/o-studii"
+  breadcrumbs={[
+    { label: 'Главная', href: '/' },
+    { label: 'О студии', href: '/o-studii' },
+  ]}
+>
+  <HeroSection
+    eyebrow="О студии"
+    title="Детейлинг студия, в которой делают акцент на результате, аккуратности и понятном подходе"
+    description="Рассказываем, как подходим к работе с автомобилем, на что обращаем внимание<br />в процессе и почему для нас важны не только внешний эффект,<br />но и аккуратность на каждом этапе."
+    image="/images/hero-o-studii.jpg"
+    mobileImage="/images/hero-o-studii-mob.jpg"
+    compact={true}
+  />
+
+  <section class="section">
+    <div class="container three-column about-grid">
+      <article class="surface-card reveal about-card">
+        <p class="eyebrow">Кто мы</p>
+        <h2 class="card-headline">Студия для владельцев, которым важны результат, аккуратность и спокойный сервис</h2>
+        <p>Работаем без поточного подхода, лишнего шума и навязанных решений — с фокусом на состоянии автомобиля и ожидаемом результате.</p>
+      </article>
+      <article class="surface-card reveal about-card">
+        <p class="eyebrow">Специализация</p>
+        <h2 class="card-headline">Кузов, защита, салон и регулярный уход за автомобилем</h2>
+        <p>Основной фокус — полировка, защитные покрытия, пленка, химчистка, предпродажная подготовка и аккуратный регулярный уход.</p>
+      </article>
+      <article class="surface-card reveal about-card">
+        <p class="eyebrow">Подход</p>
+        <h2 class="card-headline">Честная оценка и понятный объем работ</h2>
+        <p>Сначала смотрим автомобиль и задачу владельца, объясняем, что действительно стоит делать, сколько это займет и к какому результату приведет.</p>
+      </article>
+    </div>
+  </section>
+
+  <CTASection
+    title="Нужно подобрать решение под ваш автомобиль?"
+    text="Напишите нам — подскажем, какие работы подойдут именно под вашу задачу, и сориентируем по стоимости и срокам."
+  />
+  <LeadForm compact={true} />
+</Layout>

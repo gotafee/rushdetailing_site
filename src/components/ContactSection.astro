@@ -1,0 +1,35 @@
+---
+import { siteConfig } from '../data/site';
+---
+
+<section class="section">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">Контакты</p>
+      <h2>Все контакты и адрес студии — в одном месте</h2>
+      <p>Здесь можно быстро найти телефон, мессенджеры, график работы и маршрут до студии, чтобы выбрать удобный способ связи или визита.</p>
+    </div>
+
+    <div class="contact-section">
+      <div class="surface-card contact-card">
+        <ul class="contact-list contact-list-large">
+          <li><strong>Телефон</strong> <a href={`tel:${siteConfig.contacts.phone}`}>{siteConfig.contacts.phoneDisplay}</a></li>
+          <li><strong>Telegram</strong> <a href={siteConfig.social.telegram} target="_blank" rel="noreferrer">@rushdetailing</a></li>
+          <li><strong>WhatsApp</strong> <a href={siteConfig.social.whatsapp} target="_blank" rel="noreferrer">Написать в WhatsApp</a></li>
+          <li><strong>Адрес</strong> <span>{siteConfig.location.street} {siteConfig.location.floor}</span></li>
+          <li><strong>График</strong> <span>{siteConfig.location.openingHoursHuman}</span></li>
+        </ul>
+      </div>
+
+      <div class="surface-card map-placeholder">
+        <div
+          class="map-frame"
+          data-yandex-map
+          data-map-key={siteConfig.location.mapApiKey}
+          data-map-address={siteConfig.location.mapAddress}
+          data-map-label={siteConfig.location.mapLabel}
+        ></div>
+      </div>
+    </div>
+  </div>
+</section>

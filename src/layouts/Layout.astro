@@ -1,0 +1,185 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileCTA from '../components/MobileCTA.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { siteConfig } from '../data/site';
+
+interface BreadcrumbItem {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  pagePath?: string;
+  image?: string;
+  noindex?: boolean;
+  keywords?: string[];
+  breadcrumbs?: BreadcrumbItem[];
+  faqSchema?: Array<{ question: string; answer: string }>;
+  extraSchemas?: object[];
+}
+
+const {
+  title,
+  description,
+  pagePath = '/',
+  image = siteConfig.defaultOgImage,
+  noindex = false,
+  keywords = siteConfig.seo.defaultKeywords,
+  breadcrumbs = [],
+  faqSchema = [],
+  extraSchemas = [],
+} = Astro.props;
+
+const canonical = new URL(pagePath, siteConfig.siteUrl).toString();
+const resolvedImage = image.startsWith('http') ? image : new URL(image, siteConfig.siteUrl).toString();
+
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: siteConfig.brand.name,
+  alternateName: siteConfig.brand.alternateNames,
+  description: siteConfig.brand.tagline,
+  image: resolvedImage,
+  url: siteConfig.siteUrl,
+  email: siteConfig.contacts.email,
+  telephone: siteConfig.contacts.phoneDisplay,
+  priceRange: '$$',
+  currenciesAccepted: 'RUB',
+  paymentAccepted: 'Cash, Card',
+  floorLevel: siteConfig.location.floor,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: siteConfig.location.street,
+    addressLocality: siteConfig.location.city,
+    addressRegion: siteConfig.location.region,
+    addressCountry: 'RU',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: siteConfig.location.latitude,
+    longitude: siteConfig.location.longitude,
+  },
+  areaServed: [
+    {
+      '@type': 'City',
+      name: siteConfig.location.city,
+    },
+    {
+      '@type': 'AdministrativeArea',
+      name: `${siteConfig.location.district}, ${siteConfig.location.neighborhood}`,
+    },
+  ],
+  openingHours: siteConfig.location.openingHoursSchema,
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: '10:00',
+      closes: '21:00',
+    },
+  ],
+  hasMap: siteConfig.location.yandexMapsUrl,
+  sameAs: [siteConfig.social.telegram, siteConfig.social.whatsapp, siteConfig.social.yandexMaps],
+  contactPoint: [
+    {
+      '@type': 'ContactPoint',
+      telephone: siteConfig.contacts.phoneDisplay,
+      contactType: 'customer support',
+      areaServed: 'RU-MOW',
+      availableLanguage: ['ru'],
+    },
+  ],
+};
+
+const breadcrumbSchema = breadcrumbs.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbs.map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: item.label,
+        item: new URL(item.href, siteConfig.siteUrl).toString(),
+      })),
+    }
+  : null;
+
+const faqStructuredSchema = faqSchema.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqSchema.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer,
+        },
+      })),
+    }
+  : null;
+
+const webpageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description,
+  url: canonical,
+};
+
+const schemas = [orgSchema, webpageSchema, breadcrumbSchema, faqStructuredSchema, ...extraSchemas].filter(Boolean);
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords.join(', ')} />
+    <meta name="geo.region" content="RU-MOW" />
+    <meta name="geo.placename" content={`${siteConfig.location.city}, ${siteConfig.location.neighborhood}`} />
+    <meta name="geo.position" content={`${siteConfig.location.latitude};${siteConfig.location.longitude}`} />
+    <meta name="ICBM" content={`${siteConfig.location.latitude}, ${siteConfig.location.longitude}`} />
+    <meta name="theme-color" content="#050505" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/images/logo.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteConfig.brand.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={resolvedImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={resolvedImage} />
+    {schemas.map((schema) => <script type="application/ld+json" set:html={JSON.stringify(schema)} />)}
+  </head>
+  <body>
+    <Header />
+    <main>
+      {breadcrumbs.length > 1 && <Breadcrumbs items={breadcrumbs} />}
+      <slot />
+    </main>
+    <Footer />
+    <MobileCTA />
+    <script src="/scripts/site.js" defer></script>
+  </body>
+</html>

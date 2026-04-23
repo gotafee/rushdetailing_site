@@ -1,0 +1,34 @@
+---
+interface Props {
+  title: string;
+  text: string;
+  primaryLabel?: string;
+  primaryHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+}
+
+const {
+  title,
+  text,
+  primaryLabel = 'Оставить заявку',
+  primaryHref = '#lead-form',
+  secondaryLabel = 'Написать в Telegram',
+  secondaryHref = 'https://t.me/rushdetailing',
+} = Astro.props;
+---
+
+<section class="section section-compact">
+  <div class="container">
+    <div class="surface-card cta-banner">
+      <div class="cta-copy">
+        <h2 set:html={title}></h2>
+        <p set:html={text}></p>
+      </div>
+      <div class="cta-actions">
+        <a href={primaryHref} class="button button-primary">{primaryLabel}</a>
+        <a href={secondaryHref} class="button button-secondary">{secondaryLabel}</a>
+      </div>
+    </div>
+  </div>
+</section>

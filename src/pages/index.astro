@@ -1,0 +1,96 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import ServiceGrid from '../components/ServiceGrid.astro';
+import CasesGrid from '../components/CasesGrid.astro';
+import TimelineSection from '../components/TimelineSection.astro';
+import PriceTables from '../components/PriceTables.astro';
+import ReviewsGrid from '../components/ReviewsGrid.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import LeadForm from '../components/LeadForm.astro';
+import ContactSection from '../components/ContactSection.astro';
+import CTASection from '../components/CTASection.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { siteConfig, baseSeo } from '../data/site';
+---
+
+<Layout
+  title={baseSeo.defaultTitle}
+  description={baseSeo.defaultDescription}
+  pagePath="/"
+  keywords={[
+    ...siteConfig.seo.defaultKeywords,
+    'студия детейлинга строгино',
+    'детейлинг авто москва',
+    'записаться на детейлинг москва',
+  ]}
+>
+  <HeroSection
+    eyebrow={`Москва · ${siteConfig.location.district} · ${siteConfig.location.neighborhood}`}
+    title={`Детейлинг в Москве<br />с акцентом на результат,<br /><span class="accent-text">бережную работу</span><br />и понятный расчет`}
+    description={`Rush Detailing — студия детейлинга в Москве, рядом со Строгино. Полировка кузова, керамика, антигравийная пленка, химчистка салона, детейлинг-мойка и подготовка авто к продаже.`}
+    image="/images/hero-home.jpg"
+    badges={[]}
+  />
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading
+        label="Какие задачи решаем"
+        title="Делаем детейлинг, который нужен владельцу автомобиля, а не ради лишних услуг"
+        description="Работаем с типовыми задачами, с которыми в Москве приезжают в студию детейлинга: полировка кузова, защита нового авто, химчистка салона, детейлинг-мойка, оклейка пленкой и подготовка машины к продаже."
+      />
+      <div class="problem-grid">
+        {[
+          'Полировка кузова и удаление мелких дефектов',
+          'Керамика и защита кузова после детейлинга',
+          'Антигравийная пленка для новых и ухоженных авто',
+          'Химчистка салона и сидений без лишнего объема работ',
+          'Детейлинг-мойка и регулярный уход за автомобилем',
+          'Предпродажная подготовка автомобиля в Москве',
+        ].map((item) => (
+          <article class="surface-card problem-card reveal">
+            <h3>{item}</h3>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <ServiceGrid limit={6} />
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading
+        label="Почему выбирают нас"
+        title="Студия детейлинга в Строгино, где заранее понятны сроки, стоимость и объем работ"
+        description="Для локального коммерческого запроса важны не только услуги, но и доверие: удобный адрес в Москве, понятная запись, аккуратная работа и честное объяснение, что действительно нужно делать с автомобилем."
+      />
+      <div class="benefit-grid benefit-grid-featured">
+        {[
+          ['Осмотр перед работой', 'Сначала смотрим автомобиль и задачу. Объясняем, какая услуга действительно подойдет: полировка, керамика, пленка, химчистка или локальный уход.'],
+          ['Аккуратный детейлинг', 'Бережно работаем с кузовом, салоном, пленками и мелкими деталями, чтобы результат хорошо выглядел не только на фото, но и вживую.'],
+          ['Понятный расчет', 'До начала работ называем ориентир по стоимости и объясняем, от чего зависит итоговая цена именно для вашего автомобиля.'],
+          ['Удобная запись в Москве', 'Можно быстро связаться по телефону, в Telegram или WhatsApp и записаться на осмотр, мойку, химчистку или комплексный детейлинг.'],
+        ].map(([title, text]) => (
+          <article class="surface-card benefit-card reveal">
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CasesGrid limit={5} />
+  <TimelineSection />
+  <PriceTables />
+  <CTASection
+    title="Нужно подобрать решение под ваш автомобиль?"
+    text="Оставьте заявку — подскажем, какой детейлинг подойдет под вашу задачу, автомобиль и бюджет, и сориентируем по стоимости без лишних услуг."
+  />
+  <ReviewsGrid />
+  <FAQAccordion items={siteConfig.homeFaq} />
+  <LeadForm />
+  <ContactSection />
+</Layout>

@@ -1,0 +1,32 @@
+---
+import { priceGroups } from '../data/prices';
+import SectionHeading from './SectionHeading.astro';
+---
+
+<section class="section">
+  <div class="container">
+    <SectionHeading
+      label="Цены"
+      title="Показываем стартовые ориентиры и заранее объясняем, от чего зависит итоговая стоимость"
+      description="Финальная стоимость зависит от состояния автомобиля, объема работ и выбранных материалов.<br />До начала работ объясняем, что действительно нужно и из чего складывается расчет."
+    />
+    <div class="price-grid">
+      {priceGroups.map((group) => (
+        <article class="surface-card price-card reveal">
+          <h3>{group.title}</h3>
+          <ul class="price-list">
+            {group.items.map((item) => (
+              <li>
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
+              </li>
+            ))}
+          </ul>
+          <div class="price-card-action">
+            <a href="#lead-form" class="button button-secondary">Уточнить стоимость</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
