@@ -3,10 +3,10 @@ import { siteConfig } from '../data/site';
 ---
 
 <aside class="promo-offer" aria-label="Промоакция">
-  <img class="promo-offer__badge" src="/images/promo-discount.png" alt="Скидка 50%" />
+  <img class="promo-offer__badge" src="/images/promo-discount.png" alt="Скидка до 50%" />
   <div class="promo-offer__copy">
     <p>Первый визит</p>
-    <strong>Скидка на первый визит 50%</strong>
+    <strong>Скидка на первый визит до 50%</strong>
     <span>Для новых клиентов Rush Detailing</span>
   </div>
   <button class="promo-offer__link" type="button" data-analytics="promo-offer" data-promo-modal-open>
@@ -21,7 +21,7 @@ import { siteConfig } from '../data/site';
       <img class="promo-modal__badge" src="/images/promo-discount.png" alt="" />
       <div>
         <p class="eyebrow">Промоакция</p>
-        <h2 id="promo-modal-title">Скидка 50% на первый визит</h2>
+        <h2 id="promo-modal-title">Скидка до 50% на первый визит</h2>
         <p>Оставьте контакт, и мы закрепим скидку за вами перед первым визитом в Rush Detailing.</p>
       </div>
     </div>
@@ -32,7 +32,7 @@ import { siteConfig } from '../data/site';
       data-submit-mode={siteConfig.forms.submitMode}
       data-thank-you={siteConfig.forms.thankYouPath}
     >
-      <input type="hidden" name="service" value="Акция: скидка 50% на первый визит" />
+      <input type="hidden" name="service" value="Акция: скидка до 50% на первый визит" />
       <label>
         <span>Ваше имя</span>
         <input type="text" name="name" placeholder="Как к вам обращаться" required />
