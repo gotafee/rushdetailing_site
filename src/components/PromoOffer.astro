@@ -1,0 +1,50 @@
+---
+import { siteConfig } from '../data/site';
+---
+
+<aside class="promo-offer" aria-label="Промоакция">
+  <img class="promo-offer__badge" src="/images/promo-discount.png" alt="Скидка 50%" />
+  <div class="promo-offer__copy">
+    <p>Первый визит</p>
+    <strong>Скидка на первый визит 50%</strong>
+    <span>Для новых клиентов Rush Detailing</span>
+  </div>
+  <button class="promo-offer__link" type="button" data-analytics="promo-offer" data-promo-modal-open>
+    Забрать скидку
+  </button>
+</aside>
+
+<dialog class="promo-modal" data-promo-modal aria-labelledby="promo-modal-title">
+  <div class="promo-modal__panel">
+    <button class="promo-modal__close" type="button" aria-label="Закрыть" data-promo-modal-close>×</button>
+    <div class="promo-modal__head">
+      <img class="promo-modal__badge" src="/images/promo-discount.png" alt="" />
+      <div>
+        <p class="eyebrow">Промоакция</p>
+        <h2 id="promo-modal-title">Скидка 50% на первый визит</h2>
+        <p>Оставьте контакт, и мы закрепим скидку за вами перед первым визитом в Rush Detailing.</p>
+      </div>
+    </div>
+    <form
+      class="lead-form promo-modal__form"
+      data-lead-form
+      data-endpoint={siteConfig.forms.endpoint}
+      data-submit-mode={siteConfig.forms.submitMode}
+      data-thank-you={siteConfig.forms.thankYouPath}
+    >
+      <input type="hidden" name="service" value="Акция: скидка 50% на первый визит" />
+      <label>
+        <span>Ваше имя</span>
+        <input type="text" name="name" placeholder="Как к вам обращаться" required />
+      </label>
+      <label>
+        <span>Телефон или Telegram</span>
+        <input type="text" name="contact" placeholder="+7 или @username" required />
+      </label>
+      <button type="submit" class="button button-primary" data-analytics="promo-form-submit">
+        Получить скидку
+      </button>
+      <p class="form-note">{siteConfig.forms.consentText}</p>
+    </form>
+  </div>
+</dialog>

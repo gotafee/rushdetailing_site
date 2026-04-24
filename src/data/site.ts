@@ -76,7 +76,7 @@ export const siteConfig = {
   forms: {
     endpoint: 'https://rushdetailing-leads.bakeev19karim1207.workers.dev',
     submitMode: 'endpoint',
-    thankYouPath: '/spasibo',
+    thankYouPath: '/spasibo/',
     consentText:
       'Нажимая кнопку, вы соглашаетесь с обработкой персональных данных и политикой конфиденциальности.',
   },

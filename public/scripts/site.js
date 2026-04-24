@@ -30,6 +30,30 @@ if (navToggle && mobileNav) {
   });
 }
 
+const promoModal = document.querySelector('[data-promo-modal]');
+const promoModalOpen = document.querySelector('[data-promo-modal-open]');
+const promoModalClose = document.querySelector('[data-promo-modal-close]');
+
+if (promoModal && promoModalOpen) {
+  promoModalOpen.addEventListener('click', () => {
+    if (typeof promoModal.showModal === 'function') {
+      promoModal.showModal();
+    } else {
+      promoModal.setAttribute('open', '');
+    }
+  });
+
+  promoModalClose?.addEventListener('click', () => {
+    promoModal.close();
+  });
+
+  promoModal.addEventListener('click', (event) => {
+    if (event.target === promoModal) {
+      promoModal.close();
+    }
+  });
+}
+
 document.querySelectorAll('[data-case-filters]').forEach((filtersWrap) => {
   const buttons = filtersWrap.querySelectorAll('[data-filter]');
   const grid = document.querySelector('[data-case-grid]');
@@ -90,7 +114,7 @@ document.querySelectorAll('[data-lead-form]').forEach((form) => {
     const name = form.querySelector('[name="name"]');
     const contact = form.querySelector('[name="contact"]');
     const service = form.querySelector('[name="service"]');
-    const thankYou = form.getAttribute('data-thank-you') || '/spasibo';
+    const thankYou = form.getAttribute('data-thank-you') || '/spasibo/';
     const endpoint = form.getAttribute('data-endpoint');
     const submitMode = form.getAttribute('data-submit-mode');
 
@@ -121,9 +145,7 @@ document.querySelectorAll('[data-lead-form]').forEach((form) => {
       }
     }
 
-    const nextUrl = new URL(thankYou, window.location.origin);
-    if (payload.service) nextUrl.searchParams.set('service', payload.service);
-    window.location.href = nextUrl.toString();
+    window.location.href = new URL(thankYou, window.location.origin).toString();
   });
 });
 
