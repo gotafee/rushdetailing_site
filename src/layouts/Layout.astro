@@ -35,7 +35,19 @@ const {
   extraSchemas = [],
 } = Astro.props;
 
-const canonical = new URL(pagePath, siteConfig.siteUrl).toString();
+const normalizeSitePath = (path: string) => {
+  if (path === '/') {
+    return '/';
+  }
+
+  if (/\.[a-z0-9]+$/i.test(path)) {
+    return path;
+  }
+
+  return path.endsWith('/') ? path : `${path}/`;
+};
+
+const canonical = new URL(normalizeSitePath(pagePath), siteConfig.siteUrl).toString();
 const resolvedImage = image.startsWith('http') ? image : new URL(image, siteConfig.siteUrl).toString();
 
 const orgSchema = {

@@ -3,6 +3,6 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://www.rushdetailing.ru',
-  trailingSlash: 'never',
+  site: 'https://rushdetailing.ru',
+  trailingSlash: 'always',
 });
