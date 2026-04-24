@@ -45,7 +45,7 @@ export const siteConfig = {
     yandexMaps: 'https://yandex.com/maps/org/rush/157166390230/?ll=37.413933%2C55.804653&z=17',
   },
   analytics: {
-    yandexMetrikaId: '',
+    yandexMetrikaId: '108745111',
     gtmId: '',
     gscVerification: '',
   },
