@@ -2,6 +2,7 @@
 import { siteConfig } from '../data/site';
 import SocialIcon from './SocialIcon.astro';
 
+const leadFormHref = Astro.url.pathname === '/' ? '/#lead-form' : `${Astro.url.pathname}#lead-form`;
 ---
 
 <header class="site-header" data-site-header>
@@ -29,7 +30,7 @@ import SocialIcon from './SocialIcon.astro';
         <a href={siteConfig.social.whatsapp} target="_blank" rel="noreferrer" class="icon-link" aria-label="WhatsApp" data-analytics="whatsapp-click">
           <SocialIcon name="whatsapp" />
         </a>
-        <a href={siteConfig.social.telegram} target="_blank" rel="noreferrer" class="button button-primary" data-analytics="cta-header">
+        <a href={leadFormHref} class="button button-primary" data-analytics="cta-header">
           Записаться
         </a>
       </div>
