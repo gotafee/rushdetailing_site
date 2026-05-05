@@ -2,7 +2,8 @@
 import { siteConfig } from '../data/site';
 ---
 
-<aside class="promo-offer" aria-label="Промоакция">
+<aside class="promo-offer" aria-label="Промоакция" data-promo-offer hidden>
+  <button class="promo-offer__close" type="button" aria-label="Закрыть промоакцию" data-promo-offer-close>×</button>
   <img class="promo-offer__badge" src="/images/promo-discount.png" alt="Скидка до 50%" />
   <div class="promo-offer__copy">
     <p>Первый визит</p>

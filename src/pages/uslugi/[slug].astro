@@ -118,6 +118,14 @@ const serviceSchema = {
       <article class="surface-card info-card">
         <p class="eyebrow">Стоимость</p>
         <h2 class="card-headline card-price">{service.priceFrom}</h2>
+        <ul class="price-list service-price-list">
+          {service.variants.map((variant) => (
+            <li>
+              <span>{variant.label}</span>
+              <strong>{variant.priceFrom}</strong>
+            </li>
+          ))}
+        </ul>
         <p>Итоговая цена зависит от состояния автомобиля, объема работ и нужного результата. До начала работ объясняем, из чего складывается расчет.</p>
       </article>
     </div>
@@ -160,7 +168,7 @@ const serviceSchema = {
             </div>
             <div>
               <span>Что сделали</span>
-              <p>{service.includes[0]}</p>
+              <p>{service.variants.map((variant) => variant.label).join(', ')}</p>
             </div>
             <div>
               <span>Результат</span>

@@ -29,8 +29,15 @@ const items = typeof limit === 'number' ? services.slice(0, limit) : services;
           <div class="service-card-copy">
             <h3>{service.name}</h3>
             <p>{service.teaser}</p>
+            <ul class="service-variant-list" aria-label={`Услуги в группе ${service.name}`}>
+              {service.variants.slice(0, 4).map((variant) => (
+                <li>
+                  <span>{variant.label}</span>
+                  <strong>{variant.priceFrom}</strong>
+                </li>
+              ))}
+            </ul>
             <div class="service-card-meta">
-              <span class="price-pill">{service.priceFrom}</span>
               <a href={`/uslugi/${service.slug}`} class="button button-inline">Подробнее</a>
             </div>
           </div>

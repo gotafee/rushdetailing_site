@@ -15,6 +15,14 @@ const {
   selectedService = '',
   compact = false,
 } = Astro.props;
+
+const serviceOptions = services.flatMap((service) =>
+  service.variants.map((variant) => ({
+    group: service.name,
+    label: variant.label,
+    value: `${service.name}: ${variant.label}`,
+  })),
+);
 ---
 
 <section class:list={['section', compact && 'section-compact']}>
@@ -50,6 +58,9 @@ const {
             <option value="">Выберите услугу</option>
             {services.map((service) => (
               <option value={service.name} selected={selectedService === service.name}>{service.name}</option>
+            ))}
+            {serviceOptions.map((option) => (
+              <option value={option.value} selected={selectedService === option.value}>{option.label}</option>
             ))}
           </select>
         </label>

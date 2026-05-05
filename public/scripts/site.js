@@ -33,8 +33,38 @@ if (navToggle && mobileNav) {
 const promoModal = document.querySelector('[data-promo-modal]');
 const promoModalOpen = document.querySelector('[data-promo-modal-open]');
 const promoModalClose = document.querySelector('[data-promo-modal-close]');
+const promoOffer = document.querySelector('[data-promo-offer]');
+const promoOfferClose = document.querySelector('[data-promo-offer-close]');
+const promoOfferDelay = 60_000;
 
 if (promoModal && promoModalOpen) {
+  let promoOfferTimer;
+
+  const showPromoOffer = () => {
+    if (!promoOffer) return;
+    promoOffer.hidden = false;
+    requestAnimationFrame(() => {
+      promoOffer.classList.add('is-visible');
+    });
+  };
+
+  const schedulePromoOffer = () => {
+    if (!promoOffer) return;
+    window.clearTimeout(promoOfferTimer);
+    promoOfferTimer = window.setTimeout(showPromoOffer, promoOfferDelay);
+  };
+
+  const hidePromoOffer = () => {
+    if (!promoOffer) return;
+    promoOffer.classList.remove('is-visible');
+    window.setTimeout(() => {
+      promoOffer.hidden = true;
+    }, 250);
+    schedulePromoOffer();
+  };
+
+  showPromoOffer();
+
   promoModalOpen.addEventListener('click', () => {
     if (typeof promoModal.showModal === 'function') {
       promoModal.showModal();
@@ -42,6 +72,8 @@ if (promoModal && promoModalOpen) {
       promoModal.setAttribute('open', '');
     }
   });
+
+  promoOfferClose?.addEventListener('click', hidePromoOffer);
 
   promoModalClose?.addEventListener('click', () => {
     promoModal.close();
