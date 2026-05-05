@@ -1,0 +1,725 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CTASection from '../components/CTASection.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import ContactSection from '../components/ContactSection.astro';
+import { siteConfig } from '../data/site';
+
+const promoHeroImage = {
+  src: '/images/hero-home.jpg',
+  width: 1672,
+  height: 941,
+};
+
+const beforeAfterImages = [
+  { src: '/images/poli_1.jpg', width: 1672, height: 941, alt: 'Результат полировки до и после - пример 1' },
+  { src: '/images/poli_2.jpg', width: 1672, height: 941, alt: 'Результат полировки до и после - пример 2' },
+  { src: '/images/poli_3.jpg', width: 1672, height: 941, alt: 'Результат полировки до и после - пример 3' },
+  { src: '/images/poli_4.jpg', width: 1448, height: 1086, alt: 'Результат полировки до и после - пример 4' },
+];
+
+const promoVideos = [
+  {
+    src: '/videos/rush_poli_ad_1.mp4',
+    poster: '/images/pol-work1.jpg',
+    title: 'Осмотр кузова перед полировкой',
+  },
+  {
+    src: '/videos/rush_poli_ad_2.mp4',
+    poster: '/images/pol-work2.jpg',
+    title: 'Процесс восстановления блеска',
+  },
+  {
+    src: '/videos/rush_poli_ad_3.mp4',
+    poster: '/images/pol-work3.jpg',
+    title: 'Финишная доводка деталей',
+  },
+  {
+    src: '/videos/rush_poli_ad_4.mp4',
+    poster: '/images/hero-polirovka-kuzova-avto.jpg',
+    title: 'Результат после полировки',
+  },
+];
+
+const offerFaq = [
+  {
+    question: 'На какую услугу действует скидка?',
+    answer:
+      'Акция действует на полировку кузова автомобиля в Rush Detailing. Итоговый объем работ и расчет зависят от состояния ЛКП.',
+  },
+  {
+    question: 'Скидка точно будет 50%?',
+    answer:
+      'Скидка — до 50%. Точный размер скидки фиксируем после осмотра или предварительной оценки по фото автомобиля.',
+  },
+  {
+    question: 'Можно ли сначала узнать расчет?',
+    answer:
+      'Да. Оставьте контакт, мы уточним автомобиль и задачу, после чего дадим предварительный ориентир по цене и срокам.',
+  },
+  {
+    question: 'Где находится студия?',
+    answer: `Rush Detailing находится в Москве: ${siteConfig.location.fullAddress}. Работаем ${siteConfig.location.openingHoursHuman.toLowerCase()}.`,
+  },
+];
+---
+
+<Layout
+  title="Акция от Rush Detailing — скидка до 50% на полировку кузова"
+  description="Скидка до 50% на полировку кузова в Rush Detailing в Москве. Вернем кузову глубину цвета, аккуратный блеск и ухоженный внешний вид."
+  pagePath="/akciya"
+  image={promoHeroImage.src}
+  showPromoOffer={false}
+  keywords={[
+    ...siteConfig.seo.defaultKeywords,
+    'акция детейлинг москва',
+    'скидка на детейлинг москва',
+    'скидка на полировку авто',
+    'скидка на полировку кузова',
+    'акция полировка кузова москва',
+  ]}
+  breadcrumbs={[
+    { label: 'Главная', href: '/' },
+    { label: 'Акция', href: '/akciya' },
+  ]}
+  faqSchema={offerFaq}
+>
+  <section class="promo-landing-hero">
+    <div class="container">
+      <div class="promo-landing-hero__card" style={`--promo-hero-image:url('${promoHeroImage.src}')`}>
+        <div class="promo-landing-hero__content">
+          <p class="eyebrow">Акция от Rush Detailing</p>
+          <h1>Скидка до <span class="accent-text">50%</span><br />на полировку кузова в Rush Detailing</h1>
+          <p class="hero-description">
+            Вернем кузову глубину цвета, уберем заметную тусклость и мелкие следы эксплуатации,
+            чтобы автомобиль выглядел свежее и ухоженнее.
+          </p>
+          <div class="promo-landing-hero__actions">
+            <a href="#lead-form" class="button button-primary" data-analytics="promo-landing-primary">Забрать скидку</a>
+            <a href={siteConfig.social.telegram} class="button button-secondary" target="_blank" rel="noreferrer">Написать в Telegram</a>
+          </div>
+        </div>
+
+        <form
+          class="lead-form promo-landing-form"
+          id="lead-form"
+          data-lead-form
+          data-endpoint={siteConfig.forms.endpoint}
+          data-submit-mode={siteConfig.forms.submitMode}
+          data-thank-you={siteConfig.forms.thankYouPath}
+        >
+          <div>
+            <p class="eyebrow">Заявка на акцию</p>
+            <h2>Закрепить скидку</h2>
+            <p>Оставьте контакт — уточним задачу и вернемся с расчетом по акции.</p>
+          </div>
+          <input type="hidden" name="service" value="Акция: Скидка до 50% на полировку кузова в Rush Detailing" />
+          <label>
+            <span>Ваше имя</span>
+            <input type="text" name="name" placeholder="Как к вам обращаться" required />
+          </label>
+          <label>
+            <span>Телефон или Telegram</span>
+            <input type="text" name="contact" placeholder="+7 или @username" required />
+          </label>
+          <button type="submit" class="button button-primary" data-analytics="promo-landing-submit">
+            Получить предложение
+          </button>
+          <p class="form-note">{siteConfig.forms.consentText}</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section promo-section">
+    <div class="container">
+      <div class="promo-offer-strip surface-card">
+        <div>
+          <p class="eyebrow">Условия акции</p>
+          <h2>Оставь заявку и получи скидку до 50% на полировку кузова своего авто</h2>
+          <p>
+            Размер скидки зависит от состояния кузова, объема полировки и нужного результата.
+            После осмотра или оценки по фото мы объясняем, какой формат работ подойдет,
+            называем итоговую стоимость и фиксируем скидку до начала работ.
+          </p>
+        </div>
+        <div class="promo-discount-panel">
+          <span>до</span>
+          <strong>50%</strong>
+          <small>после оценки автомобиля</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section promo-section">
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow">До / После</p>
+        <h2>Показываем реальную разницу после полировки</h2>
+        <p>Полировка помогает вернуть кузову глубину цвета, убрать визуальную усталость и сделать автомобиль заметно свежее.</p>
+      </div>
+      <div class="promo-before-after">
+        {beforeAfterImages.map((image, index) => (
+          <article class="surface-card promo-ba-card reveal">
+            <button
+              class="promo-ba-button"
+              type="button"
+              data-gallery-open
+              data-gallery-index={index}
+              aria-label={`Открыть фото ${index + 1} на весь экран`}
+            >
+              <img
+                src={image.src}
+                width={image.width}
+                height={image.height}
+                alt={image.alt}
+                loading="lazy"
+              />
+            </button>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <dialog class="promo-gallery" data-gallery-dialog aria-label="Просмотр фото до и после">
+    <button class="promo-gallery__close" type="button" data-gallery-close aria-label="Закрыть">×</button>
+    <button class="promo-gallery__arrow promo-gallery__arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">‹</button>
+    <figure class="promo-gallery__figure">
+      <img data-gallery-image src={beforeAfterImages[0].src} alt={beforeAfterImages[0].alt} width={beforeAfterImages[0].width} height={beforeAfterImages[0].height} />
+    </figure>
+    <button class="promo-gallery__arrow promo-gallery__arrow-next" type="button" data-gallery-next aria-label="Следующее фото">›</button>
+  </dialog>
+
+  <section class="section section-compact promo-section">
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow">Почему выбирают нас</p>
+        <h2>Полировка с заботой о вашем авто</h2>
+        <p>Подходим к каждому авто индивидуально: смотрим состояние кузова, подбираем решение и согласовываем цену до начала работ.</p>
+      </div>
+      <div class="promo-feature-grid">
+        {[
+          ['Сначала осмотр', 'Оцениваем состояние ЛКП и объясняем, какой результат реально получить.'],
+          ['Понятный расчет', 'До начала работ согласуем объем, скидку и итоговую стоимость.'],
+          ['Бережный подход', 'Работаем аккуратно с лакокрасочным покрытием и не предлагаем лишний объем.'],
+          ['Удобная запись', 'Можно оставить заявку на сайте или написать в Telegram для быстрой консультации.'],
+        ].map(([title, text]) => (
+          <article class="surface-card benefit-card reveal">
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-compact promo-section">
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow">Как мы работаем</p>
+        <h2>Как выглядит работа над автомобилем</h2>
+        <p>Показываем процесс без лишней постановки: осматриваем кузов, аккуратно работаем с лаком, доводим детали и проверяем результат перед выдачей авто.</p>
+      </div>
+      <div class="promo-video-grid">
+        {promoVideos.map((video) => (
+          <article class="surface-card promo-video-card reveal">
+            <video
+              data-promo-video
+              controls
+              playsinline
+              preload="metadata"
+              poster={video.poster}
+              width="1280"
+              height="720"
+              aria-label={video.title}
+            >
+              <source src={video.src} type="video/mp4" />
+            </video>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-compact promo-section">
+    <div class="container">
+      <div class="promo-urgency surface-card">
+        <div>
+          <p class="eyebrow">Почему не стоит откладывать</p>
+          <h2>Царапины, паутинка и мутный лак со временем убивают авто</h2>
+          <p>
+            Следы от моек, реагенты и дорожная грязь делают лак мутнее — полировка помогает вернуть аккуратный внешний вид.
+          </p>
+        </div>
+        <ul class="check-list">
+          <li>Мелкие царапины и следы от моек со временем становятся заметнее и портят внешний вид автомобиля.</li>
+          <li>Потускневший кузов делает даже ухоженное авто визуально старше и менее аккуратным.</li>
+          <li>Перед продажей свежий блеск кузова помогает создать лучшее первое впечатление и повышает привлекательность авто.</li>
+          <li>Своевременная полировка позволяет вернуть кузову аккуратный вид без лишних работ и затрат.</li>
+          <li>Акцию выгоднее зафиксировать заранее, чем откладывать до момента, когда свободных мест уже не останется.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    title="Хотите освежить кузов и закрепить скидку?"
+    text="Оставьте заявку — уточним автомобиль, подскажем подходящий формат полировки и рассчитаем стоимость с учетом акции."
+    primaryLabel="Оставить заявку"
+    primaryHref="#lead-form"
+  />
+
+  <FAQAccordion items={offerFaq} />
+  <ContactSection />
+
+  <script is:inline define:vars={{ galleryImages: beforeAfterImages }}>
+    const galleryDialog = document.querySelector('[data-gallery-dialog]');
+    const galleryImage = document.querySelector('[data-gallery-image]');
+    const galleryOpenButtons = document.querySelectorAll('[data-gallery-open]');
+    const galleryClose = document.querySelector('[data-gallery-close]');
+    const galleryPrev = document.querySelector('[data-gallery-prev]');
+    const galleryNext = document.querySelector('[data-gallery-next]');
+    const promoVideos = document.querySelectorAll('[data-promo-video]');
+    let galleryIndex = 0;
+
+    const updateGalleryImage = () => {
+      const image = galleryImages[galleryIndex];
+      if (!image || !galleryImage) return;
+      galleryImage.src = image.src;
+      galleryImage.alt = image.alt;
+      galleryImage.width = image.width;
+      galleryImage.height = image.height;
+    };
+
+    const openGallery = (index) => {
+      if (!galleryDialog) return;
+      galleryIndex = index;
+      updateGalleryImage();
+
+      if (typeof galleryDialog.showModal === 'function') {
+        galleryDialog.showModal();
+      } else {
+        galleryDialog.setAttribute('open', '');
+      }
+    };
+
+    const closeGallery = () => {
+      if (!galleryDialog) return;
+      galleryDialog.close();
+    };
+
+    const shiftGallery = (step) => {
+      galleryIndex = (galleryIndex + step + galleryImages.length) % galleryImages.length;
+      updateGalleryImage();
+    };
+
+    galleryOpenButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        openGallery(Number(button.getAttribute('data-gallery-index')) || 0);
+      });
+    });
+
+    galleryClose?.addEventListener('click', closeGallery);
+    galleryPrev?.addEventListener('click', () => shiftGallery(-1));
+    galleryNext?.addEventListener('click', () => shiftGallery(1));
+
+    galleryDialog?.addEventListener('click', (event) => {
+      if (event.target === galleryDialog) {
+        closeGallery();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (!galleryDialog?.open) return;
+
+      if (event.key === 'ArrowLeft') {
+        shiftGallery(-1);
+      }
+
+      if (event.key === 'ArrowRight') {
+        shiftGallery(1);
+      }
+    });
+
+    promoVideos.forEach((video) => {
+      video.addEventListener('play', () => {
+        promoVideos.forEach((otherVideo) => {
+          if (otherVideo !== video && !otherVideo.paused) {
+            otherVideo.pause();
+          }
+        });
+      });
+    });
+  </script>
+</Layout>
+
+<style>
+  .promo-landing-hero {
+    padding: 12px 0 clamp(34px, 5vw, 64px);
+  }
+
+  .promo-section {
+    padding-top: clamp(34px, 5vw, 64px);
+    padding-bottom: clamp(34px, 5vw, 64px);
+  }
+
+  .promo-landing-hero__card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 480px);
+    gap: 24px;
+    min-height: min(68vh, 680px);
+    padding: clamp(22px, 2.4vw, 38px);
+    overflow: hidden;
+    border: 1px solid rgba(217, 255, 0, 0.42);
+    border-radius: 36px;
+    background:
+      linear-gradient(90deg, rgba(0, 0, 0, 0.52) 0%, rgba(0, 0, 0, 0.34) 45%, rgba(0, 0, 0, 0.7) 100%),
+      var(--promo-hero-image) center/cover no-repeat;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .promo-landing-hero__content {
+    display: grid;
+    align-content: center;
+    gap: 18px;
+    max-width: 820px;
+  }
+
+  .promo-landing-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 8px;
+  }
+
+  .promo-landing-form {
+    align-self: center;
+    padding: 26px;
+    border: 1px solid rgba(217, 255, 0, 0.48);
+    border-radius: 24px;
+    background:
+      linear-gradient(135deg, rgba(217, 255, 0, 0.14), rgba(217, 255, 0, 0.02) 42%),
+      rgba(9, 10, 12, 0.94);
+    box-shadow: var(--glow);
+    backdrop-filter: blur(16px);
+  }
+
+  .promo-landing-form h2 {
+    font-size: clamp(1.55rem, 2.4vw, 2.2rem);
+  }
+
+  .promo-before-after {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 22px);
+  }
+
+  .promo-ba-card {
+    overflow: hidden;
+    padding: 8px;
+  }
+
+  .promo-ba-button {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 16px;
+    background: transparent;
+    cursor: zoom-in;
+    overflow: hidden;
+  }
+
+  .promo-ba-button img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 230px;
+    object-fit: cover;
+    border-radius: 16px;
+    display: block;
+    transition: transform 0.28s ease;
+  }
+
+  .promo-ba-button:hover img,
+  .promo-ba-button:focus-visible img {
+    transform: scale(1.025);
+  }
+
+  .promo-gallery {
+    width: min(94vw, 1480px);
+    max-width: none;
+    max-height: 94vh;
+    padding: 0;
+    color: var(--text);
+    background: transparent;
+    border: 0;
+    overflow: visible;
+  }
+
+  .promo-gallery::backdrop {
+    background: rgba(0, 0, 0, 0.86);
+    backdrop-filter: blur(8px);
+  }
+
+  .promo-gallery__figure {
+    margin: 0;
+    display: grid;
+    place-items: center;
+  }
+
+  .promo-gallery__figure img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 88vh;
+    border-radius: 14px;
+    object-fit: contain;
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.52);
+  }
+
+  .promo-gallery__close,
+  .promo-gallery__arrow {
+    position: fixed;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    color: rgba(255, 255, 255, 0.88);
+    background: rgba(5, 5, 5, 0.38);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease,
+      background 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .promo-gallery__close:hover,
+  .promo-gallery__arrow:hover,
+  .promo-gallery__close:focus-visible,
+  .promo-gallery__arrow:focus-visible {
+    color: var(--accent);
+    border-color: rgba(217, 255, 0, 0.54);
+    background: rgba(5, 5, 5, 0.68);
+    transform: scale(1.04);
+  }
+
+  .promo-gallery__close {
+    top: 22px;
+    right: 22px;
+    width: 42px;
+    height: 42px;
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .promo-gallery__arrow {
+    top: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 2.6rem;
+    line-height: 1;
+    transform: translateY(-50%);
+  }
+
+  .promo-gallery__arrow:hover,
+  .promo-gallery__arrow:focus-visible {
+    transform: translateY(-50%) scale(1.04);
+  }
+
+  .promo-gallery__arrow-prev {
+    left: 22px;
+  }
+
+  .promo-gallery__arrow-next {
+    right: 22px;
+  }
+
+  .promo-video-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(20px, 3vw, 30px);
+  }
+
+  .promo-video-card {
+    overflow: hidden;
+    padding: 10px;
+  }
+
+  .promo-video-card video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 16px;
+    background: #050505;
+    object-fit: cover;
+  }
+
+  .promo-urgency {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+    gap: clamp(24px, 4vw, 44px);
+    align-items: start;
+    padding: clamp(24px, 4vw, 38px);
+  }
+
+  .promo-urgency > div {
+    align-self: start;
+  }
+
+  .promo-urgency h2 {
+    max-width: 900px;
+  }
+
+  .promo-offer-strip {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+    gap: clamp(24px, 4vw, 44px);
+    align-items: center;
+    padding: clamp(24px, 4vw, 38px);
+  }
+
+  .promo-offer-strip h2 {
+    max-width: 760px;
+  }
+
+  .promo-discount-panel {
+    display: grid;
+    place-items: center;
+    min-height: 220px;
+    padding: 24px;
+    border: 1px solid rgba(217, 255, 0, 0.5);
+    border-radius: 24px;
+    background: rgba(217, 255, 0, 0.12);
+    box-shadow: var(--glow);
+    text-align: center;
+  }
+
+  .promo-discount-panel span,
+  .promo-discount-panel small {
+    color: var(--text);
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .promo-discount-panel strong {
+    color: var(--accent);
+    font-family: 'Montserrat', 'Manrope', system-ui, sans-serif;
+    font-size: clamp(4rem, 8vw, 7rem);
+    line-height: 0.9;
+    text-shadow: 0 0 24px rgba(217, 255, 0, 0.26);
+  }
+
+  .promo-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(20px, 3vw, 30px);
+  }
+
+  .promo-feature-grid .benefit-card {
+    min-height: 100%;
+  }
+
+  @media (max-width: 1180px) {
+    .promo-landing-hero__card,
+    .promo-video-grid,
+    .promo-urgency,
+    .promo-offer-strip,
+    .promo-feature-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .promo-before-after {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 780px) {
+    .promo-landing-hero__card,
+    .promo-before-after,
+    .promo-video-grid,
+    .promo-urgency,
+    .promo-offer-strip,
+    .promo-feature-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .promo-landing-hero__card {
+      min-height: auto;
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.58) 0%, rgba(0, 0, 0, 0.74) 100%),
+        var(--promo-hero-image) center/cover no-repeat;
+    }
+
+    .promo-landing-hero__content {
+      min-height: 430px;
+    }
+
+    .promo-landing-hero__actions {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .promo-landing-hero__actions .button,
+    .promo-landing-form .button {
+      width: 100%;
+      min-width: 0;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .promo-section {
+      padding-top: 30px;
+      padding-bottom: 30px;
+    }
+
+    .promo-ba-button img {
+      max-height: 210px;
+    }
+
+    .promo-gallery {
+      width: calc(100vw - 22px);
+    }
+
+    .promo-gallery__figure img {
+      max-height: 82vh;
+    }
+
+    .promo-gallery__close {
+      top: 14px;
+      right: 14px;
+      width: 38px;
+      height: 38px;
+    }
+
+    .promo-gallery__arrow {
+      width: 42px;
+      height: 42px;
+      font-size: 2.2rem;
+    }
+
+    .promo-gallery__arrow-prev {
+      left: 12px;
+    }
+
+    .promo-gallery__arrow-next {
+      right: 12px;
+    }
+
+    .promo-landing-form,
+    .promo-urgency,
+    .promo-offer-strip {
+      padding: 22px;
+    }
+
+    .promo-discount-panel {
+      min-height: 180px;
+    }
+  }
+</style>

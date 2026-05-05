@@ -22,6 +22,7 @@ interface Props {
   breadcrumbs?: BreadcrumbItem[];
   faqSchema?: Array<{ question: string; answer: string }>;
   extraSchemas?: object[];
+  showPromoOffer?: boolean;
 }
 
 const {
@@ -34,6 +35,7 @@ const {
   breadcrumbs = [],
   faqSchema = [],
   extraSchemas = [],
+  showPromoOffer = true,
 } = Astro.props;
 
 const normalizeSitePath = (path: string) => {
@@ -217,7 +219,7 @@ const yandexMetrikaScript = hasYandexMetrika
       <slot />
     </main>
     <Footer />
-    <PromoOffer />
+    {showPromoOffer && <PromoOffer />}
     <MobileCTA />
     <script src="/scripts/site.js" defer></script>
   </body>
