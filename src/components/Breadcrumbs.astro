@@ -9,13 +9,21 @@ interface Props {
 }
 
 const { items } = Astro.props;
+
+const normalizeInternalHref = (href: string) => {
+  if (href === '/' || href.startsWith('#') || /^[a-z][a-z0-9+.-]*:/i.test(href)) {
+    return href;
+  }
+
+  return href.endsWith('/') ? href : `${href}/`;
+};
 ---
 
 <nav class="breadcrumbs container" aria-label="Хлебные крошки">
   <ol>
     {items.map((item, index) => (
       <li>
-        {index === items.length - 1 ? <span>{item.label}</span> : <a href={item.href}>{item.label}</a>}
+        {index === items.length - 1 ? <span>{item.label}</span> : <a href={normalizeInternalHref(item.href)}>{item.label}</a>}
       </li>
     ))}
   </ol>

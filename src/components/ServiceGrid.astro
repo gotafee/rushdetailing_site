@@ -6,14 +6,17 @@ interface Props {
   limit?: number;
   title?: string;
   description?: string;
+  excludeSlug?: string;
 }
 
 const {
   limit,
   title = 'Услуги нашего детейлинга',
   description = 'От полировки и керамики до защитной пленки и химчистки — подбираем услуги под состояние автомобиля, задачу владельца и желаемый результат.',
+  excludeSlug,
 } = Astro.props;
-const items = typeof limit === 'number' ? services.slice(0, limit) : services;
+const visibleServices = excludeSlug ? services.filter((service) => service.slug !== excludeSlug) : services;
+const items = typeof limit === 'number' ? visibleServices.slice(0, limit) : visibleServices;
 ---
 
 <section class="section">
@@ -38,7 +41,7 @@ const items = typeof limit === 'number' ? services.slice(0, limit) : services;
               ))}
             </ul>
             <div class="service-card-meta">
-              <a href={`/uslugi/${service.slug}`} class="button button-inline">Подробнее</a>
+              <a href={`/uslugi/${service.slug}/`} class="button button-inline">Подробнее</a>
             </div>
           </div>
           <div class="service-card-media">

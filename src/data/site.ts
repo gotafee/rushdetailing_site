@@ -81,12 +81,12 @@ export const siteConfig = {
       'Нажимая кнопку, вы соглашаетесь с обработкой персональных данных и политикой конфиденциальности.',
   },
   navigation: [
-    { label: 'Услуги', href: '/uslugi' },
-    { label: 'Работы', href: '/kejsy' },
-    { label: 'Цены', href: '/ceny' },
-    { label: 'О студии', href: '/o-studii' },
-    { label: 'FAQ', href: '/faq' },
-    { label: 'Контакты', href: '/kontakty' },
+    { label: 'Услуги', href: '/uslugi/' },
+    { label: 'Работы', href: '/kejsy/' },
+    { label: 'Цены', href: '/ceny/' },
+    { label: 'О студии', href: '/o-studii/' },
+    { label: 'FAQ', href: '/faq/' },
+    { label: 'Контакты', href: '/kontakty/' },
   ],
   reviews: [
     {
