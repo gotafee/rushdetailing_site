@@ -1698,10 +1698,10 @@ li {
   }
 
   .promo-offer__close {
-    top: -8px;
-    right: -6px;
-    width: 26px;
-    height: 26px;
+    top: 5px;
+    right: 7px;
+    width: 22px;
+    height: 22px;
     font-size: 1rem;
   }
 
