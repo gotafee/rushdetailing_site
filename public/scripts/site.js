@@ -30,6 +30,28 @@ if (navToggle && mobileNav) {
   });
 }
 
+document.querySelectorAll('[data-price-card-link]').forEach((card) => {
+  const href = card.getAttribute('data-price-card-link');
+  if (!href) return;
+
+  const goToService = () => {
+    window.location.href = href;
+  };
+
+  card.addEventListener('click', (event) => {
+    if (event.target.closest('a, button')) return;
+    goToService();
+  });
+
+  card.addEventListener('keydown', (event) => {
+    if (event.target.closest('a, button')) return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      goToService();
+    }
+  });
+});
+
 const promoModal = document.querySelector('[data-promo-modal]');
 const promoModalOpen = document.querySelector('[data-promo-modal-open]');
 const promoModalClose = document.querySelector('[data-promo-modal-close]');
