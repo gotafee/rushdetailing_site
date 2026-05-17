@@ -53,13 +53,13 @@ document.querySelectorAll('[data-price-card-link]').forEach((card) => {
 });
 
 const promoModal = document.querySelector('[data-promo-modal]');
-const promoModalOpen = document.querySelector('[data-promo-modal-open]');
+const promoModalOpenButtons = document.querySelectorAll('[data-promo-modal-open], [data-lead-popup-open]');
 const promoModalClose = document.querySelector('[data-promo-modal-close]');
 const promoOffer = document.querySelector('[data-promo-offer]');
 const promoOfferClose = document.querySelector('[data-promo-offer-close]');
 const promoOfferDelay = 60_000;
 
-if (promoModal && promoModalOpen) {
+if (promoModal) {
   let promoOfferTimer;
 
   const showPromoOffer = () => {
@@ -85,14 +85,21 @@ if (promoModal && promoModalOpen) {
     schedulePromoOffer();
   };
 
-  showPromoOffer();
-
-  promoModalOpen.addEventListener('click', () => {
+  const openPromoModal = () => {
     if (typeof promoModal.showModal === 'function') {
       promoModal.showModal();
     } else {
       promoModal.setAttribute('open', '');
     }
+  };
+
+  showPromoOffer();
+
+  promoModalOpenButtons.forEach((button) => {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      openPromoModal();
+    });
   });
 
   promoOfferClose?.addEventListener('click', hidePromoOffer);

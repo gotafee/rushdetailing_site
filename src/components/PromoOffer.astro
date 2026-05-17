@@ -1,19 +1,29 @@
 ---
 import { siteConfig } from '../data/site';
+
+interface Props {
+  showOffer?: boolean;
+}
+
+const { showOffer = true } = Astro.props;
 ---
 
-<aside class="promo-offer" aria-label="Промоакция" data-promo-offer hidden>
-  <button class="promo-offer__close" type="button" aria-label="Закрыть промоакцию" data-promo-offer-close>×</button>
-  <img class="promo-offer__badge" src="/images/promo-discount.png" alt="Скидка до 50%" />
-  <div class="promo-offer__copy">
-    <p>Первый визит</p>
-    <strong>Скидка до 50% на полировку авто</strong>
-    <span>Для новых клиентов Rush Detailing</span>
-  </div>
-  <button class="promo-offer__link" type="button" data-analytics="promo-offer" data-promo-modal-open>
-    Забрать скидку
-  </button>
-</aside>
+{
+  showOffer && (
+    <aside class="promo-offer" aria-label="Промоакция" data-promo-offer hidden>
+      <button class="promo-offer__close" type="button" aria-label="Закрыть промоакцию" data-promo-offer-close>×</button>
+      <img class="promo-offer__badge" src="/images/promo-discount.png" alt="Скидка до 50%" />
+      <div class="promo-offer__copy">
+        <p>Акция от Rush Detailing</p>
+        <strong>Скидка до 50% на полировку авто</strong>
+        <span>Для новых клиентов Rush Detailing</span>
+      </div>
+      <button class="promo-offer__link" type="button" data-analytics="promo-offer" data-promo-modal-open>
+        Забрать скидку
+      </button>
+    </aside>
+  )
+}
 
 <dialog class="promo-modal" data-promo-modal aria-labelledby="promo-modal-title">
   <div class="promo-modal__panel">
@@ -22,8 +32,8 @@ import { siteConfig } from '../data/site';
       <img class="promo-modal__badge" src="/images/promo-discount.png" alt="" />
       <div>
         <p class="eyebrow">Промоакция</p>
-        <h2 id="promo-modal-title">Скидка до 50% на полировку авто</h2>
-        <p>Оставьте контакт, и мы закрепим акцию на полировку авто в Rush Detailing.</p>
+        <h2 id="promo-modal-title">Зафиксируйте скидку, оставив заявку</h2>
+        <p>Оставьте контакт, и мы закрепим для вас акцию на полировку авто в Rush Detailing.</p>
       </div>
     </div>
     <form

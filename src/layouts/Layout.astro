@@ -221,7 +221,7 @@ const yandexMetrikaScript = hasYandexMetrika
       <slot />
     </main>
     <Footer />
-    {showPromoOffer && <PromoOffer />}
+    <PromoOffer showOffer={showPromoOffer} />
     <MobileCTA />
     <script src="/scripts/site.js" defer></script>
   </body>

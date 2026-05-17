@@ -16,6 +16,8 @@ const {
   secondaryLabel = 'Написать в Telegram',
   secondaryHref = 'https://t.me/rushdetailing',
 } = Astro.props;
+
+const opensLeadPopup = primaryLabel.trim().toLowerCase() === 'оставить заявку';
 ---
 
 <section class="section section-compact">
@@ -26,7 +28,7 @@ const {
         <p set:html={text}></p>
       </div>
       <div class="cta-actions">
-        <a href={primaryHref} class="button button-primary">{primaryLabel}</a>
+        <a href={primaryHref} class="button button-primary" data-lead-popup-open={opensLeadPopup ? 'true' : undefined}>{primaryLabel}</a>
         <a href={secondaryHref} class="button button-secondary">{secondaryLabel}</a>
       </div>
     </div>
