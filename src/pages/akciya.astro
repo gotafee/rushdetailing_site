@@ -299,10 +299,11 @@ const offerFaq = [
         data-lead-form
         data-endpoint={siteConfig.forms.endpoint}
         data-submit-mode={siteConfig.forms.submitMode}
-        data-thank-you={siteConfig.forms.thankYouPath}
+        data-thank-you="/spasibo-tg/"
       >
         <input type="hidden" name="name" value="Заявка из Telegram popup" />
         <input type="hidden" name="service" value="Акция: клиент просит написать в Telegram по скидке на полировку авто" />
+        <input type="hidden" name="leadType" value="telegram_callback" />
         <label>
           <span>Ваш Telegram</span>
           <input type="text" name="contact" placeholder="@username" required />

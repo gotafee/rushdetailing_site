@@ -206,6 +206,7 @@ document.querySelectorAll('[data-lead-form]').forEach((form) => {
     const name = form.querySelector('[name="name"]');
     const contact = form.querySelector('[name="contact"]');
     const service = form.querySelector('[name="service"]');
+    const leadType = form.querySelector('[name="leadType"]');
     const thankYou = form.getAttribute('data-thank-you') || '/spasibo/';
     const endpoint = form.getAttribute('data-endpoint');
     const submitMode = form.getAttribute('data-submit-mode');
@@ -219,6 +220,7 @@ document.querySelectorAll('[data-lead-form]').forEach((form) => {
       name: name.value.trim(),
       contact: contact.value.trim(),
       service: service.value.trim(),
+      leadType: leadType?.value.trim() || '',
       source: window.location.pathname,
     };
 

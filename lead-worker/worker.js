@@ -15,6 +15,18 @@ const formatLeadText = (lead) => {
   const service = lead.service || 'Не выбрана';
   const source = lead.source || 'Не указана';
 
+  if (lead.leadType === 'telegram_callback') {
+    return [
+      'Новая заявка с сайта Rush Detailing',
+      '',
+      'Нужно отписать в TG:',
+      `<b>${escapeHtml(lead.contact)}</b>`,
+      '',
+      `Услуга: <b>${escapeHtml(service)}</b>`,
+      `Страница: <b>${escapeHtml(source)}</b>`,
+    ].join('\n');
+  }
+
   return [
     'Новая заявка с сайта Rush Detailing',
     '',
@@ -26,16 +38,25 @@ const formatLeadText = (lead) => {
 };
 
 const getTelegramChatIds = (env) =>
-  String(env.TELEGRAM_CHAT_IDS || env.TELEGRAM_CHAT_ID || '')
+  [
+    env.TELEGRAM_CHAT_IDS,
+    env.TELEGRAM_CHAT_ID,
+    env.TELEGRAM_CLIENT_CHAT_ID,
+  ]
+    .filter(Boolean)
+    .join(',')
     .split(',')
     .map((chatId) => chatId.trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .filter((chatId, index, chatIds) => chatIds.indexOf(chatId) === index);
 
 const sendTelegram = async (env, text) => {
   const chatIds = getTelegramChatIds(env);
-  if (!env.TELEGRAM_BOT_TOKEN || chatIds.length === 0) return;
+  if (!env.TELEGRAM_BOT_TOKEN || chatIds.length === 0) {
+    return { delivered: 0, failed: 0 };
+  }
 
-  await Promise.all(
+  const results = await Promise.allSettled(
     chatIds.map(async (chatId) => {
       const response = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
         method: 'POST',
@@ -53,6 +74,18 @@ const sendTelegram = async (env, text) => {
       }
     }),
   );
+
+  const failedResults = results.filter((result) => result.status === 'rejected');
+  if (failedResults.length) {
+    failedResults.forEach((result) => console.error(result.reason));
+  }
+
+  const delivered = results.length - failedResults.length;
+  if (delivered === 0) {
+    throw new Error('Telegram delivery failed for all recipients');
+  }
+
+  return { delivered, failed: failedResults.length };
 };
 
 export default {
@@ -81,17 +114,17 @@ export default {
       contact: String(lead.contact).trim().slice(0, 160),
       service: String(lead.service || '').trim().slice(0, 180),
       source: String(lead.source || '').trim().slice(0, 240),
+      leadType: String(lead.leadType || '').trim().slice(0, 80),
     };
 
     const text = formatLeadText(normalizedLead);
 
     try {
-      await sendTelegram(env, text);
+      const delivery = await sendTelegram(env, text);
+      return Response.json({ ok: true, delivery }, { headers: corsHeaders });
     } catch (error) {
       console.error(error);
       return Response.json({ ok: false, error: 'Lead delivery failed' }, { status: 502, headers: corsHeaders });
     }
-
-    return Response.json({ ok: true }, { headers: corsHeaders });
   },
 };
