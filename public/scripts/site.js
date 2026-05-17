@@ -115,6 +115,37 @@ if (promoModal) {
   });
 }
 
+const telegramModal = document.querySelector('[data-telegram-modal]');
+const telegramModalOpenButtons = document.querySelectorAll('[data-telegram-modal-open]');
+const telegramModalClose = document.querySelector('[data-telegram-modal-close]');
+
+if (telegramModal) {
+  const openTelegramModal = () => {
+    if (typeof telegramModal.showModal === 'function') {
+      telegramModal.showModal();
+    } else {
+      telegramModal.setAttribute('open', '');
+    }
+  };
+
+  telegramModalOpenButtons.forEach((button) => {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      openTelegramModal();
+    });
+  });
+
+  telegramModalClose?.addEventListener('click', () => {
+    telegramModal.close();
+  });
+
+  telegramModal.addEventListener('click', (event) => {
+    if (event.target === telegramModal) {
+      telegramModal.close();
+    }
+  });
+}
+
 document.querySelectorAll('[data-case-filters]').forEach((filtersWrap) => {
   const buttons = filtersWrap.querySelectorAll('[data-filter]');
   const grid = document.querySelector('[data-case-grid]');
