@@ -1212,6 +1212,29 @@ li {
   gap: 14px;
 }
 
+.telegram-nudge-modal {
+  width: min(460px, calc(100vw - 28px));
+}
+
+.telegram-nudge-modal__panel {
+  display: grid;
+  gap: 20px;
+}
+
+.telegram-nudge-modal__copy {
+  display: grid;
+  gap: 10px;
+  padding-right: 40px;
+}
+
+.telegram-nudge-modal__copy h2 {
+  font-size: clamp(1.65rem, 4vw, 2.35rem);
+}
+
+.telegram-nudge-modal__copy p {
+  margin: 0;
+}
+
 .thank-you-card {
   max-width: 920px;
   margin: 0 auto;

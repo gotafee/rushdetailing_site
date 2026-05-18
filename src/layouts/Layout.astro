@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileCTA from '../components/MobileCTA.astro';
 import PromoOffer from '../components/PromoOffer.astro';
+import TelegramLeadModals from '../components/TelegramLeadModals.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { siteConfig } from '../data/site';
 
@@ -222,7 +223,8 @@ const yandexMetrikaScript = hasYandexMetrika
     </main>
     <Footer />
     <PromoOffer showOffer={showPromoOffer} />
+    {!noindex && <TelegramLeadModals />}
     <MobileCTA />
-    <script src="/scripts/site.js?v=20260518-tg-nudge" defer></script>
+    <script src="/scripts/site.js?v=20260518-tg-nudge-all" defer></script>
   </body>
 </html>

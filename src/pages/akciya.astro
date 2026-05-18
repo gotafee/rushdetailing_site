@@ -283,53 +283,6 @@ const offerFaq = [
   <FAQAccordion items={offerFaq} />
   <ContactSection />
 
-  <dialog class="promo-modal" data-telegram-modal aria-labelledby="telegram-modal-title">
-    <div class="promo-modal__panel">
-      <button class="promo-modal__close" type="button" aria-label="Закрыть" data-telegram-modal-close>×</button>
-      <div class="promo-modal__head">
-        <img class="promo-modal__badge" src="/images/promo-discount.png" alt="" />
-        <div>
-          <p class="eyebrow">Telegram</p>
-          <h2 id="telegram-modal-title">Оставьте Telegram, мы напишем сами</h2>
-          <p>Зафиксируем скидку и уточним детали по полировке прямо в Telegram.</p>
-        </div>
-      </div>
-      <form
-        class="lead-form promo-modal__form"
-        data-lead-form
-        data-endpoint={siteConfig.forms.endpoint}
-        data-submit-mode={siteConfig.forms.submitMode}
-        data-thank-you="/spasibo-tg/"
-      >
-        <input type="hidden" name="name" value="Заявка из Telegram popup" />
-        <input type="hidden" name="service" value="Акция: клиент просит написать в Telegram по скидке на полировку авто" />
-        <input type="hidden" name="leadType" value="telegram_callback" />
-        <label>
-          <span>Ваш Telegram</span>
-          <input type="text" name="contact" placeholder="@username" required />
-        </label>
-        <button type="submit" class="button button-primary" data-analytics="telegram-form-submit">
-          Жду сообщение в TG
-        </button>
-        <p class="form-note">{siteConfig.forms.consentText}</p>
-      </form>
-    </div>
-  </dialog>
-
-  <dialog class="promo-modal telegram-nudge-modal" data-telegram-nudge-modal aria-labelledby="telegram-nudge-title">
-    <div class="promo-modal__panel telegram-nudge-modal__panel">
-      <button class="promo-modal__close" type="button" aria-label="Закрыть" data-telegram-nudge-close>×</button>
-      <div class="telegram-nudge-modal__copy">
-        <p class="eyebrow">Акция в Telegram</p>
-        <h2 id="telegram-nudge-title">Зафиксировать скидку в TG?</h2>
-        <p>Оставьте username, и мы сами напишем вам в Telegram по акции на полировку.</p>
-      </div>
-      <button type="button" class="button button-primary" data-telegram-nudge-action>
-        Получить скидку в TG
-      </button>
-    </div>
-  </dialog>
-
   <script is:inline define:vars={{ galleryImages: beforeAfterImages }}>
     const galleryDialog = document.querySelector('[data-gallery-dialog]');
     const galleryImage = document.querySelector('[data-gallery-image]');
@@ -468,29 +421,6 @@ const offerFaq = [
 
   .promo-landing-hero__actions .button-secondary {
     color: #ffffff;
-  }
-
-  .telegram-nudge-modal {
-    width: min(460px, calc(100vw - 28px));
-  }
-
-  .telegram-nudge-modal__panel {
-    display: grid;
-    gap: 20px;
-  }
-
-  .telegram-nudge-modal__copy {
-    display: grid;
-    gap: 10px;
-    padding-right: 40px;
-  }
-
-  .telegram-nudge-modal__copy h2 {
-    font-size: clamp(1.65rem, 4vw, 2.35rem);
-  }
-
-  .telegram-nudge-modal__copy p {
-    margin: 0;
   }
 
   .promo-landing-form {
