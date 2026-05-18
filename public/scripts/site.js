@@ -121,7 +121,7 @@ const telegramModalClose = document.querySelector('[data-telegram-modal-close]')
 const telegramNudgeModal = document.querySelector('[data-telegram-nudge-modal]');
 const telegramNudgeClose = document.querySelector('[data-telegram-nudge-close]');
 const telegramNudgeAction = document.querySelector('[data-telegram-nudge-action]');
-const telegramNudgeInitialDelay = 10_000;
+const telegramNudgeInitialDelay = 7_000;
 const telegramNudgeRepeatDelay = 40_000;
 let telegramNudgeTimer;
 
