@@ -315,7 +315,12 @@ if (mapNode) {
         controls: ['zoomControl', 'fullscreenControl'],
       });
 
-      map.behaviors.disable('scrollZoom');
+      const supportsPreciseHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      if (supportsPreciseHover) {
+        map.behaviors.enable('scrollZoom');
+      } else {
+        map.behaviors.disable('scrollZoom');
+      }
 
       window.ymaps.geocode(address).then((result) => {
         const firstGeoObject = result.geoObjects.get(0);
