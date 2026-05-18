@@ -118,16 +118,24 @@ if (promoModal) {
 const telegramModal = document.querySelector('[data-telegram-modal]');
 const telegramModalOpenButtons = document.querySelectorAll('[data-telegram-modal-open]');
 const telegramModalClose = document.querySelector('[data-telegram-modal-close]');
+const telegramNudgeModal = document.querySelector('[data-telegram-nudge-modal]');
+const telegramNudgeClose = document.querySelector('[data-telegram-nudge-close]');
+const telegramNudgeAction = document.querySelector('[data-telegram-nudge-action]');
+const telegramNudgeInitialDelay = 10_000;
+const telegramNudgeRepeatDelay = 60_000;
+let telegramNudgeTimer;
+
+const openTelegramModal = () => {
+  if (!telegramModal) return;
+
+  if (typeof telegramModal.showModal === 'function') {
+    telegramModal.showModal();
+  } else {
+    telegramModal.setAttribute('open', '');
+  }
+};
 
 if (telegramModal) {
-  const openTelegramModal = () => {
-    if (typeof telegramModal.showModal === 'function') {
-      telegramModal.showModal();
-    } else {
-      telegramModal.setAttribute('open', '');
-    }
-  };
-
   telegramModalOpenButtons.forEach((button) => {
     button.addEventListener('click', (event) => {
       event.preventDefault();
@@ -144,6 +152,55 @@ if (telegramModal) {
       telegramModal.close();
     }
   });
+}
+
+if (telegramNudgeModal) {
+  const scheduleTelegramNudge = (delay) => {
+    window.clearTimeout(telegramNudgeTimer);
+    telegramNudgeTimer = window.setTimeout(() => {
+      if (document.querySelector('dialog[open]')) {
+        scheduleTelegramNudge(telegramNudgeRepeatDelay);
+        return;
+      }
+
+      if (typeof telegramNudgeModal.showModal === 'function') {
+        telegramNudgeModal.showModal();
+      } else {
+        telegramNudgeModal.setAttribute('open', '');
+      }
+    }, delay);
+  };
+
+  const closeTelegramNudge = () => {
+    if (telegramNudgeModal.open) {
+      telegramNudgeModal.close();
+    } else {
+      telegramNudgeModal.removeAttribute('open');
+    }
+
+    scheduleTelegramNudge(telegramNudgeRepeatDelay);
+  };
+
+  telegramNudgeClose?.addEventListener('click', closeTelegramNudge);
+
+  telegramNudgeModal.addEventListener('click', (event) => {
+    if (event.target === telegramNudgeModal) {
+      closeTelegramNudge();
+    }
+  });
+
+  telegramNudgeAction?.addEventListener('click', () => {
+    window.clearTimeout(telegramNudgeTimer);
+    if (telegramNudgeModal.open) {
+      telegramNudgeModal.close();
+    } else {
+      telegramNudgeModal.removeAttribute('open');
+    }
+
+    openTelegramModal();
+  });
+
+  scheduleTelegramNudge(telegramNudgeInitialDelay);
 }
 
 document.querySelectorAll('[data-case-filters]').forEach((filtersWrap) => {

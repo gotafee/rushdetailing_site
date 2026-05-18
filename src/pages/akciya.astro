@@ -316,6 +316,20 @@ const offerFaq = [
     </div>
   </dialog>
 
+  <dialog class="promo-modal telegram-nudge-modal" data-telegram-nudge-modal aria-labelledby="telegram-nudge-title">
+    <div class="promo-modal__panel telegram-nudge-modal__panel">
+      <button class="promo-modal__close" type="button" aria-label="Закрыть" data-telegram-nudge-close>×</button>
+      <div class="telegram-nudge-modal__copy">
+        <p class="eyebrow">Акция в Telegram</p>
+        <h2 id="telegram-nudge-title">Зафиксировать скидку в TG?</h2>
+        <p>Оставьте username, и мы сами напишем вам в Telegram по акции на полировку.</p>
+      </div>
+      <button type="button" class="button button-primary" data-telegram-nudge-action>
+        Получить скидку в TG
+      </button>
+    </div>
+  </dialog>
+
   <script is:inline define:vars={{ galleryImages: beforeAfterImages }}>
     const galleryDialog = document.querySelector('[data-gallery-dialog]');
     const galleryImage = document.querySelector('[data-gallery-image]');
@@ -454,6 +468,29 @@ const offerFaq = [
 
   .promo-landing-hero__actions .button-secondary {
     color: #ffffff;
+  }
+
+  .telegram-nudge-modal {
+    width: min(460px, calc(100vw - 28px));
+  }
+
+  .telegram-nudge-modal__panel {
+    display: grid;
+    gap: 20px;
+  }
+
+  .telegram-nudge-modal__copy {
+    display: grid;
+    gap: 10px;
+    padding-right: 40px;
+  }
+
+  .telegram-nudge-modal__copy h2 {
+    font-size: clamp(1.65rem, 4vw, 2.35rem);
+  }
+
+  .telegram-nudge-modal__copy p {
+    margin: 0;
   }
 
   .promo-landing-form {
