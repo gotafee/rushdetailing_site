@@ -118,22 +118,38 @@ if (promoModal) {
 const telegramModal = document.querySelector('[data-telegram-modal]');
 const telegramModalOpenButtons = document.querySelectorAll('[data-telegram-modal-open]');
 const telegramModalClose = document.querySelector('[data-telegram-modal-close]');
+const discountContactModal = document.querySelector('[data-discount-contact-modal]');
+const discountContactModalOpenButtons = document.querySelectorAll('[data-discount-contact-modal-open]');
+const discountContactModalClose = document.querySelector('[data-discount-contact-modal-close]');
 const telegramNudgeModal = document.querySelector('[data-telegram-nudge-modal]');
 const telegramNudgeClose = document.querySelector('[data-telegram-nudge-close]');
-const telegramNudgeAction = document.querySelector('[data-telegram-nudge-action]');
-const telegramNudgeInitialDelay = 7_000;
+const discountContactNudgeAction = document.querySelector('[data-discount-contact-nudge-action]');
+const telegramNudgeInitialDelay = 3_500;
 const telegramNudgeRepeatDelay = 40_000;
 let telegramNudgeTimer;
 
-const openTelegramModal = () => {
-  if (!telegramModal) return;
+const openDialog = (dialog) => {
+  if (!dialog) return;
 
-  if (typeof telegramModal.showModal === 'function') {
-    telegramModal.showModal();
+  if (typeof dialog.showModal === 'function') {
+    dialog.showModal();
   } else {
-    telegramModal.setAttribute('open', '');
+    dialog.setAttribute('open', '');
   }
 };
+
+const closeDialog = (dialog) => {
+  if (!dialog) return;
+
+  if (dialog.open) {
+    dialog.close();
+  } else {
+    dialog.removeAttribute('open');
+  }
+};
+
+const openTelegramModal = () => openDialog(telegramModal);
+const openDiscountContactModal = () => openDialog(discountContactModal);
 
 if (telegramModal) {
   telegramModalOpenButtons.forEach((button) => {
@@ -150,6 +166,25 @@ if (telegramModal) {
   telegramModal.addEventListener('click', (event) => {
     if (event.target === telegramModal) {
       telegramModal.close();
+    }
+  });
+}
+
+if (discountContactModal) {
+  discountContactModalOpenButtons.forEach((button) => {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      openDiscountContactModal();
+    });
+  });
+
+  discountContactModalClose?.addEventListener('click', () => {
+    closeDialog(discountContactModal);
+  });
+
+  discountContactModal.addEventListener('click', (event) => {
+    if (event.target === discountContactModal) {
+      closeDialog(discountContactModal);
     }
   });
 }
@@ -172,12 +207,7 @@ if (telegramNudgeModal) {
   };
 
   const closeTelegramNudge = () => {
-    if (telegramNudgeModal.open) {
-      telegramNudgeModal.close();
-    } else {
-      telegramNudgeModal.removeAttribute('open');
-    }
-
+    closeDialog(telegramNudgeModal);
     scheduleTelegramNudge(telegramNudgeRepeatDelay);
   };
 
@@ -189,15 +219,10 @@ if (telegramNudgeModal) {
     }
   });
 
-  telegramNudgeAction?.addEventListener('click', () => {
+  discountContactNudgeAction?.addEventListener('click', () => {
     window.clearTimeout(telegramNudgeTimer);
-    if (telegramNudgeModal.open) {
-      telegramNudgeModal.close();
-    } else {
-      telegramNudgeModal.removeAttribute('open');
-    }
-
-    openTelegramModal();
+    closeDialog(telegramNudgeModal);
+    openDiscountContactModal();
   });
 
   scheduleTelegramNudge(telegramNudgeInitialDelay);

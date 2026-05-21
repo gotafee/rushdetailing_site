@@ -1147,6 +1147,8 @@ li {
   color: var(--text);
   background: transparent;
   border: 0;
+  overflow: visible;
+  border-radius: 34px;
 }
 
 .promo-modal::backdrop {
@@ -1161,8 +1163,10 @@ li {
     linear-gradient(135deg, rgba(217, 255, 0, 0.14), rgba(217, 255, 0, 0.02) 42%),
     #090A0C;
   border: 1px solid rgba(217, 255, 0, 0.58);
-  border-radius: 24px;
+  border-radius: 34px;
   box-shadow: 0 26px 70px rgba(0, 0, 0, 0.58), var(--glow);
+  overflow: hidden;
+  clip-path: inset(0 round 34px);
 }
 
 .promo-modal__close {
@@ -1214,11 +1218,27 @@ li {
 
 .telegram-nudge-modal {
   width: min(460px, calc(100vw - 28px));
+  border-radius: 34px;
 }
 
 .telegram-nudge-modal__panel {
   display: grid;
   gap: 20px;
+}
+
+.telegram-nudge-modal__actions {
+  display: grid;
+  gap: 12px;
+}
+
+.telegram-nudge-modal__actions .button {
+  width: 100%;
+  white-space: normal;
+  text-align: center;
+}
+
+.telegram-nudge-modal__actions .button-secondary {
+  color: #ffffff;
 }
 
 .telegram-nudge-modal__copy {

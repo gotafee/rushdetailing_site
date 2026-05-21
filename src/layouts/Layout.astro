@@ -152,6 +152,8 @@ const webpageSchema = {
 };
 
 const schemas = [orgSchema, webpageSchema, breadcrumbSchema, faqStructuredSchema, ...extraSchemas].filter(Boolean);
+const normalizedPagePath = normalizeSitePath(pagePath);
+const isThankYouPage = ['/spasibo/', '/spasibo-tg/'].includes(normalizedPagePath);
 const yandexMetrikaCounterId = Number(siteConfig.analytics.yandexMetrikaId);
 const hasYandexMetrika = Number.isFinite(yandexMetrikaCounterId) && yandexMetrikaCounterId > 0;
 const yandexMetrikaScript = hasYandexMetrika
@@ -223,8 +225,8 @@ const yandexMetrikaScript = hasYandexMetrika
     </main>
     <Footer />
     <PromoOffer showOffer={showPromoOffer} />
-    {!noindex && <TelegramLeadModals />}
+    {!isThankYouPage && <TelegramLeadModals />}
     <MobileCTA />
-    <script src="/scripts/site.js?v=20260518-tg-nudge-7s" defer></script>
+    <script src="/scripts/site.js?v=20260521-discount-popup" defer></script>
   </body>
 </html>
