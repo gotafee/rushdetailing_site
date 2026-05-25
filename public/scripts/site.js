@@ -292,7 +292,7 @@ const loadSmartCaptcha = () => {
 
   smartCaptchaScriptPromise = new Promise((resolve, reject) => {
     const script = document.createElement('script');
-    script.src = 'https://smartcaptcha.yandexcloud.net/captcha.js?render=onload';
+    script.src = 'https://smartcaptcha.cloud.yandex.ru/captcha.js?render=onload';
     script.async = true;
     script.defer = true;
     script.onload = () => resolve(Boolean(window.smartCaptcha));
@@ -315,7 +315,6 @@ const getSmartCaptchaToken = async (form) => {
   if (!container) {
     container = document.createElement('div');
     container.setAttribute('data-smartcaptcha-container', '');
-    container.hidden = true;
     form.append(container);
   }
 
