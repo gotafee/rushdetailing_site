@@ -77,6 +77,7 @@ export const siteConfig = {
     endpoint: 'https://rushdetailing-leads.bakeev19karim1207.workers.dev',
     submitMode: 'endpoint',
     thankYouPath: '/spasibo/',
+    smartCaptchaSiteKey: import.meta.env.PUBLIC_YANDEX_SMARTCAPTCHA_SITEKEY || 'bpntsdbpv14f6ojmrcg1',
     consentText:
       'Нажимая кнопку, вы соглашаетесь с обработкой персональных данных и политикой конфиденциальности.',
   },

@@ -119,7 +119,7 @@ const offerFaq = [
           <input type="hidden" name="service" value="Акция: Скидка до 50% на полировку авто в Rush Detailing" />
           <label>
             <span>Ваше имя</span>
-            <input type="text" name="name" placeholder="Как к вам обращаться" required />
+            <input type="text" name="name" placeholder="Как к вам обращаться" pattern="[A-Za-zА-Яа-яЁё -]+" title="Используйте только буквы" required />
           </label>
           <label>
             <span>Телефон или Telegram</span>

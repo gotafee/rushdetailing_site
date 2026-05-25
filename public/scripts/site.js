@@ -281,6 +281,74 @@ document.querySelectorAll('[data-case-gallery]').forEach((gallery) => {
   updateArrows();
 });
 
+const leadNamePattern = /^[\p{L}\s-]+$/u;
+const smartCaptchaSiteKey = document.documentElement.getAttribute('data-smartcaptcha-sitekey') || '';
+let smartCaptchaScriptPromise;
+
+const loadSmartCaptcha = () => {
+  if (!smartCaptchaSiteKey) return Promise.resolve(false);
+  if (window.smartCaptcha) return Promise.resolve(true);
+  if (smartCaptchaScriptPromise) return smartCaptchaScriptPromise;
+
+  smartCaptchaScriptPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://smartcaptcha.yandexcloud.net/captcha.js?render=onload';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => resolve(Boolean(window.smartCaptcha));
+    script.onerror = () => reject(new Error('SmartCaptcha script failed'));
+    document.head.append(script);
+  });
+
+  return smartCaptchaScriptPromise;
+};
+
+const getSmartCaptchaToken = async (form) => {
+  if (!smartCaptchaSiteKey) return '';
+
+  const isLoaded = await loadSmartCaptcha();
+  if (!isLoaded || !window.smartCaptcha) {
+    throw new Error('SmartCaptcha is unavailable');
+  }
+
+  let container = form.querySelector('[data-smartcaptcha-container]');
+  if (!container) {
+    container = document.createElement('div');
+    container.setAttribute('data-smartcaptcha-container', '');
+    container.hidden = true;
+    form.append(container);
+  }
+
+  container.innerHTML = '';
+
+  return new Promise((resolve, reject) => {
+    let timeoutId;
+
+    const widgetId = window.smartCaptcha.render(container, {
+      sitekey: smartCaptchaSiteKey,
+      invisible: true,
+      callback: (token) => {
+        window.clearTimeout(timeoutId);
+        resolve(token);
+      },
+      'error-callback': () => {
+        window.clearTimeout(timeoutId);
+        reject(new Error('SmartCaptcha check failed'));
+      },
+      'expired-callback': () => {
+        window.clearTimeout(timeoutId);
+        reject(new Error('SmartCaptcha token expired'));
+      },
+    });
+
+    timeoutId = window.setTimeout(() => {
+      reject(new Error('SmartCaptcha timeout'));
+    }, 15_000);
+
+    window.smartCaptcha.execute(widgetId);
+  });
+};
+
 document.querySelectorAll('[data-lead-form]').forEach((form) => {
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -292,18 +360,38 @@ document.querySelectorAll('[data-lead-form]').forEach((form) => {
     const thankYou = form.getAttribute('data-thank-you') || '/spasibo/';
     const endpoint = form.getAttribute('data-endpoint');
     const submitMode = form.getAttribute('data-submit-mode');
+    const submitButton = form.querySelector('[type="submit"]');
+    const nameValue = name.value.trim();
 
-    if (!name.value.trim() || !contact.value.trim()) {
+    name.setCustomValidity('');
+    if (nameValue && !leadNamePattern.test(nameValue)) {
+      name.setCustomValidity('Используйте только буквы');
+    }
+
+    if (!nameValue || !contact.value.trim() || !form.checkValidity()) {
       form.reportValidity();
       return;
     }
 
+    submitButton?.setAttribute('disabled', '');
+
+    let smartCaptchaToken = '';
+    try {
+      smartCaptchaToken = await getSmartCaptchaToken(form);
+    } catch (error) {
+      console.error('SmartCaptcha failed', error);
+      alert('Не получилось проверить заявку. Пожалуйста, попробуйте еще раз.');
+      submitButton?.removeAttribute('disabled');
+      return;
+    }
+
     const payload = {
-      name: name.value.trim(),
+      name: nameValue,
       contact: contact.value.trim(),
       service: service.value.trim(),
       leadType: leadType?.value.trim() || '',
       source: window.location.pathname,
+      smartCaptchaToken,
     };
 
     if (submitMode === 'endpoint' && endpoint) {
@@ -317,6 +405,7 @@ document.querySelectorAll('[data-lead-form]').forEach((form) => {
       } catch (error) {
         console.error('Lead form submit failed', error);
         alert('Не получилось отправить заявку. Пожалуйста, напишите нам в Telegram или позвоните.');
+        submitButton?.removeAttribute('disabled');
         return;
       }
     }

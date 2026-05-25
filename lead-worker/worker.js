@@ -11,6 +11,40 @@ const escapeHtml = (value) =>
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;');
 
+const leadNamePattern = /^[\p{L}\s-]+$/u;
+
+const verifySmartCaptcha = async (request, env, token) => {
+  if (!env.SMARTCAPTCHA_SECRET_KEY) {
+    return { ok: true, skipped: true };
+  }
+
+  if (!token) {
+    return { ok: false, error: 'Missing captcha token' };
+  }
+
+  const params = new URLSearchParams();
+  params.set('secret', env.SMARTCAPTCHA_SECRET_KEY);
+  params.set('token', token);
+
+  const ip = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || '';
+  if (ip) {
+    params.set('ip', ip.split(',')[0].trim());
+  }
+
+  const response = await fetch('https://smartcaptcha.cloud.yandex.ru/validate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString(),
+  });
+
+  if (!response.ok) {
+    return { ok: false, error: `Captcha API error: ${response.status}` };
+  }
+
+  const result = await response.json();
+  return { ok: result.status === 'ok', result };
+};
+
 const formatLeadText = (lead) => {
   const service = lead.service || 'Не выбрана';
   const source = lead.source || 'Не указана';
@@ -116,6 +150,20 @@ export default {
       source: String(lead.source || '').trim().slice(0, 240),
       leadType: String(lead.leadType || '').trim().slice(0, 80),
     };
+
+    if (!leadNamePattern.test(normalizedLead.name)) {
+      return Response.json({ ok: false, error: 'Name must contain only letters' }, { status: 400, headers: corsHeaders });
+    }
+
+    try {
+      const captcha = await verifySmartCaptcha(request, env, String(lead.smartCaptchaToken || ''));
+      if (!captcha.ok) {
+        return Response.json({ ok: false, error: 'Captcha check failed' }, { status: 403, headers: corsHeaders });
+      }
+    } catch (error) {
+      console.error(error);
+      return Response.json({ ok: false, error: 'Captcha check failed' }, { status: 502, headers: corsHeaders });
+    }
 
     const text = formatLeadText(normalizedLead);
 
