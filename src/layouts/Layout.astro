@@ -154,7 +154,6 @@ const webpageSchema = {
 const schemas = [orgSchema, webpageSchema, breadcrumbSchema, faqStructuredSchema, ...extraSchemas].filter(Boolean);
 const normalizedPagePath = normalizeSitePath(pagePath);
 const isThankYouPage = ['/spasibo/', '/spasibo-tg/'].includes(normalizedPagePath);
-const smartCaptchaSiteKey = siteConfig.forms.smartCaptchaSiteKey;
 const yandexMetrikaCounterId = Number(siteConfig.analytics.yandexMetrikaId);
 const hasYandexMetrika = Number.isFinite(yandexMetrikaCounterId) && yandexMetrikaCounterId > 0;
 const yandexMetrikaScript = hasYandexMetrika
@@ -172,7 +171,7 @@ const yandexMetrikaScript = hasYandexMetrika
 ---
 
 <!doctype html>
-<html lang="ru" data-smartcaptcha-sitekey={smartCaptchaSiteKey}>
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -228,6 +227,6 @@ const yandexMetrikaScript = hasYandexMetrika
     <PromoOffer showOffer={showPromoOffer} />
     {!isThankYouPage && <TelegramLeadModals />}
     <MobileCTA />
-    <script src="/scripts/site.js?v=20260525-smartcaptcha-fix" defer></script>
+    <script src="/scripts/site.js?v=20260525-name-filter" defer></script>
   </body>
 </html>
