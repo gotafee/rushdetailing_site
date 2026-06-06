@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { services } from '../data/services';
 import { siteConfig } from '../data/site';
 
-const staticPages = ['/', '/uslugi', '/kejsy', '/ceny', '/o-studii', '/faq', '/kontakty', '/akciya'];
+const staticPages = ['/', '/uslugi', '/kejsy', '/ceny', '/o-studii', '/faq', '/kontakty', '/premium-okleyka', '/khimchistka-salona', '/polirovka-avto'];
 const urls = [...staticPages, ...services.map((service) => `/uslugi/${service.slug}`)];
 
 const normalizeSitePath = (path: string) => {

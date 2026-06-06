@@ -118,12 +118,12 @@ if (promoModal) {
 const telegramModal = document.querySelector('[data-telegram-modal]');
 const telegramModalOpenButtons = document.querySelectorAll('[data-telegram-modal-open]');
 const telegramModalClose = document.querySelector('[data-telegram-modal-close]');
-const discountContactModal = document.querySelector('[data-discount-contact-modal]');
-const discountContactModalOpenButtons = document.querySelectorAll('[data-discount-contact-modal-open]');
-const discountContactModalClose = document.querySelector('[data-discount-contact-modal-close]');
+const estimateContactModal = document.querySelector('[data-estimate-contact-modal]');
+const estimateContactModalOpenButtons = document.querySelectorAll('[data-estimate-contact-modal-open]');
+const estimateContactModalClose = document.querySelector('[data-estimate-contact-modal-close]');
 const telegramNudgeModal = document.querySelector('[data-telegram-nudge-modal]');
 const telegramNudgeClose = document.querySelector('[data-telegram-nudge-close]');
-const discountContactNudgeAction = document.querySelector('[data-discount-contact-nudge-action]');
+const estimateContactNudgeAction = document.querySelector('[data-estimate-contact-nudge-action]');
 const telegramNudgeInitialDelay = 3_500;
 const telegramNudgeRepeatDelay = 40_000;
 let telegramNudgeTimer;
@@ -149,7 +149,7 @@ const closeDialog = (dialog) => {
 };
 
 const openTelegramModal = () => openDialog(telegramModal);
-const openDiscountContactModal = () => openDialog(discountContactModal);
+const openEstimateContactModal = () => openDialog(estimateContactModal);
 
 if (telegramModal) {
   telegramModalOpenButtons.forEach((button) => {
@@ -170,21 +170,21 @@ if (telegramModal) {
   });
 }
 
-if (discountContactModal) {
-  discountContactModalOpenButtons.forEach((button) => {
+if (estimateContactModal) {
+  estimateContactModalOpenButtons.forEach((button) => {
     button.addEventListener('click', (event) => {
       event.preventDefault();
-      openDiscountContactModal();
+      openEstimateContactModal();
     });
   });
 
-  discountContactModalClose?.addEventListener('click', () => {
-    closeDialog(discountContactModal);
+  estimateContactModalClose?.addEventListener('click', () => {
+    closeDialog(estimateContactModal);
   });
 
-  discountContactModal.addEventListener('click', (event) => {
-    if (event.target === discountContactModal) {
-      closeDialog(discountContactModal);
+  estimateContactModal.addEventListener('click', (event) => {
+    if (event.target === estimateContactModal) {
+      closeDialog(estimateContactModal);
     }
   });
 }
@@ -219,10 +219,10 @@ if (telegramNudgeModal) {
     }
   });
 
-  discountContactNudgeAction?.addEventListener('click', () => {
+  estimateContactNudgeAction?.addEventListener('click', () => {
     window.clearTimeout(telegramNudgeTimer);
     closeDialog(telegramNudgeModal);
-    openDiscountContactModal();
+    openEstimateContactModal();
   });
 
   scheduleTelegramNudge(telegramNudgeInitialDelay);

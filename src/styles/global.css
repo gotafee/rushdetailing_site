@@ -793,7 +793,14 @@ li {
 
 .cta-copy {
   flex: 1 1 auto;
+  min-width: 0;
   max-width: none;
+}
+
+.cta-actions {
+  flex: 0 1 auto;
+  justify-content: flex-end;
+  min-width: 0;
 }
 
 .case-card {

@@ -1,7 +1,9 @@
 ---
 const currentLeadHref = Astro.url.pathname === '/' ? '/#lead-form' : `${Astro.url.pathname}#lead-form`;
+const landingFormPaths = ['/premium-okleyka/', '/khimchistka-salona/', '/polirovka-avto/'];
+const opensLeadPopup = !landingFormPaths.includes(Astro.url.pathname);
 ---
 
 <div class="mobile-cta-bar">
-  <a href={currentLeadHref} data-analytics="cta-mobile" data-lead-popup-open>Оставить заявку</a>
+  <a href={currentLeadHref} data-analytics="cta-mobile" data-lead-popup-open={opensLeadPopup ? 'true' : undefined}>Оставить заявку</a>
 </div>

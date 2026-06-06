@@ -10,16 +10,16 @@ const { showOffer = true } = Astro.props;
 
 {
   showOffer && (
-    <aside class="promo-offer" aria-label="Промоакция" data-promo-offer hidden>
-      <button class="promo-offer__close" type="button" aria-label="Закрыть промоакцию" data-promo-offer-close>×</button>
-      <img class="promo-offer__badge" src="/images/promo-discount.png" alt="Скидка до 50%" />
+    <aside class="promo-offer" aria-label="Диагностика и смета" data-promo-offer hidden>
+      <button class="promo-offer__close" type="button" aria-label="Закрыть предложение" data-promo-offer-close>×</button>
+      <img class="promo-offer__badge" src="/images/logo.png" alt="" />
       <div class="promo-offer__copy">
-        <p>Акция от Rush Detailing</p>
-        <strong>Скидка до 50% на полировку авто</strong>
-        <span>Для новых клиентов Rush Detailing</span>
+        <p>Быстрая оценка</p>
+        <strong>Диагностика и смета по авто</strong>
+        <span>По фото или после осмотра в студии</span>
       </div>
       <button class="promo-offer__link" type="button" data-analytics="promo-offer" data-promo-modal-open>
-        Забрать скидку
+        Получить смету
       </button>
     </aside>
   )
@@ -29,11 +29,11 @@ const { showOffer = true } = Astro.props;
   <div class="promo-modal__panel">
     <button class="promo-modal__close" type="button" aria-label="Закрыть" data-promo-modal-close>×</button>
     <div class="promo-modal__head">
-      <img class="promo-modal__badge" src="/images/promo-discount.png" alt="" />
+      <img class="promo-modal__badge" src="/images/logo.png" alt="" />
       <div>
-        <p class="eyebrow">Промоакция</p>
-        <h2 id="promo-modal-title">Зафиксируйте скидку, оставив заявку</h2>
-        <p>Оставьте контакт, и мы закрепим для вас акцию на полировку авто в Rush Detailing.</p>
+        <p class="eyebrow">Оценка работ</p>
+        <h2 id="promo-modal-title">Получите диагностику и смету</h2>
+        <p>Оставьте контакт. Уточним задачу, посмотрим фото или пригласим на осмотр и дадим понятный расчет.</p>
       </div>
     </div>
     <form
@@ -43,7 +43,7 @@ const { showOffer = true } = Astro.props;
       data-submit-mode={siteConfig.forms.submitMode}
       data-thank-you={siteConfig.forms.thankYouPath}
     >
-      <input type="hidden" name="service" value="Акция: Скидка до 50% на полировку авто в Rush Detailing" />
+      <input type="hidden" name="service" value="Лид-магнит: диагностика и смета" />
       <label>
         <span>Ваше имя</span>
         <input type="text" name="name" placeholder="Как к вам обращаться" pattern="[A-Za-zА-Яа-яЁё -]+" title="Используйте только буквы" required />
@@ -53,7 +53,7 @@ const { showOffer = true } = Astro.props;
         <input type="text" name="contact" placeholder="+7 или @username" required />
       </label>
       <button type="submit" class="button button-primary" data-analytics="promo-form-submit">
-        Получить скидку
+        Получить смету
       </button>
       <p class="form-note">{siteConfig.forms.consentText}</p>
     </form>

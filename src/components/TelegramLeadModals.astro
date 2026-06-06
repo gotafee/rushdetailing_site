@@ -6,11 +6,11 @@ import { siteConfig } from '../data/site';
   <div class="promo-modal__panel">
     <button class="promo-modal__close" type="button" aria-label="Закрыть" data-telegram-modal-close>×</button>
     <div class="promo-modal__head">
-      <img class="promo-modal__badge" src="/images/promo-discount.png" alt="" />
+      <img class="promo-modal__badge" src="/images/logo.png" alt="" />
       <div>
         <p class="eyebrow">Telegram</p>
         <h2 id="telegram-modal-title">Оставьте Telegram, мы напишем сами</h2>
-        <p>Зафиксируем скидку и уточним детали по полировке прямо в Telegram.</p>
+        <p>Уточним задачу, попросим фото при необходимости и вернемся с ориентиром по работам.</p>
       </div>
     </div>
     <form
@@ -21,7 +21,7 @@ import { siteConfig } from '../data/site';
       data-thank-you="/spasibo-tg/"
     >
       <input type="hidden" name="name" value="Заявка из Telegram popup" />
-      <input type="hidden" name="service" value="Акция: клиент просит написать в Telegram по скидке на полировку авто" />
+      <input type="hidden" name="service" value="Лид-магнит: диагностика и смета" />
       <input type="hidden" name="leadType" value="telegram_callback" />
       <label>
         <span>Ваш Telegram</span>
@@ -35,15 +35,15 @@ import { siteConfig } from '../data/site';
   </div>
 </dialog>
 
-<dialog class="promo-modal" data-discount-contact-modal aria-labelledby="discount-contact-modal-title">
+<dialog class="promo-modal" data-estimate-contact-modal aria-labelledby="estimate-contact-modal-title">
   <div class="promo-modal__panel">
-    <button class="promo-modal__close" type="button" aria-label="Закрыть" data-discount-contact-modal-close>×</button>
+    <button class="promo-modal__close" type="button" aria-label="Закрыть" data-estimate-contact-modal-close>×</button>
     <div class="promo-modal__head">
-      <img class="promo-modal__badge" src="/images/promo-discount.png" alt="" />
+      <img class="promo-modal__badge" src="/images/logo.png" alt="" />
       <div>
-        <p class="eyebrow">Скидка на полировку</p>
-        <h2 id="discount-contact-modal-title">Оставьте телефон или Telegram</h2>
-        <p>Закрепим скидку 50% и свяжемся удобным для вас способом.</p>
+        <p class="eyebrow">Диагностика и смета</p>
+        <h2 id="estimate-contact-modal-title">Оставьте телефон или Telegram</h2>
+        <p>Свяжемся удобным способом, уточним автомобиль и подскажем, какие работы имеют смысл.</p>
       </div>
     </div>
     <form
@@ -53,14 +53,14 @@ import { siteConfig } from '../data/site';
       data-submit-mode={siteConfig.forms.submitMode}
       data-thank-you={siteConfig.forms.thankYouPath}
     >
-      <input type="hidden" name="name" value="Заявка из popup скидки" />
-      <input type="hidden" name="service" value="Акция: клиент оставил телефон или Telegram для скидки на полировку авто" />
+      <input type="hidden" name="name" value="Заявка из popup диагностики" />
+      <input type="hidden" name="service" value="Лид-магнит: диагностика и смета" />
       <label>
         <span>Телефон или Telegram</span>
         <input type="text" name="contact" placeholder="+7 или @username" required />
       </label>
-      <button type="submit" class="button button-primary" data-analytics="discount-contact-form-submit">
-        Закрепить скидку
+      <button type="submit" class="button button-primary" data-analytics="estimate-contact-form-submit">
+        Получить смету
       </button>
       <p class="form-note">{siteConfig.forms.consentText}</p>
     </form>
@@ -71,13 +71,13 @@ import { siteConfig } from '../data/site';
   <div class="promo-modal__panel telegram-nudge-modal__panel">
     <button class="promo-modal__close" type="button" aria-label="Закрыть" data-telegram-nudge-close>×</button>
     <div class="telegram-nudge-modal__copy">
-      <p class="eyebrow">Скидка на полировку</p>
-      <h2 id="telegram-nudge-title">Зафиксируйте скидку 50% на полировку</h2>
-      <p>Оставьте Telegram или телефон — мы напишем сами и закрепим предложение за вами.</p>
+      <p class="eyebrow">Оценка работ</p>
+      <h2 id="telegram-nudge-title">Получите диагностику и смету</h2>
+      <p>Оставьте Telegram или телефон. Мы напишем сами, уточним задачу и дадим ориентир по стоимости.</p>
     </div>
     <div class="telegram-nudge-modal__actions">
-      <button type="button" class="button button-primary" data-discount-contact-nudge-action>
-        Получить скидку
+      <button type="button" class="button button-primary" data-estimate-contact-nudge-action>
+        Получить смету
       </button>
     </div>
   </div>
