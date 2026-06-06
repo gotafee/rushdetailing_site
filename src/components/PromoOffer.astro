@@ -32,7 +32,7 @@ const { showOffer = true } = Astro.props;
       <img class="promo-modal__badge" src="/images/promo-discount.png" alt="" />
       <div>
         <p class="eyebrow">Оценка по фото</p>
-        <h2 id="promo-modal-title">Узнайте стоимость услуг для вашего авто</h2>
+        <h2 id="promo-modal-title">Получите диагностику и стоимость услуг</h2>
         <p>Оставьте контакт и отправьте фото. Посмотрим состояние авто и подскажем предварительный объем работ.</p>
       </div>
     </div>
@@ -43,7 +43,7 @@ const { showOffer = true } = Astro.props;
       data-submit-mode={siteConfig.forms.submitMode}
       data-thank-you={siteConfig.forms.thankYouPath}
     >
-      <input type="hidden" name="service" value="Лид-магнит: диагностика и смета" />
+      <input type="hidden" name="service" value="Лид-магнит: диагностика и стоимость услуг" />
       <label>
         <span>Ваше имя</span>
         <input type="text" name="name" placeholder="Как к вам обращаться" pattern="[A-Za-zА-Яа-яЁё -]+" title="Используйте только буквы" required />
