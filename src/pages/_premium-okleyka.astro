@@ -413,9 +413,9 @@ const serviceSchema = {
       const nudgeTitle = document.querySelector('#telegram-nudge-title');
       const nudgeText = nudgeTitle?.parentElement?.querySelector('p:last-child');
       const estimateEyebrow = document.querySelector('[data-estimate-contact-modal] .promo-modal__head .eyebrow');
-      const estimateButton = document.querySelector('[data-estimate-contact-modal] button[type="submit"]');
+      const estimateButton = document.querySelector('[data-estimate-contact-modal] .promo-modal__call');
       const nudgeEyebrow = document.querySelector('[data-telegram-nudge-modal] .eyebrow');
-      const nudgeButton = document.querySelector('[data-estimate-contact-nudge-action]');
+      const nudgeButton = document.querySelector('[data-analytics="telegram-nudge-call"]');
 
       if (estimateBadge) {
         estimateBadge.src = '/images/promo-discount.png';
@@ -423,19 +423,19 @@ const serviceSchema = {
       }
 
       if (estimateTitle) {
-        estimateTitle.textContent = 'Получите диагностику и стоимость услуг';
+        estimateTitle.textContent = 'Звоните сейчас и получите скидку';
       }
 
       if (estimateText) {
-        estimateText.textContent = 'Оставьте контакт и отправьте фото. Посмотрим состояние авто и подскажем предварительный объем работ.';
+        estimateText.textContent = 'Акция действует во время теста колл-трекинга. Позвоните и скажите администратору: скидка за звонок с сайта.';
       }
 
       if (estimateEyebrow) {
-        estimateEyebrow.textContent = 'Оценка по фото';
+        estimateEyebrow.textContent = 'Акция от Rush Detailing';
       }
 
       if (estimateButton) {
-        estimateButton.textContent = 'Узнать стоимость';
+        estimateButton.textContent = 'Позвонить';
       }
 
       if (nudgeBadge) {
@@ -444,19 +444,19 @@ const serviceSchema = {
       }
 
       if (nudgeTitle) {
-        nudgeTitle.textContent = 'Получите диагностику и стоимость услуг';
+        nudgeTitle.textContent = 'Звоните сейчас и получите скидку';
       }
 
       if (nudgeText) {
-        nudgeText.textContent = 'Оставьте контакт. Посмотрим фото и дадим предварительный ориентир.';
+        nudgeText.textContent = 'Тестируем колл-трекинг 5 дней. Скажите администратору: скидка за звонок с сайта.';
       }
 
       if (nudgeEyebrow) {
-        nudgeEyebrow.textContent = 'Оценка по фото';
+        nudgeEyebrow.textContent = 'Акция от Rush Detailing';
       }
 
       if (nudgeButton) {
-        nudgeButton.textContent = 'Узнать стоимость';
+        nudgeButton.textContent = 'Позвонить';
       }
     });
   </script>

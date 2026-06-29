@@ -1,0 +1,193 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import LeadForm from '../components/LeadForm.astro';
+import ReviewsGrid from '../components/ReviewsGrid.astro';
+import CTASection from '../components/CTASection.astro';
+import ContactSection from '../components/ContactSection.astro';
+import { siteConfig } from '../data/site';
+
+const heroImage = '/images/hero-deteyling-moyka-moto.jpg';
+
+const offerItems = [
+  ['Детейлинг-мойка мотоцикла', 'Аккуратно очищаем пластик, металл, диски, трудные зоны и следы дорожной эксплуатации.'],
+  ['Полировка видимых элементов', 'Смотрим состояние лака и подбираем бережный объем полировки там, где это уместно.'],
+  ['Защитное покрытие', 'После подготовки можно нанести воск или керамику, чтобы упростить дальнейший уход.'],
+  ['Подготовка к сезону', 'Приводим мотоцикл в порядок перед активными поездками, продажей или фотосъемкой.'],
+];
+
+const steps = [
+  'Осматриваем мотоцикл и фиксируем задачу',
+  'Согласуем формат акции и стоимость',
+  'Выполняем мойку, очистку или полировку',
+  'Наносим защиту, если она нужна',
+  'Проверяем результат перед выдачей',
+];
+
+const pageFaq = [
+  {
+    question: 'Сколько длится мото-акция?',
+    answer: 'Страница подготовлена под недельную акцию. Конкретные даты и финальные условия можно быстро заменить перед запуском рекламной кампании.',
+  },
+  {
+    question: 'Можно приехать только на мойку мотоцикла?',
+    answer: 'Да. Можно выбрать только мойку, локальную очистку, полировку отдельных элементов или комплексный мотодетейлинг.',
+  },
+  {
+    question: 'Цена фиксированная?',
+    answer: 'Итоговая стоимость зависит от состояния мотоцикла, объема работ и выбранной защиты. Перед началом работ согласуем цену.',
+  },
+];
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Мотодетейлинг и мойка мотоциклов',
+  serviceType: 'Мотодетейлинг',
+  description: 'Недельная акция Rush Detailing на мойку, полировку, защиту и детейлинг мотоциклов в Москве.',
+  areaServed: {
+    '@type': 'City',
+    name: 'Москва',
+  },
+  provider: {
+    '@type': 'LocalBusiness',
+    name: siteConfig.brand.name,
+    telephone: siteConfig.contacts.phoneDisplay,
+    url: siteConfig.siteUrl,
+  },
+};
+---
+
+<Layout
+  title="Акция на детейлинг мотоциклов в Москве | Rush Detailing"
+  description="Недельная акция на мотодетейлинг в Rush Detailing: мойка мотоцикла, локальная очистка, полировка видимых элементов и защитное покрытие после осмотра."
+  pagePath="/moto-akciya"
+  image={heroImage}
+  showPromoOffer={true}
+  keywords={[
+    ...siteConfig.seo.defaultKeywords,
+    'детейлинг мотоциклов москва',
+    'мойка мотоцикла москва',
+    'полировка мотоцикла москва',
+    'мотодетейлинг строгино',
+  ]}
+  breadcrumbs={[
+    { label: 'Главная', href: '/' },
+    { label: 'Мото-акция', href: '/moto-akciya' },
+  ]}
+  faqSchema={pageFaq}
+  extraSchemas={[serviceSchema]}
+>
+  <HeroSection
+    eyebrow="Недельная мото-акция"
+    title="Приведем мотоцикл в порядок перед поездками"
+    description="Мойка, локальная очистка, полировка видимых элементов и защитное покрытие после осмотра. Условия акции фиксируем при записи."
+    image={heroImage}
+    primaryLabel="Записаться на акцию"
+    primaryHref="#lead-form"
+    secondaryLabel="Позвонить"
+    secondaryHref={`tel:${siteConfig.contacts.phone}`}
+    badges={['Акция на 7 дней', 'Мотоциклы и скутеры', 'Расчет до начала работ']}
+    mobileDim={true}
+  />
+
+  <section class="section section-compact">
+    <div class="container">
+      <div class="surface-card moto-offer-card">
+        <div>
+          <p class="eyebrow">Что входит</p>
+          <h2>Собрали мото-уход в один понятный оффер</h2>
+          <p>
+            Финальный набор работ зависит от состояния техники. Перед началом показываем, что имеет смысл делать сейчас,
+            а что можно не добавлять в чек.
+          </p>
+        </div>
+        <div class="moto-offer-grid">
+          {offerItems.map(([title, text]) => (
+            <article>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow">Как проходит</p>
+        <h2>Сначала осмотр, потом понятный объем работ</h2>
+        <p>Мотоциклы отличаются по материалам, доступу к деталям и состоянию покрытия, поэтому условия лучше фиксировать после короткого осмотра.</p>
+      </div>
+      <div class="timeline-grid timeline-grid-steps">
+        {steps.map((step, index) => (
+          <article class="surface-card timeline-card reveal">
+            <span class="timeline-index">0{index + 1}</span>
+            <h3>{step}</h3>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <LeadForm
+    title="Записаться на мото-акцию"
+    description="Оставьте контакт — уточним модель, задачу и удобное время. Если нужно, попросим фото и заранее сориентируем по формату работ."
+    selectedService="Мотодетейлинг и обслуживание"
+    compact={true}
+  />
+
+  <CTASection
+    title="Хотите быстрее записаться по телефону?"
+    text="Позвоните сейчас: администратор подскажет ближайшее окно и зафиксирует условия акции для мотоцикла."
+    primaryLabel="Позвонить"
+    primaryHref={`tel:${siteConfig.contacts.phone}`}
+    secondaryLabel="Написать в Telegram"
+    secondaryHref={siteConfig.social.telegram}
+  />
+
+  <ReviewsGrid />
+  <ContactSection />
+</Layout>
+
+<style>
+  .moto-offer-card {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 28px;
+    padding: 30px;
+  }
+
+  .moto-offer-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .moto-offer-grid article {
+    min-height: 100%;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .moto-offer-grid h3 {
+    font-size: clamp(1.1rem, 1.6vw, 1.45rem);
+  }
+
+  @media (max-width: 980px) {
+    .moto-offer-card,
+    .moto-offer-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 780px) {
+    .moto-offer-card {
+      padding: 22px;
+    }
+  }
+</style>

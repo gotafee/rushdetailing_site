@@ -10,17 +10,16 @@ const { showOffer = true } = Astro.props;
 
 {
   showOffer && (
-    <aside class="promo-offer" aria-label="Оценка стоимости по фото" data-promo-offer hidden>
+    <aside class="promo-offer" aria-label="Акция от Rush Detailing" data-promo-offer hidden>
       <button class="promo-offer__close" type="button" aria-label="Закрыть предложение" data-promo-offer-close>×</button>
       <img class="promo-offer__badge" src="/images/promo-discount.png" alt="" />
       <div class="promo-offer__copy">
-        <p>Оценка по фото</p>
-        <strong>Узнайте стоимость услуг по фото авто</strong>
-        <span>Пришлите фото, подскажем объем работ</span>
+        <p>Акция от Rush Detailing</p>
+        <strong>Звоните сейчас и получите скидку</strong>
       </div>
-      <button class="promo-offer__link" type="button" data-analytics="promo-offer" data-promo-modal-open>
-        Узнать стоимость
-      </button>
+      <a class="promo-offer__link" href={`tel:${siteConfig.contacts.phone}`} data-analytics="promo-offer-call">
+        Позвонить
+      </a>
     </aside>
   )
 }
@@ -31,31 +30,13 @@ const { showOffer = true } = Astro.props;
     <div class="promo-modal__head">
       <img class="promo-modal__badge" src="/images/promo-discount.png" alt="" />
       <div>
-        <p class="eyebrow">Оценка по фото</p>
-        <h2 id="promo-modal-title">Получите диагностику и стоимость услуг</h2>
-        <p>Оставьте контакт и отправьте фото. Посмотрим состояние авто и подскажем предварительный объем работ.</p>
+        <p class="eyebrow">Акция от Rush Detailing</p>
+        <h2 id="promo-modal-title">Звоните сейчас и получите скидку</h2>
+        <p>Звоните администратору, уточняйте удобное время записи и закрепляйте скидку на выбранную услугу.</p>
       </div>
     </div>
-    <form
-      class="lead-form promo-modal__form"
-      data-lead-form
-      data-endpoint={siteConfig.forms.endpoint}
-      data-submit-mode={siteConfig.forms.submitMode}
-      data-thank-you={siteConfig.forms.thankYouPath}
-    >
-      <input type="hidden" name="service" value="Лид-магнит: диагностика и стоимость услуг" />
-      <label>
-        <span>Ваше имя</span>
-        <input type="text" name="name" placeholder="Как к вам обращаться" pattern="[A-Za-zА-Яа-яЁё -]+" title="Используйте только буквы" required />
-      </label>
-      <label>
-        <span>Телефон или Telegram</span>
-        <input type="text" name="contact" placeholder="+7 или @username" required />
-      </label>
-      <button type="submit" class="button button-primary" data-analytics="promo-form-submit">
-        Узнать стоимость
-      </button>
-      <p class="form-note">{siteConfig.forms.consentText}</p>
-    </form>
+    <a class="button button-primary promo-modal__call" href={`tel:${siteConfig.contacts.phone}`} data-analytics="promo-modal-call">
+      Позвонить
+    </a>
   </div>
 </dialog>

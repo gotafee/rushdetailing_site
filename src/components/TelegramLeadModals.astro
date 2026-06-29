@@ -41,29 +41,14 @@ import { siteConfig } from '../data/site';
     <div class="promo-modal__head">
       <img class="promo-modal__badge" src="/images/promo-discount.png" alt="" />
       <div>
-        <p class="eyebrow">Оценка по фото</p>
-        <h2 id="estimate-contact-modal-title">Получите диагностику и стоимость услуг</h2>
-        <p>Оставьте контакт и отправьте фото. Посмотрим состояние авто и подскажем предварительный объем работ.</p>
+        <p class="eyebrow">Акция от Rush Detailing</p>
+        <h2 id="estimate-contact-modal-title">Звоните сейчас и получите скидку</h2>
+        <p>Звоните администратору, уточняйте удобное время записи и закрепляйте скидку на выбранную услугу.</p>
       </div>
     </div>
-    <form
-      class="lead-form promo-modal__form"
-      data-lead-form
-      data-endpoint={siteConfig.forms.endpoint}
-      data-submit-mode={siteConfig.forms.submitMode}
-      data-thank-you={siteConfig.forms.thankYouPath}
-    >
-      <input type="hidden" name="name" value="Заявка из popup диагностики" />
-      <input type="hidden" name="service" value="Лид-магнит: диагностика и стоимость услуг" />
-      <label>
-        <span>Телефон или Telegram</span>
-        <input type="text" name="contact" placeholder="+7 или @username" required />
-      </label>
-      <button type="submit" class="button button-primary" data-analytics="estimate-contact-form-submit">
-        Узнать стоимость
-      </button>
-      <p class="form-note">{siteConfig.forms.consentText}</p>
-    </form>
+    <a class="button button-primary promo-modal__call" href={`tel:${siteConfig.contacts.phone}`} data-analytics="estimate-contact-call">
+      Позвонить
+    </a>
   </div>
 </dialog>
 
@@ -71,14 +56,14 @@ import { siteConfig } from '../data/site';
   <div class="promo-modal__panel telegram-nudge-modal__panel">
     <button class="promo-modal__close" type="button" aria-label="Закрыть" data-telegram-nudge-close>×</button>
     <div class="telegram-nudge-modal__copy">
-      <p class="eyebrow">Оценка по фото</p>
-      <h2 id="telegram-nudge-title">Получите диагностику и стоимость услуг</h2>
-      <p>Оставьте Telegram или телефон. Посмотрим фото и дадим предварительный ориентир.</p>
+      <p class="eyebrow">Акция от Rush Detailing</p>
+      <h2 id="telegram-nudge-title">Звоните сейчас и получите скидку</h2>
+      <p>Звоните администратору, уточняйте удобное время записи и закрепляйте скидку на выбранную услугу.</p>
     </div>
     <div class="telegram-nudge-modal__actions">
-      <button type="button" class="button button-primary" data-estimate-contact-nudge-action>
-        Узнать стоимость
-      </button>
+      <a class="button button-primary" href={`tel:${siteConfig.contacts.phone}`} data-analytics="telegram-nudge-call">
+        Позвонить
+      </a>
     </div>
   </div>
 </dialog>

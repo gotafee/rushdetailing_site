@@ -1223,6 +1223,10 @@ li {
   gap: 14px;
 }
 
+.promo-modal__call {
+  width: 100%;
+}
+
 .telegram-nudge-modal {
   width: min(460px, calc(100vw - 28px));
   border-radius: 34px;

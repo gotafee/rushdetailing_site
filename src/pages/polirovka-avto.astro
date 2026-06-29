@@ -151,16 +151,16 @@ const serviceSchema = {
         <div class="polish-landing-hero__content">
           <p class="eyebrow">Полировка кузова</p>
           <h1 class="polish-title-desktop">
-            Уберем мелкие царапины, паутинку и вернем кузову глубокий блеск
+            Уберем любые царапины и паутику с гарантией
           </h1>
           <h1 class="polish-title-mobile">
-            Уберем паутинку, царапины и вернем блеск
+            Уберем царапины и паутинку с гарантией
           </h1>
           <p class="hero-description polish-description-desktop">
-            Осматриваем лакокрасочное покрытие, подбираем безопасный объем полировки и заранее называем стоимость. Работаем аккуратно, не снимая лишний лак ради блеска.
+            Осматриваем лакокрасочное покрытие, подбираем подходящий формат полировки и заранее называем стоимость. Работаем аккуратно и показываем результат перед выдачей.
           </p>
           <p class="hero-description polish-description-mobile">
-            Оценим состояние кузова, назовем честную цену и подберем безопасную полировку.
+            Оценим кузов, подберем полировку и заранее назовем стоимость работ.
           </p>
           <div class="polish-landing-hero__actions">
             <button type="button" class="button button-primary" data-analytics="polish-landing-primary" data-polish-highlight-form>Получить расчет</button>
@@ -442,9 +442,9 @@ const serviceSchema = {
       const nudgeTitle = document.querySelector('#telegram-nudge-title');
       const nudgeText = nudgeTitle?.parentElement?.querySelector('p:last-child');
       const estimateEyebrow = document.querySelector('[data-estimate-contact-modal] .promo-modal__head .eyebrow');
-      const estimateButton = document.querySelector('[data-estimate-contact-modal] button[type="submit"]');
+      const estimateButton = document.querySelector('[data-estimate-contact-modal] .promo-modal__call');
       const nudgeEyebrow = document.querySelector('[data-telegram-nudge-modal] .eyebrow');
-      const nudgeButton = document.querySelector('[data-estimate-contact-nudge-action]');
+      const nudgeButton = document.querySelector('[data-analytics="telegram-nudge-call"]');
 
       if (estimateBadge) {
         estimateBadge.src = '/images/promo-discount.png';
@@ -452,19 +452,19 @@ const serviceSchema = {
       }
 
       if (estimateTitle) {
-        estimateTitle.textContent = 'Получите диагностику и стоимость услуг';
+        estimateTitle.textContent = 'Звоните сейчас и получите скидку';
       }
 
       if (estimateText) {
-        estimateText.textContent = 'Оставьте контакт и отправьте фото. Посмотрим состояние авто и подскажем предварительный объем работ.';
+        estimateText.textContent = 'Звоните администратору, уточняйте удобное время записи и закрепляйте скидку на выбранную услугу.';
       }
 
       if (estimateEyebrow) {
-        estimateEyebrow.textContent = 'Оценка по фото';
+        estimateEyebrow.textContent = 'Акция от Rush Detailing';
       }
 
       if (estimateButton) {
-        estimateButton.textContent = 'Узнать стоимость';
+        estimateButton.textContent = 'Позвонить';
       }
 
       if (nudgeBadge) {
@@ -473,19 +473,19 @@ const serviceSchema = {
       }
 
       if (nudgeTitle) {
-        nudgeTitle.textContent = 'Получите диагностику и стоимость услуг';
+        nudgeTitle.textContent = 'Звоните сейчас и получите скидку';
       }
 
       if (nudgeText) {
-        nudgeText.textContent = 'Оставьте контакт. Посмотрим фото и дадим предварительный ориентир.';
+        nudgeText.textContent = 'Звоните администратору, уточняйте удобное время записи и закрепляйте скидку на выбранную услугу.';
       }
 
       if (nudgeEyebrow) {
-        nudgeEyebrow.textContent = 'Оценка по фото';
+        nudgeEyebrow.textContent = 'Акция от Rush Detailing';
       }
 
       if (nudgeButton) {
-        nudgeButton.textContent = 'Узнать стоимость';
+        nudgeButton.textContent = 'Позвонить';
       }
     });
   </script>
