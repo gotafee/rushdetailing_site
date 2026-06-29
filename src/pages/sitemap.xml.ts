@@ -1,8 +1,8 @@
-import type { APIRoute } from 'astro';
+﻿import type { APIRoute } from 'astro';
 import { services } from '../data/services';
 import { siteConfig } from '../data/site';
 
-const staticPages = ['/', '/uslugi', '/kejsy', '/ceny', '/o-studii', '/faq', '/kontakty', '/khimchistka-salona', '/polirovka-avto', '/moto-akciya', '/politika-konfidencialnosti'];
+const staticPages = ['/', '/uslugi', '/kejsy', '/ceny', '/o-studii', '/faq', '/kontakty', '/khimchistka-salona', '/polirovka-avto', '/politika-konfidencialnosti'];
 const urls = [...staticPages, ...services.map((service) => `/uslugi/${service.slug}`)];
 
 const normalizeSitePath = (path: string) => {
