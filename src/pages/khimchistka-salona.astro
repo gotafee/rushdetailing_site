@@ -814,7 +814,25 @@ const serviceSchema = {
     }
 
     .cleaning-landing-form {
-      display: none;
+      display: flex;
+      max-width: none;
+      margin-top: 4px;
+      padding: 18px;
+      gap: 10px;
+      border-radius: 22px;
+    }
+
+    .cleaning-landing-form h2 {
+      font-size: 1.38rem;
+    }
+
+    .cleaning-landing-form p:not(.eyebrow):not(.form-note) {
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .cleaning-landing-form input {
+      min-height: 50px;
     }
 
     .cleaning-price-list-card,

@@ -209,7 +209,7 @@ const serviceSchema = {
       <div class="surface-card polish-price-list-card">
         <div>
           <p class="eyebrow">Прайс-лист</p>
-          <h2>Ориентиры по полировке</h2>
+          <h2>Ориентиры по полировке кузова</h2>
           <p>Финальную стоимость называем после осмотра. Цена зависит от состояния лака, размера автомобиля и глубины полировки.</p>
         </div>
         <ul class="polish-price-list">
@@ -1239,7 +1239,25 @@ const serviceSchema = {
     }
 
     .polish-landing-form {
-      display: none;
+      display: flex;
+      max-width: none;
+      margin-top: 4px;
+      padding: 18px;
+      gap: 10px;
+      border-radius: 22px;
+    }
+
+    .polish-landing-form h2 {
+      font-size: 1.38rem;
+    }
+
+    .polish-landing-form p:not(.eyebrow):not(.form-note) {
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .polish-landing-form input {
+      min-height: 50px;
     }
 
     .polish-offer-strip,
