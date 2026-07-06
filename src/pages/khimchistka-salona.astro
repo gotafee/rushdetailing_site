@@ -18,6 +18,31 @@ const galleryItems = [
   { src: '/images/him4.webp', alt: 'Работа с загрязнениями в салоне автомобиля' },
 ];
 
+const processItems = [
+  {
+    type: 'video',
+    src: '/images/khim1.mp4',
+    poster: '/images/khim1_pr.png',
+    title: 'Процесс химчистки салона, этап 1',
+  },
+  {
+    type: 'image',
+    src: '/images/khim1_ai.png',
+    alt: 'Результат химчистки салона, этап 1',
+  },
+  {
+    type: 'video',
+    src: '/images/khim2.mp4',
+    poster: '/images/khim2_pr.png',
+    title: 'Процесс химчистки салона, этап 2',
+  },
+  {
+    type: 'image',
+    src: '/images/khim2_ai.png',
+    alt: 'Результат химчистки салона, этап 2',
+  },
+];
+
 const pageFaq = [
   {
     question: 'Сколько стоит химчистка салона?',
@@ -63,6 +88,7 @@ const formats = [
 const priceItems = [
   ['Химчистка салона', 'от 8 000 ₽'],
   ['Глубокая химчистка салона', 'от 22 000 ₽'],
+  ['Комплексная химчистка', 'от 25 000 ₽'],
   ['Предпродажная чистка салона', 'от 15 000 ₽'],
   ['Химчистка сидений', 'от 8 000 ₽'],
   ['Озонация салона', 'от 2 500 ₽'],
@@ -107,7 +133,7 @@ const serviceSchema = {
   description="Химчистка салона автомобиля в Москве. Чистим ткань, кожу, пластик, ковры, потолок и запахи. Оценка по фото, ориентир 18-25 тыс. ₽."
   pagePath="/khimchistka-salona"
   image={heroImage.src}
-  showPromoOffer={false}
+  showPromoOffer={true}
   keywords={[
     ...siteConfig.seo.defaultKeywords,
     'химчистка салона авто москва',
@@ -219,6 +245,50 @@ const serviceSchema = {
     </div>
   </section>
 
+  <section class="section section-compact cleaning-section">
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow">Процесс</p>
+        <h2>Как выглядит работа с салоном</h2>
+        <p>Показываем процесс и результат в вертикальном формате: чистка, детали салона и финальный вид после обработки.</p>
+      </div>
+      <div class="cleaning-process-grid">
+        {processItems.map((item, index) => (
+          <article class:list={['surface-card cleaning-process-card reveal', item.type === 'image' && 'cleaning-process-card--image']}>
+            <div class="cleaning-process-frame">
+              {item.type === 'video' ? (
+                <>
+                  <video
+                    data-cleaning-process-video
+                    controls
+                    playsinline
+                    preload="metadata"
+                    poster={item.poster}
+                    width="1280"
+                    height="720"
+                    aria-label={item.title}
+                  >
+                    <source src={item.src} type="video/mp4" />
+                  </video>
+                  <button
+                    class="cleaning-process-play"
+                    type="button"
+                    data-cleaning-process-play
+                    aria-label={`Смотреть видео ${index + 1}: ${item.title}`}
+                  >
+                    <span></span>
+                  </button>
+                </>
+              ) : (
+                <img class="cleaning-process-image" src={item.src} alt={item.alt} loading="lazy" />
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <section class="section cleaning-section">
     <div class="container">
       <div class="section-heading">
@@ -257,24 +327,6 @@ const serviceSchema = {
     </div>
   </section>
 
-  <section class="section section-compact cleaning-section">
-    <div class="container">
-      <div class="section-heading">
-        <p class="eyebrow">Процесс</p>
-        <h2>Как проходит химчистка салона</h2>
-        <p>До начала согласуем зоны, материалы и цену. После чистки сушим салон и проверяем, чтобы не осталось сырости и разводов.</p>
-      </div>
-      <div class="cleaning-step-grid">
-        {steps.map((step, index) => (
-          <article class="surface-card timeline-card reveal">
-            <span class="timeline-index">0{index + 1}</span>
-            <h3>{step}</h3>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
   <CTASection
     title="Хотите узнать стоимость химчистки?"
     text="Оставьте заявку или отправьте фото салона. Посмотрим загрязнения, назовем срок и предварительную цену."
@@ -286,8 +338,36 @@ const serviceSchema = {
   <ContactSection />
 
   <script is:inline>
+    const cleaningProcessVideos = document.querySelectorAll('[data-cleaning-process-video]');
     const cleaningHighlightButtons = document.querySelectorAll('[data-cleaning-highlight-form]');
     const cleaningLeadForm = document.querySelector('#lead-form');
+
+    cleaningProcessVideos.forEach((video) => {
+      const frame = video.closest('.cleaning-process-frame');
+      const playButton = frame?.querySelector('[data-cleaning-process-play]');
+
+      playButton?.addEventListener('click', () => {
+        video.play();
+      });
+
+      video.addEventListener('play', () => {
+        frame?.classList.add('is-playing');
+
+        cleaningProcessVideos.forEach((otherVideo) => {
+          if (otherVideo !== video && !otherVideo.paused) {
+            otherVideo.pause();
+          }
+        });
+      });
+
+      video.addEventListener('pause', () => {
+        frame?.classList.remove('is-playing');
+      });
+
+      video.addEventListener('ended', () => {
+        frame?.classList.remove('is-playing');
+      });
+    });
 
     cleaningHighlightButtons.forEach((button) => {
       button.addEventListener('click', () => {
@@ -342,7 +422,7 @@ const serviceSchema = {
       }
 
       if (estimateText) {
-        estimateText.textContent = 'Звоните администратору, уточняйте удобное время записи и закрепляйте скидку на выбранную услугу.';
+        estimateText.textContent = 'Звоните, уточняйте удобное время записи и закрепляйте скидку на выбранную услугу.';
       }
 
       if (estimateEyebrow) {
@@ -363,7 +443,7 @@ const serviceSchema = {
       }
 
       if (nudgeText) {
-        nudgeText.textContent = 'Звоните администратору, уточняйте удобное время записи и закрепляйте скидку на выбранную услугу.';
+        nudgeText.textContent = 'Звоните, уточняйте удобное время записи и закрепляйте скидку на выбранную услугу.';
       }
 
       if (nudgeEyebrow) {
@@ -411,6 +491,7 @@ const serviceSchema = {
     border-radius: 36px;
     background:
       linear-gradient(90deg, rgba(0, 0, 0, 0.58) 0%, rgba(0, 0, 0, 0.42) 45%, rgba(0, 0, 0, 0.76) 100%),
+      linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.2) 100%),
       var(--cleaning-hero-image) center/cover no-repeat;
     box-shadow: var(--shadow-lg);
   }
@@ -453,6 +534,20 @@ const serviceSchema = {
     margin-bottom: 0;
   }
 
+  .cleaning-landing-hero__actions .button-primary {
+    background: rgba(74, 92, 0, 0.86);
+    color: #ffffff;
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+  }
+
+  .cleaning-landing-hero__actions .button-primary:hover,
+  .cleaning-landing-hero__actions .button-primary:focus-visible {
+    background: rgba(255, 255, 255, 0.02);
+    color: #ffffff;
+    border-color: var(--accent-hover);
+  }
+
   .cleaning-landing-hero__actions .button-secondary {
     color: #ffffff;
   }
@@ -464,7 +559,7 @@ const serviceSchema = {
     justify-content: start;
     gap: 8px;
     padding: 0;
-    margin: 4px 0 0;
+    margin: 10px 0 0;
     list-style: none;
   }
 
@@ -609,8 +704,15 @@ const serviceSchema = {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
+  .cleaning-process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(20px, 3vw, 30px);
+  }
+
   .cleaning-gallery-card {
-    padding: 10px;
+    padding: 0;
+    overflow: hidden;
   }
 
   .cleaning-gallery-media {
@@ -618,10 +720,10 @@ const serviceSchema = {
     place-items: center;
     min-height: 180px;
     aspect-ratio: 16 / 10;
-    margin-bottom: 14px;
+    margin: 0;
     overflow: hidden;
-    border: 1px dashed rgba(217, 255, 0, 0.38);
-    border-radius: 16px;
+    border: 0;
+    border-radius: inherit;
     color: rgba(255, 255, 255, 0.62);
     font-weight: 900;
     letter-spacing: 0.12em;
@@ -635,6 +737,96 @@ const serviceSchema = {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .cleaning-process-card {
+    display: flex;
+    overflow: hidden;
+    padding: 10px;
+  }
+
+  .cleaning-process-frame {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #050505;
+  }
+
+  .cleaning-process-frame video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #050505;
+    object-fit: cover;
+  }
+
+  .cleaning-process-frame .cleaning-process-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    background: #050505;
+    object-fit: cover;
+  }
+
+  .cleaning-process-card--image .cleaning-process-frame {
+    display: flex;
+    flex: 1;
+    height: 100%;
+  }
+
+  .cleaning-process-play {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    border: 0;
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.06) 0 16%, rgba(0, 0, 0, 0.34) 100%);
+    cursor: pointer;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+
+  .cleaning-process-play span {
+    position: relative;
+    width: clamp(56px, 8vw, 78px);
+    height: clamp(56px, 8vw, 78px);
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    border-radius: 999px;
+    background: rgba(5, 5, 5, 0.62);
+    box-shadow: 0 18px 46px rgba(0, 0, 0, 0.45), 0 0 28px rgba(217, 255, 0, 0.24);
+    backdrop-filter: blur(8px);
+  }
+
+  .cleaning-process-play span::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border-top: 13px solid transparent;
+    border-bottom: 13px solid transparent;
+    border-left: 20px solid var(--accent);
+    transform: translate(-35%, -50%);
+  }
+
+  .cleaning-process-play:hover span,
+  .cleaning-process-play:focus-visible span {
+    border-color: rgba(217, 255, 0, 0.78);
+    box-shadow: 0 18px 46px rgba(0, 0, 0, 0.45), var(--glow);
+  }
+
+  .cleaning-process-play:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -8px;
+  }
+
+  .cleaning-process-frame.is-playing .cleaning-process-play {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
   }
 
   .cleaning-format-grid {
@@ -694,7 +886,8 @@ const serviceSchema = {
     }
 
     .cleaning-gallery-grid,
-    .cleaning-step-grid {
+    .cleaning-step-grid,
+    .cleaning-process-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
@@ -705,7 +898,8 @@ const serviceSchema = {
     .cleaning-offer-strip,
     .cleaning-gallery-grid,
     .cleaning-feature-grid,
-    .cleaning-step-grid {
+    .cleaning-step-grid,
+    .cleaning-process-grid {
       grid-template-columns: 1fr;
     }
 
@@ -732,6 +926,11 @@ const serviceSchema = {
 
     .cleaning-landing-hero {
       padding-top: 2px;
+    }
+
+    :global(body:has(.cleaning-landing-hero) .promo-offer) {
+      bottom: 12px;
+      width: min(312px, calc(100vw - 20px));
     }
 
     .cleaning-landing-hero__card {
