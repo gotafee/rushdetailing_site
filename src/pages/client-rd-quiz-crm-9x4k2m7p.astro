@@ -2,11 +2,14 @@
 const pageTitle = 'Rush Detailing Demo';
 const leadEndpoint = import.meta.env.PUBLIC_DEMO_LEAD_ENDPOINT || 'https://rushdetailing-leads.bakeev19karim1207.workers.dev';
 const services = [
-  { title: 'Полировка кузова', price: 15000 },
-  { title: 'Предпродажная подготовка', price: 18000 },
-  { title: 'Оклейка авто бронепленкой', price: 30000 },
-  { title: 'Химчистка салона', price: 10000 },
-  { title: 'Детейлинг мойка', price: 4500 },
+  { title: 'Полировка кузова', price: 15000, vehicles: ['Седан', 'Кроссовер'], checked: true },
+  { title: 'Предпродажная подготовка', price: 18000, vehicles: ['Седан', 'Кроссовер'] },
+  { title: 'Оклейка авто бронепленкой', price: 30000, vehicles: ['Седан', 'Кроссовер'] },
+  { title: 'Химчистка салона', price: 10000, vehicles: ['Седан', 'Кроссовер'] },
+  { title: 'Детейлинг мойка', price: 4500, vehicles: ['Седан', 'Кроссовер'] },
+  { title: 'Мойка мотоциклов', price: 1500, vehicles: ['Мото'] },
+  { title: 'Детейлинг мотоциклов', price: 25000, vehicles: ['Мото'], checked: true },
+  { title: 'Полировка мотоциклов', price: 10000, vehicles: ['Мото'] },
 ];
 ---
 
@@ -90,6 +93,11 @@ const services = [
                     <img src="/images/crossover.png" alt="" loading="lazy" />
                     <span>Кроссовер</span>
                   </label>
+                  <label>
+                    <input type="radio" name="car" value="Мото" data-multiplier="1" />
+                    <img src="/images/moto.png" alt="" loading="lazy" />
+                    <span>Мото</span>
+                  </label>
                 </div>
               </fieldset>
 
@@ -97,13 +105,13 @@ const services = [
                 <legend>2. Выберите услуги</legend>
                 <div class="service-list">
                   {services.map((service) => (
-                    <label>
+                    <label data-vehicles={service.vehicles.join('|')}>
                       <input
                         type="checkbox"
                         name="services"
                         value={service.title}
                         data-price={service.price}
-                        checked={service.title === 'Полировка кузова'}
+                        checked={service.checked}
                       />
                       <span>{service.title}</span>
                       <b>{service.price.toLocaleString('ru-RU')} ₽</b>
@@ -195,13 +203,30 @@ const services = [
       const chatMessages = document.querySelector('[data-chat-messages]');
       const chatForm = document.querySelector('[data-chat-form]');
       const quickReplies = document.querySelectorAll('[data-question]');
+      const serviceLabels = Array.from(quizForm.querySelectorAll('.service-list label'));
 
       const formatPrice = (value) => new Intl.NumberFormat('ru-RU').format(value) + ' ₽';
+
+      const syncServicesForVehicle = () => {
+        const car = quizForm.querySelector('input[name="car"]:checked')?.value || '';
+        let hasCheckedVisibleService = false;
+        serviceLabels.forEach((label) => {
+          const input = label.querySelector('input[name="services"]');
+          const visible = (label.dataset.vehicles || '').split('|').includes(car);
+          label.hidden = !visible;
+          if (!visible) input.checked = false;
+          if (visible && input.checked) hasCheckedVisibleService = true;
+        });
+        if (!hasCheckedVisibleService) {
+          const firstVisibleInput = serviceLabels.find((label) => !label.hidden)?.querySelector('input[name="services"]');
+          if (firstVisibleInput) firstVisibleInput.checked = true;
+        }
+      };
 
       const getQuizData = () => {
         const data = new FormData(quizForm);
         const carInput = quizForm.querySelector('input[name="car"]:checked');
-        const serviceInputs = Array.from(quizForm.querySelectorAll('input[name="services"]:checked'));
+        const serviceInputs = Array.from(quizForm.querySelectorAll('.service-list label:not([hidden]) input[name="services"]:checked'));
         const multiplier = Number(carInput?.dataset.multiplier || 1);
         const base = serviceInputs.reduce((sum, input) => sum + Number(input.dataset.price || 0), 0);
         return {
@@ -223,7 +248,10 @@ const services = [
         priceNode.textContent = formatPrice(lead.price);
       };
 
-      quizForm.addEventListener('change', renderSummary);
+      quizForm.addEventListener('change', (event) => {
+        if (event.target?.name === 'car') syncServicesForVehicle();
+        renderSummary();
+      });
       quizForm.addEventListener('input', renderSummary);
       quizForm.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -303,6 +331,7 @@ const services = [
         input.value = '';
       });
 
+      syncServicesForVehicle();
       renderSummary();
     </script>
   </body>
@@ -365,8 +394,8 @@ const services = [
   .quiz__main { padding: 30px 34px; }
   fieldset { margin: 0 0 28px; padding: 0; border: 0; }
   legend { margin-bottom: 16px; font-weight: 900; }
-  .car-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--line); }
-  .car-tabs label { display: grid; place-items: center; gap: 10px; min-height: 92px; border-right: 1px solid var(--line); cursor: pointer; color: var(--muted); font-size: 15px; font-weight: 900; transition: color .22s ease, background .22s ease, box-shadow .22s ease, transform .22s ease; }
+  .car-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--line); }
+  .car-tabs label { display: grid; place-items: center; gap: 5px; min-height: 92px; border-right: 1px solid var(--line); cursor: pointer; color: var(--muted); font-size: 15px; font-weight: 900; transition: color .22s ease, background .22s ease, box-shadow .22s ease, transform .22s ease; }
   .car-tabs label:last-child { border-right: 0; }
   .car-tabs input { position: absolute; opacity: 0; }
   .car-tabs img { width: 54px; height: 32px; object-fit: contain; opacity: .72; filter: invert(1) brightness(1.4); transition: opacity .22s ease, transform .22s ease, filter .22s ease; }
