@@ -2,13 +2,11 @@
 const pageTitle = 'Rush Detailing Demo';
 const leadEndpoint = import.meta.env.PUBLIC_DEMO_LEAD_ENDPOINT || 'https://rushdetailing-leads.bakeev19karim1207.workers.dev';
 const services = [
-  { title: 'Полировка кузова', price: 15000, icon: 'spark' },
-  { title: 'Защитное покрытие', price: 4000, icon: 'shield' },
-  { title: 'Воск', price: 4000, icon: 'drop' },
-  { title: 'Пленка на зоны риска', price: 45000, icon: 'film' },
-  { title: 'Полная оклейка', price: 120000, icon: 'wrap' },
-  { title: 'Химчистка салона', price: 10000, icon: 'seat' },
-  { title: 'Мойка кузова', price: 2600, icon: 'wash' },
+  { title: 'Полировка кузова', price: 15000 },
+  { title: 'Предпродажная подготовка', price: 18000 },
+  { title: 'Оклейка авто бронепленкой', price: 30000 },
+  { title: 'Химчистка салона', price: 10000 },
+  { title: 'Детейлинг мойка', price: 4500 },
 ];
 ---
 
@@ -84,15 +82,13 @@ const services = [
                 <div class="car-tabs">
                   <label>
                     <input type="radio" name="car" value="Седан" data-multiplier="1" checked />
+                    <img src="/images/sedan.png" alt="" loading="lazy" />
                     <span>Седан</span>
                   </label>
                   <label>
                     <input type="radio" name="car" value="Кроссовер" data-multiplier="1.25" />
+                    <img src="/images/crossover.png" alt="" loading="lazy" />
                     <span>Кроссовер</span>
-                  </label>
-                  <label>
-                    <input type="radio" name="car" value="Спорткар" data-multiplier="1.4" />
-                    <span>Спорткар</span>
                   </label>
                 </div>
               </fieldset>
@@ -138,7 +134,6 @@ const services = [
             <aside class="quiz__summary">
               <div class="summary-head">
                 <h3>Итого</h3>
-                <span>VIP</span>
               </div>
               <dl>
                 <div><dt>Авто</dt><dd data-summary-car>Седан</dd></div>
@@ -350,9 +345,10 @@ const services = [
   .hero p, .cards p, .hero-card p { color: var(--muted); line-height: 1.65; }
   .hero p { max-width: 720px; margin: 22px 0 0; font-size: 18px; }
   .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
-  .button { display: inline-flex; align-items: center; justify-content: center; min-height: 54px; padding: 0 22px; border-radius: 10px; border: 1px solid var(--line); cursor: pointer; color: #fff; font-weight: 900; }
+  .button { display: inline-flex; align-items: center; justify-content: center; min-height: 54px; padding: 0 22px; border-radius: 10px; border: 1px solid var(--line); cursor: pointer; color: #fff; font-weight: 900; transition: transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease; }
+  .button:hover { transform: translateY(-1px); }
   .button-primary { border-color: rgba(217,255,0,.86); background: rgba(53,68,0,.92); box-shadow: var(--glow); }
-  .button-primary:hover { background: rgba(255,255,255,.035); }
+  .button-primary:hover { background: rgba(72,92,0,.96); box-shadow: 0 0 44px rgba(217,255,0,.32); }
   .button-secondary { background: rgba(255,255,255,.04); }
   .hero-card, .cards article, .quiz, .chat-widget { border: 1px solid var(--line); background: rgba(17,19,15,.88); box-shadow: 0 28px 80px rgba(0,0,0,.38); backdrop-filter: blur(18px); }
   .hero-card { display: grid; align-content: end; min-height: 420px; padding: 28px; border-radius: 18px; }
@@ -365,28 +361,33 @@ const services = [
   .cards h2 { font-size: 24px; }
   .section-heading { margin-bottom: 22px; }
   .section-heading h2 { font-size: clamp(34px, 4vw, 58px); line-height: 1; }
-  .quiz { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 6px; border-radius: 8px; overflow: hidden; }
+  .quiz { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 6px; border-radius: 8px; overflow: hidden; animation: quizLift .45s ease both; }
   .quiz__main { padding: 30px 34px; }
   fieldset { margin: 0 0 28px; padding: 0; border: 0; }
   legend { margin-bottom: 16px; font-weight: 900; }
-  .car-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--line); }
-  .car-tabs label { display: grid; place-items: center; min-height: 76px; border-right: 1px solid var(--line); cursor: pointer; color: var(--muted); font-size: 15px; font-weight: 900; }
+  .car-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--line); }
+  .car-tabs label { display: grid; place-items: center; gap: 10px; min-height: 92px; border-right: 1px solid var(--line); cursor: pointer; color: var(--muted); font-size: 15px; font-weight: 900; transition: color .22s ease, background .22s ease, box-shadow .22s ease, transform .22s ease; }
   .car-tabs label:last-child { border-right: 0; }
   .car-tabs input { position: absolute; opacity: 0; }
-  .car-tabs label:has(input:checked) { background: rgba(217,255,0,.12); box-shadow: inset 0 -2px 0 var(--accent); color: #fff; }
+  .car-tabs img { width: 54px; height: 32px; object-fit: contain; opacity: .72; filter: invert(1) brightness(1.4); transition: opacity .22s ease, transform .22s ease, filter .22s ease; }
+  .car-tabs label:hover { background: rgba(255,255,255,.035); color: #fff; }
+  .car-tabs label:hover img { opacity: 1; transform: translateY(-1px); }
+  .car-tabs label:has(input:checked) { background: rgba(217,255,0,.12); box-shadow: inset 0 -2px 0 var(--accent); color: #fff; transform: translateY(-1px); }
+  .car-tabs label:has(input:checked) img { opacity: 1; filter: invert(1) brightness(1.55) drop-shadow(0 0 12px rgba(217,255,0,.28)); }
   .service-list { display: grid; gap: 2px; }
-  .service-list label { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; min-height: 50px; padding: 0 16px; background: rgba(255,255,255,.018); cursor: pointer; }
+  .service-list label { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; min-height: 52px; padding: 0 16px; background: rgba(255,255,255,.018); cursor: pointer; transition: transform .2s ease, background .2s ease, box-shadow .2s ease; }
+  .service-list label:hover { background: rgba(255,255,255,.04); transform: translateX(2px); }
+  .service-list label:has(input:checked) { background: rgba(217,255,0,.055); box-shadow: inset 2px 0 0 rgba(217,255,0,.72); }
   .service-list input { width: 18px; height: 18px; accent-color: var(--accent); }
   .service-list span { color: rgba(255,255,255,.84); font-size: 14px; font-weight: 800; }
   .service-list b { color: rgba(255,255,255,.7); font-size: 14px; }
   .contact-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .contact-grid label { display: grid; gap: 8px; color: var(--muted); font-size: 13px; font-weight: 900; }
-  .contact-grid input, .contact-grid select { min-height: 48px; border: 1px solid var(--line); border-radius: 8px; background: #0b0d09; color: #fff; padding: 0 12px; outline: none; }
-  .contact-grid input:focus, .contact-grid select:focus { border-color: var(--accent); }
+  .contact-grid input, .contact-grid select { min-height: 48px; border: 1px solid var(--line); border-radius: 8px; background: #0b0d09; color: #fff; padding: 0 12px; outline: none; transition: border-color .2s ease, box-shadow .2s ease, background .2s ease; }
+  .contact-grid input:focus, .contact-grid select:focus { border-color: var(--accent); background: #0f120b; box-shadow: 0 0 0 3px rgba(217,255,0,.08); }
   .quiz__summary { display: flex; flex-direction: column; min-height: 100%; padding: 30px; border-left: 1px solid rgba(217,255,0,.52); background: rgba(7,8,6,.78); }
   .summary-head { display: flex; align-items: center; justify-content: space-between; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
   .summary-head h3 { font-size: 24px; }
-  .summary-head span { padding: 6px 12px; border: 1px solid var(--line); color: var(--muted); font-size: 11px; font-weight: 900; letter-spacing: .18em; }
   dl { display: grid; gap: 16px; margin: 24px 0; }
   dl div, .price-row { display: flex; justify-content: space-between; gap: 18px; }
   dt, .price-row span { color: var(--muted); font-weight: 900; }
@@ -416,4 +417,5 @@ const services = [
   .chat-form input { flex: 1; min-height: 38px; border: 1px solid #dedede; border-radius: 999px; padding: 0 12px; outline: none; }
   @media (max-width: 980px) { .hero__grid, .cards, .quiz { grid-template-columns: 1fr; } .quiz__summary { border-left: 0; border-top: 1px solid rgba(217,255,0,.52); } }
   @media (max-width: 640px) { .container { width: min(100% - 20px, 1220px); } .hero { min-height: auto; padding-top: 42px; } .hero__actions, .contact-grid { flex-direction: column; grid-template-columns: 1fr; } .car-tabs { grid-template-columns: 1fr; } .car-tabs label { border-right: 0; border-bottom: 1px solid var(--line); } .quiz__main, .quiz__summary { padding: 20px; } .chat-form { flex-direction: row; } .chat-form button { flex: 0 0 auto; } }
+  @keyframes quizLift { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 </style>
