@@ -89,7 +89,7 @@ const services = [
                     <span>Седан</span>
                   </label>
                   <label>
-                    <input type="radio" name="car" value="Кроссовер" data-multiplier="1.25" />
+                    <input type="radio" name="car" value="Кроссовер" data-multiplier="1" />
                     <img src="/images/crossover.png" alt="" loading="lazy" />
                     <span>Кроссовер</span>
                   </label>
@@ -227,7 +227,6 @@ const services = [
         const data = new FormData(quizForm);
         const carInput = quizForm.querySelector('input[name="car"]:checked');
         const serviceInputs = Array.from(quizForm.querySelectorAll('.service-list label:not([hidden]) input[name="services"]:checked'));
-        const multiplier = Number(carInput?.dataset.multiplier || 1);
         const base = serviceInputs.reduce((sum, input) => sum + Number(input.dataset.price || 0), 0);
         return {
           car: data.get('car') || '',
@@ -236,7 +235,7 @@ const services = [
           name: String(data.get('name') || '').trim(),
           phone: String(data.get('phone') || '').trim(),
           email: String(data.get('email') || '').trim(),
-          price: Math.round(base * multiplier),
+          price: base,
         };
       };
 
