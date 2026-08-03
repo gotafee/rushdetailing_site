@@ -95,5 +95,16 @@ const chatEndpoint = import.meta.env.PUBLIC_DEMO_CHAT_ENDPOINT || 'https://rush-
   .rush-ai__form input { flex:1; min-width:0; height:48px; border:1px solid rgba(255,255,255,.17); border-radius:13px; background:#15171a; color:#fff; padding:0 13px; font:500 14px Manrope,sans-serif; outline:none; }
   .rush-ai__form input:focus { border-color:#d9ff00; }
   .rush-ai__form button { width:48px; height:48px; border:0; border-radius:13px; background:#d9ff00; color:#080909; font-size:21px; cursor:pointer; }
-  @media (max-width:640px) { .rush-ai__fab { left:16px; bottom:16px; width:54px; height:54px; } .rush-ai__head { padding:20px; } .rush-ai__body { padding:16px; } }
+  @media (max-width:640px) {
+    /* Keep AI separate from the mobile CTA and the promo card. */
+    .rush-ai__fab {
+      left:auto;
+      right:16px;
+      bottom:calc(210px + env(safe-area-inset-bottom, 0px));
+      width:54px;
+      height:54px;
+    }
+    .rush-ai__head { padding:20px; }
+    .rush-ai__body { padding:16px; }
+  }
 </style>
