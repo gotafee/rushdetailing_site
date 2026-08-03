@@ -1730,7 +1730,7 @@ li {
     display: grid;
     width: calc(100vw - 94px);
     max-width: 340px;
-    inset: auto auto calc(12px + env(safe-area-inset-bottom, 0px)) 12px;
+    inset: auto auto calc(4px + env(safe-area-inset-bottom, 0px)) 12px;
     left: 12px;
     right: auto;
     transform: none;
@@ -1753,7 +1753,7 @@ li {
     bottom: 88px;
     transform: translate(-50%, 12px);
     grid-template-columns: 44px minmax(0, 1fr);
-    width: min(312px, calc(100vw - 20px));
+    width: min(420px, calc(100vw - 24px));
     gap: 9px;
     padding: 9px;
     border-radius: 18px;
