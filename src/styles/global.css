@@ -1784,9 +1784,13 @@ li {
     letter-spacing: 0.12em;
   }
 
+  .promo-offer__copy {
+    align-self: center;
+  }
+
   .promo-offer__copy strong {
-    font-size: 0.82rem;
-    line-height: 1.12;
+    font-size: 0.96rem;
+    line-height: 1.16;
   }
 
   .promo-offer__copy span {
