@@ -96,11 +96,11 @@ const chatEndpoint = import.meta.env.PUBLIC_DEMO_CHAT_ENDPOINT || 'https://rush-
   .rush-ai__form input:focus { border-color:#d9ff00; }
   .rush-ai__form button { width:48px; height:48px; border:0; border-radius:13px; background:#d9ff00; color:#080909; font-size:21px; cursor:pointer; }
   @media (max-width:640px) {
-    /* Keep AI separate from the mobile CTA and the promo card. */
+    /* On mobile the chat button shares the bottom action row with the CTA. */
     .rush-ai__fab {
       left:auto;
-      right:16px;
-      bottom:calc(210px + env(safe-area-inset-bottom, 0px));
+      right:14px;
+      bottom:calc(12px + env(safe-area-inset-bottom, 0px));
       width:54px;
       height:54px;
     }

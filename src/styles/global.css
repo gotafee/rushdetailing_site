@@ -1728,11 +1728,12 @@ li {
 
   .mobile-cta-bar {
     display: grid;
-    width: min(300px, calc(100vw - 48px));
-    inset: auto auto 12px auto;
-    left: 50%;
+    width: calc(100vw - 94px);
+    max-width: 340px;
+    inset: auto auto calc(12px + env(safe-area-inset-bottom, 0px)) 12px;
+    left: 12px;
     right: auto;
-    transform: translateX(-50%);
+    transform: none;
     gap: 6px;
     padding: 8px;
   }
