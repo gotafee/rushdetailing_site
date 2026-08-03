@@ -1,6 +1,7 @@
 ---
 const pageTitle = 'Rush Detailing Demo';
-const leadEndpoint = import.meta.env.PUBLIC_DEMO_LEAD_ENDPOINT || 'https://rushdetailing-leads.bakeev19karim1207.workers.dev';
+const leadEndpoint = import.meta.env.PUBLIC_DEMO_LEAD_ENDPOINT || 'https://rushdetailing-leads.bakeevkarim.workers.dev';
+const chatEndpoint = import.meta.env.PUBLIC_DEMO_CHAT_ENDPOINT || 'https://rush-ai-chat-fix.bakeevkarim.workers.dev/chat';
 const services = [
   { title: 'Полировка кузова', price: 15000, vehicles: ['Седан', 'Кроссовер'], checked: true },
   { title: 'Предпродажная подготовка', price: 18000, vehicles: ['Седан', 'Кроссовер'] },
@@ -123,9 +124,9 @@ const services = [
               <fieldset>
                 <legend>3. Контакты и запись</legend>
                 <div class="contact-grid">
-                  <label>Имя<input type="text" name="name" placeholder="Алексей" required /></label>
-                  <label>Телефон<input type="tel" name="phone" placeholder="+7 925 000-00-00" required /></label>
-                  <label>Email<input type="email" name="email" placeholder="client@mail.ru" required /></label>
+                  <label>Имя<input type="text" name="name" placeholder="Алексей" data-name-only required /></label>
+                  <label>Телефон<input type="tel" name="phone" placeholder="79250000000" inputmode="numeric" pattern="[0-9]{10,15}" maxlength="15" data-phone-only required /></label>
+                  <label>Email<input type="email" name="email" placeholder="client@mail.ru" data-email-only required /></label>
                   <label>
                     Когда удобно
                     <select name="time">
@@ -161,32 +162,28 @@ const services = [
       </section>
     </main>
 
+    <div class="chat-backdrop" data-close-chat></div>
     <button class="chat-fab" type="button" data-open-chat aria-label="Открыть чат">?</button>
 
     <section class="chat-widget" data-chat-widget aria-hidden="true">
       <div class="chat-widget__top">
-        <div class="chat-logo">RD</div>
-        <button type="button" data-close-chat aria-label="Закрыть чат">×</button>
-        <h2>Есть вопрос?</h2>
-        <p>Напишите боту или выберите удобный канал.</p>
+        <div class="chat-topline">
+          <button type="button" data-close-chat aria-label="Закрыть чат">×</button>
+        </div>
+        <p class="chat-kicker">Rush Detailing assistant</p>
+        <h2>Поможем с выбором услуги</h2>
+        <p>Задайте вопрос по цене, срокам или записи. Ответ появится прямо здесь.</p>
       </div>
       <div class="chat-widget__body">
-        <div class="channel-list">
-          <a href="https://api.whatsapp.com/send/?phone=79254706712" target="_blank" rel="noreferrer">WhatsApp</a>
-          <a href="https://t.me/rushdetailing" target="_blank" rel="noreferrer">Telegram</a>
-        </div>
         <div class="messages" data-chat-messages>
-          <p class="message message-bot">Здравствуйте. Я могу подсказать цены, сроки, услуги и запись.</p>
+          <p class="message message-bot">Здравствуйте. Я могу подсказать цены, сроки, услуги и помочь перейти к записи.</p>
         </div>
-        <div class="quick-replies">
-          <button type="button" data-question="Сколько стоит химчистка?">Цена химчистки</button>
-          <button type="button" data-question="Сколько занимает полировка?">Срок полировки</button>
-          <button type="button" data-question="Как записаться?">Запись</button>
+        <div class="chat-actions">
+          <form class="chat-form" data-chat-form data-endpoint={chatEndpoint}>
+            <input type="text" name="question" placeholder="Напишите вопрос" autocomplete="off" />
+            <button type="submit">Отправить</button>
+          </form>
         </div>
-        <form class="chat-form" data-chat-form>
-          <input type="text" name="question" placeholder="Напишите вопрос" autocomplete="off" />
-          <button type="submit">Отправить</button>
-        </form>
       </div>
     </section>
 
@@ -199,11 +196,28 @@ const services = [
       const priceNode = document.querySelector('[data-summary-price]');
       const chatWidget = document.querySelector('[data-chat-widget]');
       const openChatButtons = document.querySelectorAll('[data-open-chat]');
-      const closeChatButton = document.querySelector('[data-close-chat]');
+      const closeChatButtons = document.querySelectorAll('[data-close-chat]');
       const chatMessages = document.querySelector('[data-chat-messages]');
       const chatForm = document.querySelector('[data-chat-form]');
-      const quickReplies = document.querySelectorAll('[data-question]');
       const serviceLabels = Array.from(quizForm.querySelectorAll('.service-list label'));
+      const namePattern = /^[\p{L}\s-]+$/u;
+      const emailPattern = /^[A-Za-zА-Яа-яЁё._-]+@[A-Za-zА-Яа-яЁё-]+(?:\.[A-Za-zА-Яа-яЁё-]+)+$/;
+
+      quizForm.querySelectorAll('[data-name-only]').forEach((input) => {
+        input.addEventListener('input', () => {
+          input.value = input.value.replace(/[^\p{L}\s-]/gu, '');
+        });
+      });
+      quizForm.querySelectorAll('[data-phone-only]').forEach((input) => {
+        input.addEventListener('input', () => {
+          input.value = input.value.replace(/\D/g, '').slice(0, 15);
+        });
+      });
+      quizForm.querySelectorAll('[data-email-only]').forEach((input) => {
+        input.addEventListener('input', () => {
+          input.value = input.value.replace(/[^A-Za-zА-Яа-яЁё@._-]/g, '');
+        });
+      });
 
       const formatPrice = (value) => new Intl.NumberFormat('ru-RU').format(value) + ' ₽';
 
@@ -257,6 +271,18 @@ const services = [
         if (!quizForm.reportValidity()) return;
 
         const lead = getQuizData();
+        if (!namePattern.test(lead.name)) {
+          statusNode.textContent = 'Имя может содержать только буквы, пробел и дефис.';
+          return;
+        }
+        if (!/^\d{10,15}$/.test(lead.phone)) {
+          statusNode.textContent = 'Укажите номер только цифрами: от 10 до 15 знаков.';
+          return;
+        }
+        if (!emailPattern.test(lead.email)) {
+          statusNode.textContent = 'Введите корректный email без цифр.';
+          return;
+        }
         const payload = {
           name: lead.name,
           contact: lead.phone,
@@ -287,22 +313,22 @@ const services = [
 
       const openChat = () => {
         chatWidget.classList.add('is-open');
+        document.body.classList.add('chat-is-open');
+        document.documentElement.classList.add('chat-is-open');
         chatWidget.setAttribute('aria-hidden', 'false');
       };
       const closeChat = () => {
         chatWidget.classList.remove('is-open');
+        document.body.classList.remove('chat-is-open');
+        document.documentElement.classList.remove('chat-is-open');
         chatWidget.setAttribute('aria-hidden', 'true');
       };
       openChatButtons.forEach((button) => button.addEventListener('click', openChat));
-      closeChatButton.addEventListener('click', closeChat);
+      closeChatButtons.forEach((button) => button.addEventListener('click', closeChat));
 
-      const answers = [
-        ['химчист', 'Химчистка салона начинается от 10 000 ₽. Точная цена зависит от загрязнений и материала салона.'],
-        ['полиров', 'Полировка обычно занимает от одного рабочего дня. Сложные работы и покрытие требуют больше времени.'],
-        ['запис', 'Оставьте заявку в квизе: менеджер увидит авто, услуги, цену и удобное время.'],
-        ['пленк', 'Пленка на зоны риска стоит от 45 000 ₽, полная оклейка от 120 000 ₽.'],
-        ['мойк', 'Мойка кузова в демо-расчете стоит 2 600 ₽. Можно добавить ее к любой услуге.'],
-      ];
+      const chatHistory = [];
+      const dialogId = window.localStorage.getItem('rushDemoDialogId') || crypto.randomUUID();
+      window.localStorage.setItem('rushDemoDialogId', dialogId);
 
       const addMessage = (text, type) => {
         const node = document.createElement('p');
@@ -312,17 +338,39 @@ const services = [
         chatMessages.scrollTop = chatMessages.scrollHeight;
       };
 
-      const reply = (question) => {
-        if (!question.trim()) return;
-        addMessage(question, 'user');
-        const normalized = question.toLowerCase();
-        const match = answers.find(([key]) => normalized.includes(key));
-        window.setTimeout(() => {
-          addMessage(match?.[1] || 'Могу подсказать по услугам, цене и записи. Для точного расчета оставьте заявку в квизе.', 'bot');
-        }, 250);
+      const requestChatAnswer = async (question) => {
+        const response = await fetch(chatForm.dataset.endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: question,
+            dialogId,
+            siteId: 'rush-detailing',
+            history: chatHistory.slice(-4),
+          }),
+        });
+        if (!response.ok) throw new Error('Chat request failed');
+        const data = await response.json();
+        if (!data?.answer) throw new Error('Empty chat answer');
+        return data.answer;
       };
 
-      quickReplies.forEach((button) => button.addEventListener('click', () => reply(button.dataset.question || '')));
+      const reply = async (question) => {
+        if (!question.trim()) return;
+        addMessage(question, 'user');
+        chatHistory.push({ role: 'user', content: question });
+        addMessage('Печатаю ответ...', 'bot');
+        const typingNode = chatMessages.lastElementChild;
+        try {
+          const answer = await requestChatAnswer(question);
+          typingNode.textContent = answer;
+          chatHistory.push({ role: 'assistant', content: answer });
+        } catch (error) {
+          typingNode.textContent = 'ИИ временно недоступен. Оставьте заявку — менеджер ответит лично.';
+        }
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      };
+
       chatForm.addEventListener('submit', (event) => {
         event.preventDefault();
         const input = chatForm.elements.question;
@@ -362,6 +410,7 @@ const services = [
     color: var(--text);
     font-family: Manrope, Arial, sans-serif;
   }
+  html.chat-is-open, body.chat-is-open { overflow: hidden; }
   a { color: inherit; text-decoration: none; }
   button, input, select { font: inherit; }
   .container { width: min(1220px, calc(100% - 32px)); margin: 0 auto; }
@@ -424,25 +473,38 @@ const services = [
   .price-row b { font-size: 34px; }
   .quiz__summary p, .quiz__summary small { color: var(--muted); font-size: 12px; line-height: 1.5; }
   .quiz__summary .button { margin-top: auto; width: 100%; }
-  .chat-fab { position: fixed; right: 26px; bottom: 24px; z-index: 20; width: 58px; height: 58px; border: 0; border-radius: 18px; background: var(--accent); color: #050505; font-size: 34px; line-height: 1; cursor: pointer; box-shadow: 0 18px 48px rgba(0,0,0,.32), var(--glow); }
-  .chat-widget { position: fixed; right: 26px; bottom: 94px; z-index: 25; width: min(470px, calc(100vw - 28px)); overflow: hidden; border: 0; border-radius: 16px; background: #f5f6fa; color: #171717; opacity: 0; pointer-events: none; transform: translateY(16px); transition: opacity .2s ease, transform .2s ease; }
-  .chat-widget.is-open { opacity: 1; pointer-events: auto; transform: translateY(0); }
-  .chat-widget__top { position: relative; min-height: 136px; padding: 20px 22px 16px; background: radial-gradient(circle at 18% 12%, rgba(255,255,255,.22), transparent 28%), linear-gradient(145deg, #d9ff00, #a8d600); }
-  .chat-logo { width: 34px; height: 34px; border-radius: 999px; background: #161616; color: var(--accent); display: grid; place-items: center; font-size: 12px; font-weight: 900; }
-  .chat-widget__top h2 { margin-top: 28px; font-family: Manrope, Arial, sans-serif; font-size: 26px; }
-  .chat-widget__top p { margin: 6px 0 0; color: #1c1c1c; }
-  .chat-widget__top button { position: absolute; top: 20px; right: 20px; border: 0; background: transparent; font-size: 20px; cursor: pointer; }
-  .chat-widget__body { padding: 16px 20px 18px; background: #f1f2f5; }
-  .channel-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-  .channel-list a { min-height: 40px; border-radius: 9px; background: #fff; display: grid; place-items: center; color: #111; font-weight: 900; box-shadow: 0 8px 20px rgba(0,0,0,.07); }
-  .messages { max-height: 150px; min-height: 68px; overflow: auto; }
-  .message { width: fit-content; max-width: 88%; margin: 0 0 7px; padding: 9px 12px; border-radius: 13px; line-height: 1.32; font-size: 13px; }
-  .message-bot { background: #fff; }
-  .message-user { margin-left: auto; background: #171717; color: #fff; }
-  .quick-replies { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
-  .quick-replies button, .chat-form button { min-height: 32px; border: 0; border-radius: 999px; background: #171717; color: #fff; padding: 0 12px; cursor: pointer; font-size: 12px; font-weight: 900; }
-  .chat-form { display: flex; gap: 8px; }
-  .chat-form input { flex: 1; min-height: 38px; border: 1px solid #dedede; border-radius: 999px; padding: 0 12px; outline: none; }
+  .chat-backdrop { position: fixed; inset: 0; z-index: 22; background: rgba(0,0,0,.58); opacity: 0; pointer-events: none; backdrop-filter: blur(6px); transition: opacity .28s ease; }
+  body.chat-is-open .chat-backdrop { opacity: 1; pointer-events: auto; }
+  .chat-fab { position: fixed; left: 26px; bottom: 24px; z-index: 21; width: 58px; height: 58px; border: 1px solid rgba(255,255,255,.28); border-radius: 18px; background: var(--accent); color: #050505; font-size: 34px; line-height: 1; cursor: pointer; box-shadow: 0 18px 48px rgba(0,0,0,.32), var(--glow); transition: transform .22s ease, box-shadow .22s ease; }
+  .chat-fab:hover { transform: translateY(-2px); box-shadow: 0 20px 60px rgba(0,0,0,.42), 0 0 44px rgba(217,255,0,.34); }
+  .chat-widget { position: fixed; inset: 0 auto 0 0; z-index: 25; width: min(520px, 100vw); height: 100vh; height: 100dvh; display: grid; grid-template-rows: auto 1fr; overflow: hidden; border-right: 1px solid rgba(217,255,0,.48); border-radius: 0; background: radial-gradient(circle at 50% 0, rgba(217,255,0,.12), transparent 34%), rgba(7,9,6,.98); color: #fff; opacity: 0; pointer-events: none; transform: translateX(-100%); box-shadow: 28px 0 90px rgba(0,0,0,.56), 4px 0 34px rgba(217,255,0,.14); transition: opacity .28s ease, transform .34s cubic-bezier(.2,.8,.2,1); }
+  .chat-widget.is-open { opacity: 1; pointer-events: auto; transform: translateX(0); }
+  .chat-widget__top { position: relative; padding: 28px 28px 24px; border-bottom: 1px solid rgba(255,255,255,.1); background: linear-gradient(180deg, rgba(22,27,16,.96), rgba(7,9,6,.9)); }
+  .chat-topline { display: flex; align-items: center; justify-content: flex-end; height: 0; margin-bottom: 0; }
+  .chat-kicker { margin: 0 0 10px; color: var(--accent); font-size: 12px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+  .chat-widget__top h2 { max-width: none; margin: 0; padding-right: 54px; font-family: Montserrat, Manrope, Arial, sans-serif; font-size: clamp(30px, 4vw, 42px); line-height: 1; }
+  .chat-widget__top p:not(.chat-kicker) { max-width: none; margin: 14px 0 0; padding-right: 54px; color: rgba(255,255,255,.68); line-height: 1.5; }
+  .chat-widget__top button { width: 42px; height: 42px; border: 1px solid rgba(255,255,255,.18); border-radius: 12px; background: rgba(255,255,255,.035); color: #fff; font-size: 22px; cursor: pointer; transition: border-color .2s ease, background .2s ease, transform .2s ease; }
+  .chat-widget__top button:hover { border-color: rgba(217,255,0,.72); background: rgba(217,255,0,.09); transform: rotate(3deg); }
+  .chat-widget__body { min-height: 0; display: grid; grid-template-rows: 1fr auto; padding: 22px 28px 26px; background: linear-gradient(180deg, rgba(12,14,10,.98), rgba(3,4,3,.98)); }
+  .messages { min-height: 0; overflow: auto; padding-right: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+  .messages::-webkit-scrollbar { width: 0; height: 0; }
+  .message { width: fit-content; max-width: 86%; margin: 0 0 12px; padding: 13px 15px; border-radius: 14px; line-height: 1.45; font-size: 14px; }
+  .message-bot { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); color: rgba(255,255,255,.86); }
+  .message-user { margin-left: auto; background: rgba(217,255,0,.9); color: #080a05; font-weight: 800; }
+  .chat-actions { display: grid; gap: 12px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.1); }
+  .channel-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .channel-list a { min-height: 46px; border: 1px solid rgba(217,255,0,.52); border-radius: 10px; background: rgba(217,255,0,.08); display: grid; place-items: center; color: #fff; font-weight: 900; transition: background .2s ease, transform .2s ease, box-shadow .2s ease; }
+  .channel-list a:hover { background: rgba(217,255,0,.16); transform: translateY(-1px); box-shadow: 0 0 28px rgba(217,255,0,.14); }
+  .quick-replies { display: flex; flex-wrap: wrap; gap: 8px; }
+  .quick-replies button, .chat-form button { min-height: 38px; border: 1px solid rgba(255,255,255,.12); border-radius: 999px; background: rgba(255,255,255,.07); color: #fff; padding: 0 14px; cursor: pointer; font-size: 12px; font-weight: 900; transition: background .2s ease, border-color .2s ease, transform .2s ease; }
+  .quick-replies button:hover { border-color: rgba(217,255,0,.62); background: rgba(217,255,0,.1); transform: translateY(-1px); }
+  .chat-form { display: flex; gap: 10px; }
+  .chat-form input { flex: 1; min-width: 0; min-height: 48px; border: 1px solid rgba(255,255,255,.14); border-radius: 12px; background: rgba(255,255,255,.06); color: #fff; padding: 0 14px; outline: none; transition: border-color .2s ease, box-shadow .2s ease, background .2s ease; }
+  .chat-form input::placeholder { color: rgba(255,255,255,.42); }
+  .chat-form input:focus { border-color: rgba(217,255,0,.72); background: rgba(255,255,255,.085); box-shadow: 0 0 0 3px rgba(217,255,0,.08); }
+  .chat-form button { min-height: 48px; border-color: rgba(217,255,0,.72); background: rgba(53,68,0,.9); border-radius: 12px; }
+  .chat-form button:hover { background: rgba(72,92,0,.96); transform: translateY(-1px); }
   @media (max-width: 980px) { .hero__grid, .cards, .quiz { grid-template-columns: 1fr; } .quiz__summary { border-left: 0; border-top: 1px solid rgba(217,255,0,.52); } }
   @media (max-width: 640px) { .container { width: min(100% - 20px, 1220px); } .hero { min-height: auto; padding-top: 42px; } .hero__actions, .contact-grid { flex-direction: column; grid-template-columns: 1fr; } .car-tabs { grid-template-columns: 1fr; } .car-tabs label { border-right: 0; border-bottom: 1px solid var(--line); } .quiz__main, .quiz__summary { padding: 20px; } .chat-form { flex-direction: row; } .chat-form button { flex: 0 0 auto; } }
   @keyframes quizLift { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

@@ -1,0 +1,1040 @@
+---
+const pageTitle = 'Демо: квиз, Google Sheets CRM и чат-бот';
+const sheetsEndpoint = import.meta.env.PUBLIC_DEMO_LEAD_ENDPOINT || '';
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{pageTitle}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Montserrat:wght@800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style is:global>
+      :root {
+        --bg: #090909;
+        --panel: #15121a;
+        --panel-2: #100f14;
+        --line: rgba(255, 255, 255, 0.12);
+        --muted: rgba(255, 255, 255, 0.68);
+        --text: #ffffff;
+        --accent: #d9ff00;
+        --accent-2: #bfff00;
+        --yellow: #d9ff00;
+        --olive: #354400;
+        --glow: 0 0 36px rgba(217, 255, 0, 0.28);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <div class="container hero__grid">
+          <div class="hero__copy">
+            <p class="eyebrow">AI заявки для сервиса</p>
+            <h1>Демо-страница с квизом, чат-ботом и CRM в Google Sheets</h1>
+            <p>
+              Посетитель читает короткое описание услуги, рассчитывает ориентир через квиз и оставляет контакты.
+              Заявка уходит в Google-таблицу, где менеджер видит лиды как в простой CRM.
+            </p>
+            <div class="hero__actions">
+              <a href="#quiz" class="button button-primary">Посмотреть квиз</a>
+              <button class="button button-secondary" type="button" data-open-chat>Открыть чат-бот</button>
+            </div>
+          </div>
+          <div class="hero__card">
+            <span>Сценарий демо</span>
+            <b>Сайт → Квиз → Google Sheets → Менеджер</b>
+            <p>На странице не показываем CRM-таблицу. Она находится отдельно в Google и пополняется после отправки формы.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container feature-grid">
+          <article>
+            <span>01</span>
+            <h2>Квиз вместо обычной формы</h2>
+            <p>Клиент выбирает тип автомобиля, услуги и удобное время. Итоговая стоимость считается сразу в правом блоке.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h2>Google Sheets как CRM</h2>
+            <p>После подключения Apps Script каждая заявка добавляется новой строкой в вашу Google-таблицу.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h2>Чат-бот на странице</h2>
+            <p>Большой виджет отвечает на частые вопросы и предлагает WhatsApp, Telegram или livechat.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section-soft">
+        <div class="container text-block">
+          <p class="eyebrow">Как это выглядит для клиента</p>
+          <h2>Сначала понятная страница, потом точка действия</h2>
+          <p>
+            Такой формат удобен для демонстрации заказчику: сверху объясняем ценность, ниже показываем автоматизацию.
+            Заявка не теряется в мессенджерах, а сразу попадает в таблицу с датой, контактом, услугами и суммой.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="quiz">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Квиз-заявка</p>
+            <h2>Рассчитать услугу и записаться</h2>
+          </div>
+
+          <form class="quiz" data-quiz-form data-endpoint={sheetsEndpoint}>
+            <div class="quiz__main">
+              <fieldset>
+                <legend>1. Тип автомобиля</legend>
+                <div class="car-tabs">
+                  <label>
+                    <input type="radio" name="car" value="Седан" data-multiplier="1" checked />
+                    <span>▰</span>
+                    Седан
+                  </label>
+                  <label>
+                    <input type="radio" name="car" value="Кроссовер" data-multiplier="1.25" />
+                    <span>▱</span>
+                    Кроссовер
+                  </label>
+                  <label>
+                    <input type="radio" name="car" value="Спорткар" data-multiplier="1.4" />
+                    <span>▰</span>
+                    Спорткар
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend>2. Выберите услуги</legend>
+                <div class="service-list">
+                  <label>
+                    <input type="checkbox" name="services" value="Детейлинг полировка кузова" data-price="15000" checked />
+                    <span>Детейлинг полировка кузова</span>
+                    <b>15 000 ₽</b>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="services" value="НАНО / Кварцевое покрытие" data-price="4000" />
+                    <span>НАНО / Кварцевое покрытие</span>
+                    <b>4 000 ₽</b>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="services" value="Твердый воск" data-price="4000" />
+                    <span>Твердый воск</span>
+                    <b>4 000 ₽</b>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="services" value="PPF зоны риска" data-price="45000" />
+                    <span>PPF зоны риска</span>
+                    <b>45 000 ₽</b>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="services" value="Полная оклейка PPF" data-price="120000" />
+                    <span>Полная оклейка PPF</span>
+                    <b>120 000 ₽</b>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="services" value="Химчистка салона" data-price="10000" />
+                    <span>Химчистка салона</span>
+                    <b>10 000 ₽</b>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="services" value="2-фазная мойка" data-price="2600" />
+                    <span>2-фазная мойка</span>
+                    <b>2 600 ₽</b>
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend>3. Контакты и запись</legend>
+                <div class="contact-grid">
+                  <label>
+                    Имя
+                    <input type="text" name="name" placeholder="Алексей" autocomplete="name" required />
+                  </label>
+                  <label>
+                    Телефон
+                    <input type="tel" name="phone" placeholder="+7 925 000-00-00" autocomplete="tel" required />
+                  </label>
+                  <label>
+                    Email
+                    <input type="email" name="email" placeholder="client@mail.ru" autocomplete="email" required />
+                  </label>
+                  <label>
+                    Когда удобно
+                    <select name="time">
+                      <option>Сегодня</option>
+                      <option>Завтра</option>
+                      <option>На выходных</option>
+                      <option>Нужен звонок</option>
+                    </select>
+                  </label>
+                </div>
+              </fieldset>
+            </div>
+
+            <aside class="quiz__summary">
+              <div class="summary-head">
+                <h3>Итого</h3>
+                <span>VIP</span>
+              </div>
+              <dl>
+                <div>
+                  <dt>Авто</dt>
+                  <dd data-summary-car>Седан</dd>
+                </div>
+                <div>
+                  <dt>Услуги</dt>
+                  <dd data-summary-services>1 услуга</dd>
+                </div>
+                <div>
+                  <dt>Время</dt>
+                  <dd data-summary-time>Сегодня</dd>
+                </div>
+              </dl>
+              <div class="price-row">
+                <span>Стоимость</span>
+                <b data-summary-price>15 000 ₽</b>
+              </div>
+              <p>*Ориентировочно. Зависит от состояния авто и размера колес.</p>
+              <button class="button button-primary" type="submit">Записаться с этим расчетом</button>
+              <small data-submit-status></small>
+            </aside>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <button class="chat-fab" type="button" data-open-chat aria-label="Открыть чат">
+      ?
+    </button>
+
+    <section class="chat-widget" data-chat-widget aria-hidden="true">
+      <div class="chat-widget__yellow">
+        <div class="chat-logo">RD</div>
+        <button type="button" data-close-chat aria-label="Закрыть чат">×</button>
+        <h2>Есть вопрос?</h2>
+        <p>Напишите нам, мы на связи!</p>
+      </div>
+      <div class="chat-widget__body">
+        <div class="channel-list">
+          <p>Выберите канал</p>
+          <a href="https://api.whatsapp.com/send/?phone=79254706712" target="_blank" rel="noreferrer">WhatsApp</a>
+          <a href="https://t.me/rushdetailing" target="_blank" rel="noreferrer">Telegram</a>
+          <button type="button" data-livechat>Livechat</button>
+        </div>
+        <div class="livechat" data-livechat-panel hidden>
+          <div class="messages" data-chat-messages>
+            <p class="message message-bot">Здравствуйте. Могу подсказать стоимость, сроки и свободные окна записи.</p>
+          </div>
+          <div class="quick-replies">
+            <button type="button" data-question="Сколько стоит химчистка?">Цена химчистки</button>
+            <button type="button" data-question="Сколько занимает полировка?">Срок полировки</button>
+            <button type="button" data-question="Как записаться?">Запись</button>
+          </div>
+          <form class="chat-form" data-chat-form>
+            <input type="text" name="question" placeholder="Напишите вопрос" autocomplete="off" />
+            <button type="submit">Отправить</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <script is:inline>
+      const quizForm = document.querySelector('[data-quiz-form]');
+      const statusNode = document.querySelector('[data-submit-status]');
+      const carNode = document.querySelector('[data-summary-car]');
+      const servicesNode = document.querySelector('[data-summary-services]');
+      const timeNode = document.querySelector('[data-summary-time]');
+      const priceNode = document.querySelector('[data-summary-price]');
+      const chatWidget = document.querySelector('[data-chat-widget]');
+      const openChatButtons = document.querySelectorAll('[data-open-chat]');
+      const closeChatButton = document.querySelector('[data-close-chat]');
+      const livechatButton = document.querySelector('[data-livechat]');
+      const livechatPanel = document.querySelector('[data-livechat-panel]');
+      const chatMessages = document.querySelector('[data-chat-messages]');
+      const chatForm = document.querySelector('[data-chat-form]');
+      const quickReplies = document.querySelectorAll('[data-question]');
+
+      const formatPrice = (value) => new Intl.NumberFormat('ru-RU').format(value) + ' ₽';
+
+      const getQuizData = () => {
+        const data = new FormData(quizForm);
+        const carInput = quizForm.querySelector('input[name="car"]:checked');
+        const serviceInputs = Array.from(quizForm.querySelectorAll('input[name="services"]:checked'));
+        const multiplier = Number(carInput?.dataset.multiplier || 1);
+        const base = serviceInputs.reduce((sum, input) => sum + Number(input.dataset.price || 0), 0);
+        const price = Math.round(base * multiplier);
+
+        return {
+          car: data.get('car') || '',
+          services: serviceInputs.map((input) => input.value),
+          time: data.get('time') || '',
+          name: String(data.get('name') || '').trim(),
+          phone: String(data.get('phone') || '').trim(),
+          email: String(data.get('email') || '').trim(),
+          price,
+        };
+      };
+
+      const renderSummary = () => {
+        const lead = getQuizData();
+        carNode.textContent = lead.car;
+        servicesNode.textContent = lead.services.length === 1 ? '1 услуга' : `${lead.services.length} услуг`;
+        timeNode.textContent = lead.time;
+        priceNode.textContent = formatPrice(lead.price);
+      };
+
+      quizForm.addEventListener('change', renderSummary);
+      quizForm.addEventListener('input', renderSummary);
+
+      quizForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!quizForm.reportValidity()) return;
+
+        const lead = getQuizData();
+        const payload = {
+          name: lead.name,
+          contact: lead.phone,
+          email: lead.email,
+          service: lead.services.join(', '),
+          source: 'demo-crm',
+          leadType: 'demo_quiz',
+          carMake: lead.car,
+          carModel: lead.time,
+          price: lead.price,
+        };
+
+        const endpoint = quizForm.dataset.endpoint;
+        statusNode.textContent = 'Отправляем заявку...';
+
+        if (!endpoint) {
+          statusNode.textContent = 'Демо: endpoint Google Sheets пока не подключен.';
+          return;
+        }
+
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+
+          if (!response.ok) throw new Error('Request failed');
+          statusNode.textContent = 'Заявка отправлена в Google Sheets.';
+          quizForm.reset();
+          renderSummary();
+        } catch {
+          statusNode.textContent = 'Не удалось отправить. Проверьте endpoint.';
+        }
+      });
+
+      const openChat = () => {
+        chatWidget.classList.add('is-open');
+        chatWidget.setAttribute('aria-hidden', 'false');
+      };
+
+      const closeChat = () => {
+        chatWidget.classList.remove('is-open');
+        chatWidget.setAttribute('aria-hidden', 'true');
+      };
+
+      openChatButtons.forEach((button) => button.addEventListener('click', openChat));
+      closeChatButton.addEventListener('click', closeChat);
+      livechatButton.addEventListener('click', () => {
+        livechatPanel.hidden = false;
+      });
+
+      const answers = [
+        ['химчист', 'Химчистка салона начинается от 10 000 ₽. Точный расчет зависит от загрязнений, материала салона и размера автомобиля.'],
+        ['полиров', 'Полировка обычно занимает от одного рабочего дня. Если добавляем защитное покрытие, срок согласуем отдельно.'],
+        ['запис', 'Можно оставить заявку в квизе. Она попадет в Google Sheets CRM, и менеджер увидит расчет, контакты и удобное время.'],
+        ['пленк', 'PPF зоны риска стоит от 45 000 ₽, полная оклейка от 120 000 ₽.'],
+      ];
+
+      const addMessage = (text, type) => {
+        const node = document.createElement('p');
+        node.className = `message message-${type}`;
+        node.textContent = text;
+        chatMessages.append(node);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      };
+
+      const reply = (question) => {
+        if (!question.trim()) return;
+        addMessage(question, 'user');
+        const normalized = question.toLowerCase();
+        const match = answers.find(([key]) => normalized.includes(key));
+        window.setTimeout(() => addMessage(match?.[1] || 'Подскажу по услугам, цене и записи. Для точного расчета оставьте заявку в квизе.', 'bot'), 250);
+      };
+
+      quickReplies.forEach((button) => button.addEventListener('click', () => reply(button.dataset.question || '')));
+      chatForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const input = chatForm.elements.question;
+        reply(input.value);
+        input.value = '';
+      });
+
+      renderSummary();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #090909;
+    --panel: #15121a;
+    --panel-2: #100f14;
+    --line: rgba(255, 255, 255, 0.12);
+    --muted: rgba(255, 255, 255, 0.68);
+    --text: #ffffff;
+    --accent: #d9ff00;
+    --accent-2: #bfff00;
+    --yellow: #d9ff00;
+    --olive: #354400;
+    --glow: 0 0 36px rgba(217, 255, 0, 0.28);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 18% 8%, rgba(217, 255, 0, 0.12), transparent 28%),
+      radial-gradient(circle at 84% 10%, rgba(99, 125, 0, 0.18), transparent 26%),
+      #050505;
+    color: var(--text);
+    font-family: Manrope, Arial, sans-serif;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button,
+  input,
+  select {
+    font: inherit;
+  }
+
+  .container {
+    width: min(1220px, calc(100% - 32px));
+    margin: 0 auto;
+  }
+
+  .hero {
+    min-height: 620px;
+    display: flex;
+    align-items: center;
+    padding: 72px 0 44px;
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+    gap: 28px;
+    align-items: stretch;
+  }
+
+  .eyebrow {
+    margin: 0 0 12px;
+    color: var(--accent-2);
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  h1,
+  h2,
+  h3 {
+    margin: 0;
+    font-family: Montserrat, Manrope, Arial, sans-serif;
+    letter-spacing: 0;
+  }
+
+  h1 {
+    max-width: 920px;
+    font-size: clamp(44px, 6vw, 88px);
+    line-height: 0.94;
+  }
+
+  .hero__copy p:not(.eyebrow),
+  .text-block p,
+  .feature-grid p,
+  .hero__card p {
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .hero__copy p:not(.eyebrow) {
+    max-width: 720px;
+    margin: 22px 0 0;
+    font-size: 18px;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 54px;
+    padding: 0 22px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    cursor: pointer;
+    color: #fff;
+    font-weight: 900;
+  }
+
+  .button-primary {
+    border-color: rgba(217, 255, 0, 0.86);
+    background: rgba(53, 68, 0, 0.92);
+    box-shadow: var(--glow);
+  }
+
+  .button-primary:hover {
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .button-secondary {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .hero__card,
+  .feature-grid article,
+  .quiz,
+  .chat-widget {
+    border: 1px solid var(--line);
+    background: rgba(18, 16, 22, 0.84);
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.38);
+    backdrop-filter: blur(18px);
+  }
+
+  .hero__card {
+    display: grid;
+    align-content: end;
+    min-height: 420px;
+    padding: 28px;
+    border-radius: 18px;
+  }
+
+  .hero__card span {
+    width: fit-content;
+    margin-bottom: 16px;
+    padding: 8px 12px;
+    border: 1px solid rgba(217, 255, 0, 0.5);
+    color: var(--accent-2);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .hero__card b {
+    font-size: 30px;
+    line-height: 1.08;
+  }
+
+  .section {
+    padding: 56px 0;
+  }
+
+  .section-soft {
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .feature-grid article {
+    min-height: 240px;
+    padding: 24px;
+    border-radius: 16px;
+  }
+
+  .feature-grid span {
+    display: block;
+    margin-bottom: 24px;
+    color: var(--accent-2);
+    font-weight: 900;
+  }
+
+  .feature-grid h2 {
+    font-size: 24px;
+  }
+
+  .text-block {
+    max-width: 860px;
+  }
+
+  .text-block h2,
+  .section-heading h2 {
+    font-size: clamp(34px, 4vw, 58px);
+    line-height: 1;
+  }
+
+  .text-block p {
+    font-size: 18px;
+  }
+
+  .section-heading {
+    margin-bottom: 22px;
+  }
+
+  .quiz {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 350px;
+    gap: 6px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .quiz__main {
+    padding: 30px 34px;
+  }
+
+  fieldset {
+    margin: 0 0 28px;
+    padding: 0;
+    border: 0;
+  }
+
+  legend {
+    margin-bottom: 16px;
+    font-weight: 900;
+  }
+
+  .car-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border: 1px solid var(--line);
+  }
+
+  .car-tabs label {
+    display: grid;
+    place-items: center;
+    gap: 10px;
+    min-height: 104px;
+    border-right: 1px solid var(--line);
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .car-tabs label:last-child {
+    border-right: 0;
+  }
+
+  .car-tabs input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .car-tabs label:has(input:checked) {
+    background: rgba(217, 255, 0, 0.12);
+    box-shadow: inset 0 -2px 0 var(--accent);
+    color: #fff;
+  }
+
+  .service-list {
+    display: grid;
+    gap: 2px;
+  }
+
+  .service-list label {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 14px;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    background: rgba(255, 255, 255, 0.018);
+    cursor: pointer;
+  }
+
+  .service-list input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent);
+  }
+
+  .service-list span {
+    color: rgba(255, 255, 255, 0.84);
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .service-list b {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .contact-grid label {
+    display: grid;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .contact-grid input,
+  .contact-grid select {
+    min-height: 48px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #0c0b10;
+    color: #fff;
+    padding: 0 12px;
+    outline: none;
+  }
+
+  .contact-grid input:focus,
+  .contact-grid select:focus {
+    border-color: var(--accent);
+  }
+
+  .quiz__summary {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: 30px;
+    border-left: 1px solid rgba(217, 255, 0, 0.52);
+    background: rgba(8, 7, 10, 0.78);
+  }
+
+  .summary-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .summary-head h3 {
+    font-size: 24px;
+  }
+
+  .summary-head span {
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+  }
+
+  dl {
+    display: grid;
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  dl div,
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+  }
+
+  dt,
+  .price-row span {
+    color: var(--muted);
+    font-weight: 900;
+  }
+
+  dd {
+    margin: 0;
+    text-align: right;
+    font-weight: 900;
+  }
+
+  .price-row {
+    align-items: end;
+    padding: 24px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .price-row b {
+    font-size: 34px;
+  }
+
+  .quiz__summary p,
+  .quiz__summary small {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .quiz__summary .button {
+    margin-top: auto;
+    width: 100%;
+  }
+
+  .chat-fab {
+    position: fixed;
+    right: 26px;
+    bottom: 24px;
+    z-index: 20;
+    width: 58px;
+    height: 58px;
+    border: 0;
+    border-radius: 18px;
+    background: var(--yellow);
+    color: #050505;
+    font-size: 34px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  }
+
+  .chat-widget {
+    position: fixed;
+    right: 26px;
+    bottom: 94px;
+    z-index: 25;
+    width: min(400px, calc(100vw - 28px));
+    overflow: hidden;
+    border: 0;
+    border-radius: 16px;
+    background: #f5f6fa;
+    color: #171717;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(16px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .chat-widget.is-open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .chat-widget__yellow {
+    position: relative;
+    min-height: 260px;
+    padding: 34px 24px 22px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.22), transparent 26%),
+      linear-gradient(145deg, #d9ff00, #95b800);
+  }
+
+  .chat-logo {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: #161616;
+    color: var(--accent);
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .chat-widget__yellow h2 {
+    margin-top: 84px;
+    font-family: Manrope, Arial, sans-serif;
+    font-size: 28px;
+  }
+
+  .chat-widget__yellow p {
+    margin: 10px 0 0;
+    color: #1c1c1c;
+  }
+
+  .chat-widget__yellow button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    border: 0;
+    background: transparent;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  .chat-widget__body {
+    min-height: 250px;
+    padding: 24px;
+  }
+
+  .channel-list {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 0;
+    padding: 16px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  }
+
+  .channel-list p {
+    margin: 0 0 12px;
+    color: #777;
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .channel-list a,
+  .channel-list button {
+    display: block;
+    width: 100%;
+    min-height: 42px;
+    border: 0;
+    background: transparent;
+    color: #111;
+    text-align: left;
+    cursor: pointer;
+    font-weight: 800;
+  }
+
+  .livechat {
+    margin-top: 14px;
+  }
+
+  .messages {
+    max-height: 180px;
+    overflow: auto;
+  }
+
+  .message {
+    width: fit-content;
+    max-width: 88%;
+    margin: 0 0 8px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    line-height: 1.35;
+    font-size: 13px;
+  }
+
+  .message-bot {
+    background: #fff;
+  }
+
+  .message-user {
+    margin-left: auto;
+    background: #171717;
+    color: #fff;
+  }
+
+  .quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 10px 0;
+  }
+
+  .quick-replies button,
+  .chat-form button {
+    min-height: 34px;
+    border: 0;
+    border-radius: 999px;
+    background: #171717;
+    color: #fff;
+    padding: 0 12px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .chat-form {
+    display: flex;
+    gap: 8px;
+  }
+
+  .chat-form input {
+    flex: 1;
+    min-height: 40px;
+    border: 1px solid #dedede;
+    border-radius: 999px;
+    padding: 0 12px;
+    outline: none;
+  }
+
+  @media (max-width: 980px) {
+    .hero__grid,
+    .feature-grid,
+    .quiz {
+      grid-template-columns: 1fr;
+    }
+
+    .quiz__summary {
+      border-left: 0;
+      border-top: 1px solid rgba(217, 255, 0, 0.52);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .container {
+      width: min(100% - 20px, 1220px);
+    }
+
+    .hero {
+      min-height: auto;
+      padding-top: 42px;
+    }
+
+    .hero__actions,
+    .contact-grid,
+    .chat-form {
+      grid-template-columns: 1fr;
+      flex-direction: column;
+    }
+
+    .car-tabs {
+      grid-template-columns: 1fr;
+    }
+
+    .car-tabs label {
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .quiz__main,
+    .quiz__summary {
+      padding: 20px;
+    }
+  }
+</style>

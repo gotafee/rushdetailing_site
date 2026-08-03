@@ -1,0 +1,99 @@
+---
+const chatEndpoint = import.meta.env.PUBLIC_DEMO_CHAT_ENDPOINT || 'https://rush-ai-chat-fix.bakeevkarim.workers.dev/chat';
+---
+
+<div class="rush-ai" data-rush-ai>
+  <button class="rush-ai__fab" type="button" data-rush-ai-open aria-label="Открыть AI-консультанта">?</button>
+  <div class="rush-ai__backdrop" data-rush-ai-close></div>
+  <section class="rush-ai__panel" aria-hidden="true" data-rush-ai-panel>
+    <header class="rush-ai__head">
+      <div>
+        <p>RUSH AI · онлайн</p>
+        <h2>Консультант RUSH</h2>
+      </div>
+      <button type="button" data-rush-ai-close aria-label="Закрыть чат">×</button>
+    </header>
+    <div class="rush-ai__body">
+      <div class="rush-ai__messages" data-rush-ai-messages>
+        <p class="rush-ai__message rush-ai__message--bot">Здравствуйте! Подскажу по услугам, срокам и стоимости. Что хотите узнать?</p>
+      </div>
+      <form class="rush-ai__form" data-rush-ai-form data-endpoint={chatEndpoint}>
+        <input name="question" maxlength="500" placeholder="Напишите вопрос…" autocomplete="off" aria-label="Вопрос консультанту" />
+        <button type="submit" aria-label="Отправить вопрос">➤</button>
+      </form>
+    </div>
+  </section>
+</div>
+
+<script is:inline>
+  document.querySelectorAll('[data-rush-ai]').forEach((widget) => {
+    const panel = widget.querySelector('[data-rush-ai-panel]');
+    const form = widget.querySelector('[data-rush-ai-form]');
+    const messages = widget.querySelector('[data-rush-ai-messages]');
+    const dialogId = window.localStorage.getItem('rushAiDialogId') || crypto.randomUUID();
+    const history = [];
+    window.localStorage.setItem('rushAiDialogId', dialogId);
+
+    const setOpen = (open) => {
+      widget.classList.toggle('is-open', open);
+      panel.setAttribute('aria-hidden', String(!open));
+      document.documentElement.classList.toggle('rush-ai-open', open);
+    };
+    const add = (text, type) => {
+      const message = document.createElement('p');
+      message.className = `rush-ai__message rush-ai__message--${type}`;
+      message.textContent = text;
+      messages.append(message);
+      messages.scrollTop = messages.scrollHeight;
+      return message;
+    };
+
+    widget.querySelectorAll('[data-rush-ai-open]').forEach((button) => button.addEventListener('click', () => setOpen(true)));
+    widget.querySelectorAll('[data-rush-ai-close]').forEach((button) => button.addEventListener('click', () => setOpen(false)));
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const input = form.elements.question;
+      const question = input.value.trim();
+      if (!question) return;
+      add(question, 'user');
+      input.value = '';
+      history.push({ role: 'user', content: question });
+      const typing = add('Печатаю ответ…', 'bot');
+      try {
+        const response = await fetch(form.dataset.endpoint, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: question, dialogId, siteId: 'rush-detailing', history: history.slice(-4) }),
+        });
+        const data = await response.json();
+        if (!response.ok || !data?.answer) throw new Error('Chat unavailable');
+        typing.textContent = data.answer;
+        history.push({ role: 'assistant', content: data.answer });
+      } catch {
+        typing.textContent = 'ИИ временно недоступен. Оставьте заявку — менеджер ответит лично.';
+      }
+    });
+  });
+</script>
+
+<style is:global>
+  html.rush-ai-open { overflow: hidden; }
+  .rush-ai__fab { position: fixed; left: 24px; bottom: 24px; z-index: 80; width: 58px; height: 58px; border: 1px solid rgba(216,255,0,.75); border-radius: 18px; background: #d9ff00; color: #070707; font: 900 34px/1 Manrope, sans-serif; cursor: pointer; box-shadow: 0 16px 42px rgba(0,0,0,.35), 0 0 28px rgba(216,255,0,.24); }
+  .rush-ai__backdrop { position: fixed; inset: 0; z-index: 81; background: rgba(0,0,0,.55); opacity: 0; pointer-events: none; backdrop-filter: blur(5px); transition: opacity .25s ease; }
+  .rush-ai__panel { position: fixed; inset: 0 auto 0 0; z-index: 82; display: grid; grid-template-rows: auto minmax(0,1fr); width: min(470px,100vw); background: #090a0b; border-right: 1px solid rgba(216,255,0,.45); color: #fff; opacity: 0; pointer-events: none; transform: translateX(-100%); transition: opacity .25s ease, transform .32s cubic-bezier(.2,.8,.2,1); box-shadow: 24px 0 74px rgba(0,0,0,.55); }
+  .rush-ai.is-open .rush-ai__backdrop { opacity: 1; pointer-events: auto; }
+  .rush-ai.is-open .rush-ai__panel { opacity: 1; pointer-events: auto; transform: translateX(0); }
+  .rush-ai__head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:24px; border-bottom:1px solid rgba(255,255,255,.11); background:linear-gradient(135deg,#171a1e,#0a0b0d); }
+  .rush-ai__head p { margin:0 0 6px; color:#d9ff00; font:800 11px/1 Manrope,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+  .rush-ai__head h2 { margin:0; font:800 22px/1.1 Montserrat,Manrope,sans-serif; }
+  .rush-ai__head button { width:38px; height:38px; border:1px solid rgba(255,255,255,.18); border-radius:50%; background:transparent; color:#fff; font-size:24px; cursor:pointer; }
+  .rush-ai__body { display:grid; grid-template-rows:minmax(0,1fr) auto; gap:14px; padding:18px 20px 20px; min-height:0; }
+  .rush-ai__messages { min-height:0; overflow:auto; padding-right:4px; }
+  .rush-ai__message { width:fit-content; max-width:88%; margin:0 0 10px; padding:12px 14px; border-radius:14px; font:500 14px/1.45 Manrope,sans-serif; }
+  .rush-ai__message--bot { background:#1c2024; color:#d5dbe2; }
+  .rush-ai__message--user { margin-left:auto; background:#d9ff00; color:#080909; font-weight:700; }
+  .rush-ai__form { display:flex; gap:9px; }
+  .rush-ai__form input { flex:1; min-width:0; height:48px; border:1px solid rgba(255,255,255,.17); border-radius:13px; background:#15171a; color:#fff; padding:0 13px; font:500 14px Manrope,sans-serif; outline:none; }
+  .rush-ai__form input:focus { border-color:#d9ff00; }
+  .rush-ai__form button { width:48px; height:48px; border:0; border-radius:13px; background:#d9ff00; color:#080909; font-size:21px; cursor:pointer; }
+  @media (max-width:640px) { .rush-ai__fab { left:16px; bottom:16px; width:54px; height:54px; } .rush-ai__head { padding:20px; } .rush-ai__body { padding:16px; } }
+</style>

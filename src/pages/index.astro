@@ -7,7 +7,7 @@ import TimelineSection from '../components/TimelineSection.astro';
 import PriceTables from '../components/PriceTables.astro';
 import ReviewsGrid from '../components/ReviewsGrid.astro';
 import FAQAccordion from '../components/FAQAccordion.astro';
-import LeadForm from '../components/LeadForm.astro';
+import FullQuoteQuiz from '../components/FullQuoteQuiz.astro';
 import ContactSection from '../components/ContactSection.astro';
 import CTASection from '../components/CTASection.astro';
 import SectionHeading from '../components/SectionHeading.astro';
@@ -27,9 +27,10 @@ import { siteConfig, baseSeo } from '../data/site';
 >
   <HeroSection
     eyebrow={`Москва · ${siteConfig.location.district} · ${siteConfig.location.neighborhood}`}
-    title={`Детейлинг в Москве<br />с акцентом на результат,<br /><span class="accent-text">бережную работу</span><br />и понятный расчет`}
+    title={`Детейлинг в Москве<br />с акцентом на результат,<br />бережную работу<br />и понятный расчет`}
     description={`Rush Detailing — студия детейлинга в Москве, рядом со Строгино. Полировка, бронепленка, защитные покрытия, химчистка салона, детейлинг-мойка, мотодетейлинг и подготовка авто к продаже.`}
     image="/images/hero-home.jpg"
+    primaryHref="#lead-form"
     badges={[]}
   />
 
@@ -91,6 +92,6 @@ import { siteConfig, baseSeo } from '../data/site';
   />
   <ReviewsGrid />
   <FAQAccordion items={siteConfig.homeFaq} />
-  <LeadForm />
+  <FullQuoteQuiz />
   <ContactSection />
 </Layout>

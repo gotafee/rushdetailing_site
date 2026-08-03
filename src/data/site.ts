@@ -74,7 +74,7 @@ export const siteConfig = {
     ],
   },
   forms: {
-    endpoint: 'https://rushdetailing-leads.bakeev19karim1207.workers.dev',
+    endpoint: 'https://rushdetailing-leads.bakeevkarim.workers.dev',
     submitMode: 'endpoint',
     thankYouPath: '/spasibo/',
     consentText:

@@ -30,6 +30,7 @@ const {
   compact = false,
   mobileDim = false,
 } = Astro.props;
+const opensQuickLead = secondaryLabel.trim().toLowerCase() === 'записаться';
 ---
 
 <section class="hero-section">
@@ -54,6 +55,7 @@ const {
             target={secondaryHref.startsWith('http') ? '_blank' : undefined}
             rel={secondaryHref.startsWith('http') ? 'noreferrer' : undefined}
             class="button button-secondary"
+            data-quick-lead-open={opensQuickLead ? 'true' : undefined}
             data-analytics="cta-hero-secondary"
           >
             {secondaryLabel}

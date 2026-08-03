@@ -1,0 +1,132 @@
+---
+import { siteConfig } from '../data/site';
+
+const endpoint = siteConfig.forms.endpoint;
+const services = ['Полировка кузова', 'Предпродажная подготовка', 'Оклейка авто бронепленкой', 'Химчистка салона', 'Детейлинг мойка'];
+---
+
+<section class="section" id="lead-form">
+  <div class="container">
+    <div class="full-quiz-heading">
+      <p class="eyebrow">Быстрый расчет</p>
+      <h2>Рассчитать услугу и записаться</h2>
+    </div>
+    <form class="full-quiz" data-full-quiz data-endpoint={endpoint}>
+      <div class="full-quiz__main">
+        <fieldset>
+          <legend>1. Тип автомобиля</legend>
+          <div class="full-quiz__cars">
+            <label><input type="radio" name="car" value="Седан" checked /><img src="/images/sedan.png" alt="Седан" /><b>Седан</b></label>
+            <label><input type="radio" name="car" value="Кроссовер" /><img src="/images/crossover.png" alt="Кроссовер" /><b>Кроссовер</b></label>
+            <label><input type="radio" name="car" value="Мото" /><img src="/images/moto.png" alt="Мотоцикл" /><b>Мото</b></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>2. Выберите услуги</legend>
+          <div class="full-quiz__services">
+            {services.map((service, index) => (
+              <label><input type="checkbox" name="services" value={service} checked={index === 0} /><span>{service}</span></label>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>3. Контакты и запись</legend>
+          <div class="full-quiz__contacts">
+            <label>Имя<input name="name" data-name-only placeholder="Алексей" required /></label>
+            <label>Телефон<input name="contact" data-phone-only inputmode="numeric" pattern="[0-9]{10,15}" maxlength="15" placeholder="79250000000" required /></label>
+            <label>Email<input type="email" name="email" data-email-only placeholder="client@mail.ru" /></label>
+            <label>Когда удобно<select name="time"><option>Сегодня</option><option>Завтра</option><option>На выходных</option><option>Нужен звонок</option></select></label>
+          </div>
+        </fieldset>
+      </div>
+      <aside class="full-quiz__summary">
+        <h3>Итого</h3>
+        <dl>
+          <div><dt>Авто</dt><dd data-full-quiz-car>Седан</dd></div>
+          <div><dt>Услуги</dt><dd data-full-quiz-services>1 услуга</dd></div>
+          <div><dt>Время</dt><dd data-full-quiz-time>Сегодня</dd></div>
+        </dl>
+        <p>Подберём подходящий вариант и назовём точную стоимость после короткой консультации.</p>
+        <button type="submit" class="button button-primary">Записаться с этим расчетом</button>
+        <small data-full-quiz-status aria-live="polite"></small>
+      </aside>
+    </form>
+  </div>
+</section>
+
+<script is:inline>
+  document.querySelectorAll('[data-full-quiz]').forEach((form) => {
+    const carNode = form.querySelector('[data-full-quiz-car]');
+    const servicesNode = form.querySelector('[data-full-quiz-services]');
+    const timeNode = form.querySelector('[data-full-quiz-time]');
+    const status = form.querySelector('[data-full-quiz-status]');
+    const update = () => {
+      const data = new FormData(form);
+      const selected = [...form.querySelectorAll('input[name="services"]:checked')];
+      carNode.textContent = data.get('car') || '—';
+      servicesNode.textContent = selected.length === 1 ? '1 услуга' : `${selected.length} услуги`;
+      timeNode.textContent = data.get('time') || '—';
+    };
+    form.querySelectorAll('[data-name-only]').forEach((input) => input.addEventListener('input', () => { input.value = input.value.replace(/[^\p{L}\s-]/gu, ''); }));
+    form.querySelectorAll('[data-phone-only]').forEach((input) => input.addEventListener('input', () => { input.value = input.value.replace(/\D/g, '').slice(0,15); }));
+    form.querySelectorAll('[data-email-only]').forEach((input) => input.addEventListener('input', () => { input.value = input.value.replace(/[^A-Za-zА-Яа-яЁё@._-]/g, ''); }));
+    form.addEventListener('change', update);
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      const data = new FormData(form);
+      const name = String(data.get('name') || '').trim();
+      const contact = String(data.get('contact') || '').trim();
+      const email = String(data.get('email') || '').trim();
+      const selected = [...form.querySelectorAll('input[name="services"]:checked')].map((input) => input.value);
+      if (!selected.length) { status.textContent = 'Выберите хотя бы одну услугу.'; return; }
+      if (!/^[\p{L}\s-]+$/u.test(name) || !/^\d{10,15}$/.test(contact)) { status.textContent = 'Проверьте имя и номер телефона.'; return; }
+      status.textContent = 'Отправляем заявку…';
+      try {
+        const response = await fetch(form.dataset.endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ name, contact, email, service:selected.join(', '), carMake:data.get('car'), carModel:data.get('time'), source:location.pathname, leadType:'site_quiz' }) });
+        if (!response.ok) throw new Error('Request failed');
+        status.textContent = 'Заявка отправлена. Мы скоро свяжемся с вами.';
+        form.reset(); update();
+      } catch { status.textContent = 'Не удалось отправить заявку. Позвоните нам или попробуйте еще раз.'; }
+    });
+    update();
+  });
+</script>
+
+<style>
+  .full-quiz-heading { margin-bottom:24px; }
+  .full-quiz-heading h2 { margin:6px 0 0; font-size:clamp(32px,4.5vw,64px); line-height:1; }
+  .full-quiz { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(300px,.65fr); overflow:hidden; border:1px solid var(--line); border-radius:18px; background:rgba(17,19,15,.9); box-shadow:0 28px 80px rgba(0,0,0,.3); }
+  .full-quiz__main { padding:34px; }
+  .full-quiz fieldset { min-width:0; margin:0 0 28px; padding:0; border:0; }
+  .full-quiz fieldset:last-child { margin-bottom:0; }
+  .full-quiz legend { margin-bottom:16px; color:#fff; font-size:17px; font-weight:900; }
+  .full-quiz__cars { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); }
+  .full-quiz__cars label { display:grid; place-items:center; gap:5px; min-height:92px; padding:12px; border-right:1px solid var(--line); color:var(--muted); cursor:pointer; text-align:center; }
+  .full-quiz__cars label:last-child { border-right:0; }
+  .full-quiz__cars input { position:absolute; opacity:0; pointer-events:none; }
+  .full-quiz__cars img { width:54px; height:32px; object-fit:contain; opacity:.72; filter:invert(1) brightness(1.4); }
+  .full-quiz__cars label:has(input:checked) { color:#fff; background:rgba(216,255,0,.12); box-shadow:inset 0 -2px 0 var(--accent); }
+  .full-quiz__cars label:has(input:checked) img { opacity:1; filter:invert(1) brightness(1.55) drop-shadow(0 0 12px rgba(217,255,0,.28)); }
+  .full-quiz__services { display:grid; gap:2px; }
+  .full-quiz__services label { display:flex; align-items:center; gap:14px; min-height:52px; padding:0 18px; background:rgba(255,255,255,.035); color:rgba(255,255,255,.82); font-weight:800; cursor:pointer; }
+  .full-quiz__services label:has(input:checked) { background:rgba(216,255,0,.1); border-left:2px solid var(--accent); color:#fff; }
+  .full-quiz__services input { width:18px; height:18px; accent-color:var(--accent); }
+  .full-quiz__contacts { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .full-quiz__contacts label { display:grid; gap:7px; color:var(--muted); font-size:13px; font-weight:800; }
+  .full-quiz__contacts input,.full-quiz__contacts select { width:100%; min-height:50px; border:1px solid var(--line); border-radius:10px; background:#0d0f0d; color:#fff; padding:0 13px; font:inherit; outline:none; }
+  .full-quiz__contacts input:focus,.full-quiz__contacts select:focus { border-color:var(--accent); }
+  .full-quiz__summary { display:flex; flex-direction:column; padding:34px 30px; border-left:1px solid rgba(216,255,0,.55); background:rgba(6,7,6,.7); }
+  .full-quiz__summary h3 { margin:0 0 22px; font-size:28px; }
+  .full-quiz__summary dl { margin:0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:14px 0; }
+  .full-quiz__summary dl div { display:flex; justify-content:space-between; gap:16px; padding:8px 0; }
+  .full-quiz__summary dt { color:var(--muted); font-weight:800; }
+  .full-quiz__summary dd { margin:0; text-align:right; font-weight:900; }
+  .full-quiz__summary p { margin:24px 0; color:var(--muted); font-size:13px; line-height:1.55; }
+  .full-quiz__summary .button { width:100%; margin-top:auto; }
+  .full-quiz__summary small { min-height:20px; margin-top:12px; color:var(--muted); text-align:center; }
+  @media(max-width:850px){ .full-quiz{grid-template-columns:1fr}.full-quiz__summary{border-left:0;border-top:1px solid rgba(216,255,0,.55)} }
+  @media(max-width:560px){.full-quiz__main,.full-quiz__summary{padding:22px 16px}.full-quiz__contacts{grid-template-columns:1fr}.full-quiz__cars label{min-height:92px;padding:10px;font-size:13px}.full-quiz__services label{padding:0 12px;font-size:14px}}
+</style>

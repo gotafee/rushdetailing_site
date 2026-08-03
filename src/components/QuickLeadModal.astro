@@ -1,0 +1,66 @@
+---
+import { siteConfig } from '../data/site';
+---
+
+<dialog class="quick-lead-modal" data-quick-lead-modal aria-labelledby="quick-lead-title">
+  <div class="quick-lead-modal__panel">
+    <button class="quick-lead-modal__close" type="button" data-quick-lead-close aria-label="Закрыть">×</button>
+    <p class="eyebrow">RUSH DETAILING</p>
+    <h2 id="quick-lead-title">Мы свяжемся с вами как можно скорее</h2>
+    <form data-quick-lead-form data-endpoint={siteConfig.forms.endpoint}>
+      <label>Ваше имя<input name="name" data-name-only placeholder="Иван" required /></label>
+      <label>Марка вашего авто<input name="car" placeholder="Например: Porsche Macan 2024" required /></label>
+      <label>Номер телефона<input name="contact" data-phone-only inputmode="numeric" pattern="[0-9]{10,15}" maxlength="15" placeholder="79000000000" required /></label>
+      <label>Email (необязательно)<input type="email" name="email" data-email-only placeholder="ivan@example.com" /></label>
+      <button class="button button-primary" type="submit">Отправить заявку <span>→</span></button>
+      <small data-quick-lead-status aria-live="polite"></small>
+    </form>
+  </div>
+</dialog>
+
+<script is:inline>
+  const quickLeadModal = document.querySelector('[data-quick-lead-modal]');
+  if (quickLeadModal) {
+    const closeQuickLead = () => quickLeadModal.close();
+    document.querySelectorAll('[data-quick-lead-open]').forEach((button) => button.addEventListener('click', (event) => { event.preventDefault(); quickLeadModal.showModal(); }));
+    quickLeadModal.querySelectorAll('[data-quick-lead-close]').forEach((button) => button.addEventListener('click', closeQuickLead));
+    quickLeadModal.addEventListener('click', (event) => { if (event.target === quickLeadModal) closeQuickLead(); });
+    const form = quickLeadModal.querySelector('[data-quick-lead-form]');
+    const status = quickLeadModal.querySelector('[data-quick-lead-status]');
+    form.querySelectorAll('[data-name-only]').forEach((input) => input.addEventListener('input', () => { input.value = input.value.replace(/[^\p{L}\s-]/gu, ''); }));
+    form.querySelectorAll('[data-phone-only]').forEach((input) => input.addEventListener('input', () => { input.value = input.value.replace(/\D/g, '').slice(0,15); }));
+    form.querySelectorAll('[data-email-only]').forEach((input) => input.addEventListener('input', () => { input.value = input.value.replace(/[^A-Za-zА-Яа-яЁё@._-]/g, ''); }));
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      const data = new FormData(form);
+      const name = String(data.get('name') || '').trim();
+      const contact = String(data.get('contact') || '').trim();
+      const email = String(data.get('email') || '').trim();
+      if (!/^[\p{L}\s-]+$/u.test(name) || !/^\d{10,15}$/.test(contact)) { status.textContent = 'Проверьте имя и номер телефона.'; return; }
+      status.textContent = 'Отправляем заявку…';
+      try {
+        const response = await fetch(form.dataset.endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ name, contact, email, carMake:data.get('car'), service:'Запись в студию', source:location.pathname, leadType:'quick_booking' }) });
+        if (!response.ok) throw new Error('Request failed');
+        window.location.href = '/spasibo/';
+      } catch { status.textContent = 'Не удалось отправить заявку. Попробуйте еще раз или позвоните нам.'; }
+    });
+  }
+</script>
+
+<style is:global>
+  .quick-lead-modal { width:min(520px,calc(100vw - 28px)); padding:0; border:1px solid rgba(255,255,255,.17); border-radius:22px; background:#0c0e11; color:#fff; box-shadow:0 30px 90px rgba(0,0,0,.65); }
+  .quick-lead-modal::backdrop { background:rgba(0,0,0,.7); backdrop-filter:blur(6px); }
+  .quick-lead-modal__panel { position:relative; padding:34px; background:radial-gradient(circle at 100% 0,rgba(216,255,0,.1),transparent 32%),#0c0e11; }
+  .quick-lead-modal .eyebrow { margin:0 0 12px; }
+  .quick-lead-modal h2 { max-width:410px; margin:0 0 28px; font:800 clamp(28px,5vw,38px)/1.08 Montserrat,Manrope,sans-serif; }
+  .quick-lead-modal__close { position:absolute; top:18px; right:18px; width:38px; height:38px; border:1px solid rgba(255,255,255,.17); border-radius:50%; background:transparent; color:#fff; font-size:24px; cursor:pointer; }
+  .quick-lead-modal form { display:grid; gap:16px; }
+  .quick-lead-modal label { display:grid; gap:8px; color:#9facbf; font-size:13px; font-weight:800; }
+  .quick-lead-modal input { width:100%; height:50px; border:1px solid rgba(255,255,255,.15); border-radius:11px; background:#191b1f; color:#fff; padding:0 14px; font:500 15px Manrope,sans-serif; outline:none; }
+  .quick-lead-modal input:focus { border-color:#d9ff00; }
+  .quick-lead-modal .button { width:100%; margin-top:8px; }
+  .quick-lead-modal .button span { margin-left:12px; font-size:21px; line-height:0; }
+  .quick-lead-modal small { min-height:18px; color:#aeb7c4; text-align:center; }
+  @media(max-width:560px){.quick-lead-modal__panel{padding:28px 20px 22px}.quick-lead-modal h2{font-size:29px}.quick-lead-modal__close{top:13px;right:13px}}
+</style>

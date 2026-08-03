@@ -1,0 +1,999 @@
+---
+const pageTitle = 'Rush Detailing Manager Console';
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{pageTitle}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800;900&family=Montserrat:wght@800;900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main class="manager">
+      <header class="manager__top">
+        <div>
+          <p>Rush Detailing Operator</p>
+          <h1>Чаты клиентов</h1>
+        </div>
+        <div class="stats">
+          <span class="is-live">Live</span>
+          <span data-active-count>4 активных</span>
+          <span>Ответ 38 сек</span>
+        </div>
+      </header>
+
+      <section class="console" aria-label="Панель менеджера">
+        <aside class="chat-list">
+          <div class="section-head">
+            <h2>Все чаты</h2>
+            <button type="button" data-create-dialog aria-label="Новый диалог">+</button>
+          </div>
+          <input class="search" type="search" placeholder="Поиск: имя, авто, услуга" data-search />
+          <div class="dialogs" data-dialog-list></div>
+        </aside>
+
+        <section class="chat-window">
+          <div class="chat-window__head">
+            <div>
+              <p data-client-source>Квиз / демо-страница</p>
+              <h2 data-client-name>Клиент</h2>
+              <div class="subline">
+                <span data-dialog-status>ИИ отвечает</span>
+                <span data-last-activity>только что</span>
+              </div>
+            </div>
+            <div class="actions">
+              <label class="switch">
+                <input type="checkbox" data-ai-toggle checked />
+                <span></span>
+                <b data-ai-label>ИИ включен</b>
+              </label>
+              <button type="button" data-takeover>Взять в работу</button>
+            </div>
+          </div>
+
+          <div class="messages" data-messages></div>
+
+          <div class="composer">
+            <div class="templates">
+              <button type="button" data-template="Здравствуйте. Я менеджер Rush Detailing, сейчас помогу с записью.">Представиться</button>
+              <button type="button" data-template="Для точного расчета пришлите, пожалуйста, марку авто и фото зоны работ.">Запросить фото</button>
+              <button type="button" data-template="Могу предложить ближайшее окно сегодня после 18:00 или завтра утром.">Предложить время</button>
+            </div>
+            <form data-reply-form>
+              <textarea name="reply" rows="2" placeholder="Ответ менеджера"></textarea>
+              <button type="submit">Отправить</button>
+            </form>
+          </div>
+        </section>
+
+        <aside class="lead-panel">
+          <div class="lead-panel__top">
+            <h2>Лид</h2>
+            <span data-lead-score>теплый</span>
+          </div>
+          <dl>
+            <div>
+              <dt>Авто</dt>
+              <dd data-car>BMW X6 M</dd>
+            </div>
+            <div>
+              <dt>Услуга</dt>
+              <dd data-service>Химчистка салона</dd>
+            </div>
+            <div>
+              <dt>Бюджет</dt>
+              <dd data-budget>от 10 000 ₽</dd>
+            </div>
+            <div>
+              <dt>Контакт</dt>
+              <dd data-contact>+7 925 000-00-00</dd>
+            </div>
+          </dl>
+          <label class="note">
+            <span>Заметка</span>
+            <textarea data-note rows="4">Клиент интересуется сроками и хочет записаться без звонка.</textarea>
+          </label>
+          <div class="ai-card">
+            <h3>Синхрон с ИИ</h3>
+            <p data-ai-note>ИИ отвечает сам. Менеджер видит переписку и может забрать ее в любой момент.</p>
+            <button type="button" data-stop-ai>Отключить ИИ</button>
+          </div>
+          <div class="sync-card">
+            <h3>Готово к подключению</h3>
+            <p>В JS уже вынесены функции для загрузки чатов, отправки сообщений и realtime-подписки.</p>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script is:inline>
+      const API_CONFIG = {
+        conversationsUrl: '',
+        sendMessageUrl: '',
+        aiModeUrl: '',
+        realtimeUrl: '',
+      };
+
+      const demoDialogs = [
+        {
+          id: 'lead_1001',
+          name: 'Алексей',
+          source: 'Сайт / квиз-заявка',
+          car: 'BMW X6 M',
+          service: 'Химчистка салона',
+          budget: 'от 10 000 ₽',
+          contact: '+7 925 470-67-12',
+          mode: 'ai',
+          time: 'только что',
+          preview: 'Сколько займет химчистка салона?',
+          score: 'теплый',
+          note: 'Клиент спрашивает срок и ближайшую запись.',
+          messages: [
+            { role: 'client', text: 'Здравствуйте. Сколько займет химчистка салона BMW X6?', at: '12:41' },
+            { role: 'bot', text: 'Обычно комплексная химчистка занимает один рабочий день. Если загрязнения сложные, менеджер уточнит срок после фото.', at: '12:42' },
+            { role: 'client', text: 'Можно записаться на завтра?', at: '12:43' },
+          ],
+        },
+        {
+          id: 'lead_1002',
+          name: 'Марина',
+          source: 'Чат / главная',
+          car: 'Mercedes GLC',
+          service: 'Полировка кузова',
+          budget: 'от 15 000 ₽',
+          contact: '@marina_auto',
+          mode: 'manual',
+          time: '2 мин назад',
+          preview: 'Нужна полировка и защитное покрытие.',
+          score: 'к записи',
+          note: 'Нужен расчет полировка + покрытие.',
+          messages: [
+            { role: 'client', text: 'Нужна полировка и защитное покрытие. Можно узнать цену?', at: '12:35' },
+            { role: 'manager', text: 'Да, ориентир по полировке от 15 000 ₽, покрытие от 12 000 ₽. Точно скажем после осмотра.', at: '12:36' },
+          ],
+        },
+        {
+          id: 'lead_1003',
+          name: 'Игорь',
+          source: 'Сайт / Telegram',
+          car: 'Porsche 911',
+          service: 'Пленка на зоны риска',
+          budget: 'от 45 000 ₽',
+          contact: '+7 999 120-40-20',
+          mode: 'ai',
+          time: '7 мин назад',
+          preview: 'Какая пленка и сколько по времени?',
+          score: 'цена',
+          note: 'Уточнить зону оклейки и пленку.',
+          messages: [
+            { role: 'client', text: 'Какая пленка и сколько по времени?', at: '12:28' },
+            { role: 'bot', text: 'На зоны риска обычно закладываем от одного дня. Пленку и стоимость менеджер подберет под автомобиль.', at: '12:29' },
+          ],
+        },
+        {
+          id: 'lead_1004',
+          name: 'Дмитрий',
+          source: 'Квиз / демо-страница',
+          car: 'Мотоцикл',
+          service: 'Детейлинг мотоциклов',
+          budget: 'от 25 000 ₽',
+          contact: 'dmitry@mail.ru',
+          mode: 'ai',
+          time: '12 мин назад',
+          preview: 'Хочу подготовить мотоцикл к продаже.',
+          score: 'новый',
+          note: 'Клиент интересуется сроками и хочет записаться без звонка.',
+          messages: [
+            { role: 'client', text: 'Хочу подготовить мотоцикл к продаже. Что входит?', at: '12:21' },
+            { role: 'bot', text: 'Можно сделать детейлинг мойку, полировку и локальную подготовку деталей. Менеджер уточнит состояние мотоцикла.', at: '12:22' },
+          ],
+        },
+      ];
+
+      let dialogs = [...demoDialogs];
+      let activeId = dialogs[0].id;
+      let currentFilter = 'all';
+
+      const nodes = {
+        activeCount: document.querySelector('[data-active-count]'),
+        list: document.querySelector('[data-dialog-list]'),
+        search: document.querySelector('[data-search]'),
+        filters: document.querySelectorAll('[data-filter]'),
+        messages: document.querySelector('[data-messages]'),
+        name: document.querySelector('[data-client-name]'),
+        source: document.querySelector('[data-client-source]'),
+        status: document.querySelector('[data-dialog-status]'),
+        activity: document.querySelector('[data-last-activity]'),
+        aiToggle: document.querySelector('[data-ai-toggle]'),
+        aiLabel: document.querySelector('[data-ai-label]'),
+        takeover: document.querySelector('[data-takeover]'),
+        stopAi: document.querySelector('[data-stop-ai]'),
+        aiNote: document.querySelector('[data-ai-note]'),
+        car: document.querySelector('[data-car]'),
+        service: document.querySelector('[data-service]'),
+        budget: document.querySelector('[data-budget]'),
+        contact: document.querySelector('[data-contact]'),
+        score: document.querySelector('[data-lead-score]'),
+        note: document.querySelector('[data-note]'),
+        replyForm: document.querySelector('[data-reply-form]'),
+        templates: document.querySelectorAll('[data-template]'),
+      };
+
+      const getActiveDialog = () => dialogs.find((dialog) => dialog.id === activeId) || dialogs[0];
+
+      async function loadConversations() {
+        if (!API_CONFIG.conversationsUrl) return dialogs;
+        const response = await fetch(API_CONFIG.conversationsUrl);
+        dialogs = await response.json();
+        activeId = dialogs[0]?.id;
+        renderActive();
+      }
+
+      async function sendManagerMessage(dialogId, text) {
+        if (!API_CONFIG.sendMessageUrl) return;
+        await fetch(API_CONFIG.sendMessageUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dialogId, text, sender: 'manager' }),
+        });
+      }
+
+      async function setAiMode(dialogId, enabled) {
+        if (!API_CONFIG.aiModeUrl) return;
+        await fetch(API_CONFIG.aiModeUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dialogId, aiEnabled: enabled }),
+        });
+      }
+
+      function subscribeToRealtime() {
+        if (!API_CONFIG.realtimeUrl || !window.EventSource) return;
+        const stream = new EventSource(API_CONFIG.realtimeUrl);
+        stream.addEventListener('message', (event) => {
+          dialogs = JSON.parse(event.data);
+          renderActive();
+        });
+      }
+
+      const renderList = () => {
+        const query = nodes.search.value.trim().toLowerCase();
+        const visible = dialogs.filter((dialog) => {
+          const matchesMode = currentFilter === 'all' || dialog.mode === currentFilter;
+          const haystack = `${dialog.name} ${dialog.car} ${dialog.service} ${dialog.preview}`.toLowerCase();
+          return matchesMode && haystack.includes(query);
+        });
+
+        nodes.activeCount.textContent = `${dialogs.length} активных`;
+        nodes.list.innerHTML = visible.map((dialog) => `
+          <button class="dialog ${dialog.id === activeId ? 'active' : ''}" type="button" data-dialog-id="${dialog.id}">
+            <span class="dialog__row">
+              <b>${dialog.name}</b>
+              <small>${dialog.time}</small>
+            </span>
+            <span class="dialog__row">
+              <em class="${dialog.mode}">${dialog.mode === 'ai' ? 'ИИ' : 'Менеджер'}</em>
+              <strong>${dialog.service}</strong>
+            </span>
+            <span class="dialog__preview">${dialog.preview}</span>
+          </button>
+        `).join('');
+      };
+
+      const renderMessages = () => {
+        const dialog = getActiveDialog();
+        nodes.messages.innerHTML = dialog.messages.map((message) => `
+          <article class="message message-${message.role}">
+            <p>${message.text}</p>
+            <time>${message.at}</time>
+          </article>
+        `).join('');
+        nodes.messages.scrollTop = nodes.messages.scrollHeight;
+      };
+
+      const renderActive = () => {
+        const dialog = getActiveDialog();
+        nodes.name.textContent = dialog.name;
+        nodes.source.textContent = dialog.source;
+        nodes.status.textContent = dialog.mode === 'ai' ? 'ИИ отвечает' : 'Менеджер ведет диалог';
+        nodes.activity.textContent = dialog.time;
+        nodes.aiToggle.checked = dialog.mode === 'ai';
+        nodes.aiLabel.textContent = dialog.mode === 'ai' ? 'ИИ включен' : 'ИИ выключен';
+        nodes.aiNote.textContent = dialog.mode === 'ai'
+          ? 'ИИ отвечает сам. Менеджер видит переписку и может забрать ее в любой момент.'
+          : 'ИИ выключен. Ответы отправляет менеджер вручную.';
+        nodes.car.textContent = dialog.car;
+        nodes.service.textContent = dialog.service;
+        nodes.budget.textContent = dialog.budget;
+        nodes.contact.textContent = dialog.contact;
+        nodes.score.textContent = dialog.score;
+        nodes.note.value = dialog.note;
+        renderList();
+        renderMessages();
+      };
+
+      const switchAi = async (enabled) => {
+        const dialog = getActiveDialog();
+        dialog.mode = enabled ? 'ai' : 'manual';
+        await setAiMode(dialog.id, enabled);
+        renderActive();
+      };
+
+      const takeOver = async () => {
+        const dialog = getActiveDialog();
+        if (dialog.mode !== 'manual') {
+          dialog.mode = 'manual';
+          dialog.messages.push({
+            role: 'manager',
+            text: 'Здравствуйте. Я менеджер Rush Detailing, дальше отвечу вручную.',
+            at: 'сейчас',
+          });
+        }
+        await setAiMode(dialog.id, false);
+        renderActive();
+      };
+
+      nodes.list.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-dialog-id]');
+        if (!button) return;
+        activeId = button.dataset.dialogId;
+        renderActive();
+      });
+
+      nodes.search.addEventListener('input', renderList);
+
+      nodes.filters.forEach((button) => {
+        button.addEventListener('click', () => {
+          nodes.filters.forEach((item) => item.classList.remove('active'));
+          button.classList.add('active');
+          currentFilter = button.dataset.filter;
+          renderList();
+        });
+      });
+
+      nodes.aiToggle.addEventListener('change', () => switchAi(nodes.aiToggle.checked));
+      nodes.takeover.addEventListener('click', takeOver);
+      nodes.stopAi.addEventListener('click', takeOver);
+
+      nodes.note.addEventListener('input', () => {
+        getActiveDialog().note = nodes.note.value;
+      });
+
+      nodes.templates.forEach((button) => {
+        button.addEventListener('click', () => {
+          nodes.replyForm.reply.value = button.dataset.template;
+          nodes.replyForm.reply.focus();
+        });
+      });
+
+      nodes.replyForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const text = nodes.replyForm.reply.value.trim();
+        if (!text) return;
+        const dialog = getActiveDialog();
+        dialog.mode = 'manual';
+        dialog.messages.push({ role: 'manager', text, at: 'сейчас' });
+        dialog.preview = text;
+        dialog.time = 'только что';
+        nodes.replyForm.reset();
+        await sendManagerMessage(dialog.id, text);
+        renderActive();
+      });
+
+      loadConversations();
+      subscribeToRealtime();
+      renderActive();
+    </script>
+
+    <style>
+      :root {
+        --bg: #020302;
+        --panel: #080b08;
+        --panel-2: #0c100c;
+        --line: rgba(255, 255, 255, 0.14);
+        --line-green: rgba(198, 255, 0, 0.42);
+        --text: #fff;
+        --muted: rgba(255, 255, 255, 0.64);
+        --green: #c6ff00;
+        --green-2: #2b3905;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 76% 12%, rgba(198, 255, 0, 0.14), transparent 30rem),
+          radial-gradient(circle at 18% 94%, rgba(198, 255, 0, 0.08), transparent 26rem),
+          #000;
+        font-family: Manrope, Arial, sans-serif;
+      }
+
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      .manager {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        gap: 14px;
+        width: min(1840px, calc(100vw - 44px));
+        height: 100vh;
+        margin: 0 auto;
+        padding: 18px 0;
+      }
+
+      .manager__top,
+      .console {
+        border: 1px solid var(--line-green);
+        background: rgba(6, 9, 6, 0.92);
+        box-shadow: 0 0 44px rgba(198, 255, 0, 0.12);
+      }
+
+      .manager__top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        min-height: 106px;
+        padding: 18px 24px;
+        border-radius: 28px;
+      }
+
+      .manager__top p,
+      .chat-window__head p {
+        margin: 0 0 6px;
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: Montserrat, Manrope, Arial, sans-serif;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        font-size: clamp(34px, 4vw, 64px);
+        line-height: 0.9;
+      }
+
+      .stats,
+      .templates {
+        display: flex;
+        gap: 8px;
+      }
+
+      .stats {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .stats span,
+      .templates button {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: rgba(255, 255, 255, 0.82);
+        background: rgba(255, 255, 255, 0.045);
+        font-weight: 900;
+      }
+
+      .stats span {
+        padding: 10px 14px;
+      }
+
+      .stats .is-live {
+        border-color: var(--green);
+        color: var(--green);
+        background: rgba(198, 255, 0, 0.12);
+      }
+
+      .console {
+        display: grid;
+        grid-template-columns: 332px minmax(0, 1fr) 326px;
+        min-height: 0;
+        border-radius: 24px;
+        overflow: hidden;
+      }
+
+      .chat-list,
+      .lead-panel {
+        min-height: 0;
+        padding: 18px;
+        background: rgba(255, 255, 255, 0.018);
+      }
+
+      .chat-list {
+        border-right: 1px solid var(--line);
+      }
+
+      .lead-panel {
+        border-left: 1px solid var(--line);
+        overflow: auto;
+      }
+
+      .section-head,
+      .lead-panel__top,
+      .chat-window__head,
+      .subline,
+      .actions,
+      .dialog__row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .section-head h2,
+      .lead-panel__top h2 {
+        font-size: 24px;
+      }
+
+      .section-head button {
+        width: 42px;
+        height: 42px;
+        border: 1px solid var(--line-green);
+        border-radius: 14px;
+        color: var(--green);
+        background: rgba(198, 255, 0, 0.08);
+        font-size: 22px;
+        font-weight: 900;
+      }
+
+      .search {
+        width: 100%;
+        height: 46px;
+        margin: 14px 0 10px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 0 13px;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.04);
+        outline: none;
+      }
+
+      .search:focus,
+      textarea:focus {
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px rgba(198, 255, 0, 0.12);
+      }
+
+      .dialogs {
+        display: grid;
+        align-content: start;
+        gap: 8px;
+        height: calc(100% - 84px);
+        overflow: auto;
+        padding-right: 2px;
+        scrollbar-width: none;
+      }
+
+      .dialogs::-webkit-scrollbar,
+      .messages::-webkit-scrollbar,
+      .lead-panel::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+      }
+
+      .dialog {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        padding: 12px;
+        color: var(--text);
+        background:
+          linear-gradient(135deg, rgba(198, 255, 0, 0.055), transparent 58%),
+          rgba(255, 255, 255, 0.035);
+        text-align: left;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+        transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+      }
+
+      .dialog:hover,
+      .dialog.active {
+        border-color: var(--line-green);
+        background:
+          linear-gradient(135deg, rgba(198, 255, 0, 0.16), transparent 60%),
+          rgba(198, 255, 0, 0.055);
+        transform: translateY(-1px);
+      }
+
+      .dialog b {
+        font-size: 16px;
+        line-height: 1.1;
+      }
+
+      .dialog small,
+      .dialog strong,
+      .dialog__preview,
+      .subline,
+      .lead-panel dt,
+      .ai-card p,
+      .sync-card p {
+        color: var(--muted);
+      }
+
+      .dialog strong {
+        max-width: 180px;
+        overflow: hidden;
+        font-size: 12px;
+        font-weight: 900;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .dialog em {
+        border-radius: 999px;
+        padding: 4px 8px;
+        font-size: 11px;
+        font-style: normal;
+        font-weight: 900;
+      }
+
+      .dialog em.ai {
+        color: var(--green);
+        background: rgba(198, 255, 0, 0.13);
+      }
+
+      .dialog em.manual {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.14);
+      }
+
+      .dialog__preview {
+        display: -webkit-box;
+        margin-top: 8px;
+        overflow: hidden;
+        font-size: 13px;
+        line-height: 1.35;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+
+      .chat-window {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        min-width: 0;
+        min-height: 0;
+      }
+
+      .chat-window__head {
+        min-height: 104px;
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .chat-window__head h2 {
+        font-size: clamp(34px, 4vw, 58px);
+        line-height: 0.9;
+      }
+
+      .subline {
+        justify-content: flex-start;
+        margin-top: 10px;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .actions button,
+      .composer button,
+      .ai-card button {
+        border: 1px solid var(--green);
+        border-radius: 14px;
+        color: var(--text);
+        background: rgba(198, 255, 0, 0.13);
+        font-weight: 900;
+        transition: background 0.18s ease, transform 0.18s ease;
+      }
+
+      .actions button {
+        height: 44px;
+        padding: 0 16px;
+      }
+
+      .actions button:hover,
+      .composer button:hover,
+      .ai-card button:hover {
+        background: rgba(198, 255, 0, 0.22);
+        transform: translateY(-1px);
+      }
+
+      .switch {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 900;
+      }
+
+      .switch input {
+        position: absolute;
+        opacity: 0;
+      }
+
+      .switch span {
+        position: relative;
+        width: 54px;
+        height: 30px;
+        border: 1px solid var(--line-green);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .switch span::after {
+        content: '';
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.72);
+        transition: 0.2s ease;
+      }
+
+      .switch input:checked + span {
+        background: var(--green-2);
+      }
+
+      .switch input:checked + span::after {
+        transform: translateX(24px);
+        background: var(--green);
+      }
+
+      .messages {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-height: 0;
+        padding: 18px 22px;
+        overflow: auto;
+        scrollbar-width: none;
+      }
+
+      .message {
+        width: fit-content;
+        max-width: min(72%, 720px);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 12px 14px 9px;
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .message p {
+        margin: 0;
+        line-height: 1.43;
+        font-weight: 750;
+      }
+
+      .message time {
+        display: block;
+        margin-top: 6px;
+        color: rgba(255, 255, 255, 0.45);
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .message-bot {
+        align-self: flex-end;
+        border-color: rgba(198, 255, 0, 0.5);
+        color: #070907;
+        background: var(--green);
+      }
+
+      .message-bot time {
+        color: rgba(0, 0, 0, 0.52);
+      }
+
+      .message-manager {
+        align-self: flex-end;
+        border-color: var(--line-green);
+        background: rgba(198, 255, 0, 0.13);
+      }
+
+      .composer {
+        padding: 14px 18px 16px;
+        border-top: 1px solid var(--line);
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      .templates {
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+
+      .templates button {
+        padding: 8px 11px;
+        font-size: 12px;
+      }
+
+      .composer form {
+        display: grid;
+        grid-template-columns: 1fr 132px;
+        gap: 10px;
+      }
+
+      textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 12px;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.045);
+        outline: none;
+        resize: none;
+      }
+
+      .composer textarea,
+      .composer button {
+        min-height: 52px;
+      }
+
+      .lead-panel__top span {
+        border: 1px solid var(--green);
+        border-radius: 999px;
+        padding: 7px 10px;
+        color: var(--green);
+        background: rgba(198, 255, 0, 0.1);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .lead-panel dl {
+        display: grid;
+        gap: 8px;
+        margin: 16px 0;
+      }
+
+      .lead-panel dl div {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 9px;
+      }
+
+      .lead-panel dt {
+        margin-bottom: 5px;
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .lead-panel dd {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 900;
+      }
+
+      .note,
+      .ai-card,
+      .sync-card {
+        display: block;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 13px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .note span,
+      .ai-card h3,
+      .sync-card h3 {
+        display: block;
+        margin-bottom: 9px;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .note textarea {
+        min-height: 104px;
+      }
+
+      .ai-card,
+      .sync-card {
+        margin-top: 12px;
+      }
+
+      .ai-card p,
+      .sync-card p {
+        margin: 0;
+        line-height: 1.4;
+      }
+
+      .ai-card button {
+        width: 100%;
+        min-height: 46px;
+        margin-top: 12px;
+      }
+
+      @media (max-width: 1180px) {
+        html,
+        body {
+          overflow: auto;
+        }
+
+        .manager {
+          height: auto;
+          min-height: 100vh;
+        }
+
+        .console {
+          grid-template-columns: 300px minmax(0, 1fr);
+        }
+
+        .lead-panel {
+          grid-column: 1 / -1;
+          border-left: 0;
+          border-top: 1px solid var(--line);
+        }
+      }
+
+      @media (max-width: 820px) {
+        .manager {
+          width: min(100% - 20px, 720px);
+          padding: 10px 0;
+        }
+
+        .manager__top,
+        .console,
+        .chat-window__head,
+        .actions,
+        .composer form {
+          display: grid;
+        }
+
+        .console {
+          grid-template-columns: 1fr;
+        }
+
+        .chat-list,
+        .lead-panel {
+          border: 0;
+          border-top: 1px solid var(--line);
+        }
+
+        .chat-list {
+          order: 1;
+        }
+
+        .chat-window {
+          order: 2;
+          min-height: 680px;
+        }
+
+        .lead-panel {
+          order: 3;
+        }
+
+        .message {
+          max-width: 88%;
+        }
+      }
+    </style>
+  </body>
+</html>
