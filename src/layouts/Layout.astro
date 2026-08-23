@@ -6,7 +6,6 @@ import MobileCTA from '../components/MobileCTA.astro';
 import PromoOffer from '../components/PromoOffer.astro';
 import TelegramLeadModals from '../components/TelegramLeadModals.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import AiChat from '../components/AiChat.astro';
 import QuickLeadModal from '../components/QuickLeadModal.astro';
 import { siteConfig } from '../data/site';
 
@@ -229,7 +228,6 @@ const yandexMetrikaScript = hasYandexMetrika
     <PromoOffer showOffer={showPromoOffer} />
     {!isThankYouPage && <TelegramLeadModals />}
     <MobileCTA />
-    {!isThankYouPage && <AiChat />}
     {!isThankYouPage && <QuickLeadModal />}
     <script src="/scripts/site.js?v=20260525-name-filter" defer></script>
     <script src="//cdn.callibri.ru/callibri.js" type="text/javascript" charset="utf-8" defer></script>

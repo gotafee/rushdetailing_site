@@ -1,6 +1,6 @@
 ---
 const pageTitle = 'Rush Detailing Demo';
-const leadEndpoint = import.meta.env.PUBLIC_DEMO_LEAD_ENDPOINT || 'https://rushdetailing-leads.bakeevkarim.workers.dev';
+const leadEndpoint = import.meta.env.PUBLIC_DEMO_LEAD_ENDPOINT || '';
 const chatEndpoint = import.meta.env.PUBLIC_DEMO_CHAT_ENDPOINT || 'https://rush-ai-chat-fix.bakeevkarim.workers.dev/chat';
 const services = [
   { title: 'Полировка кузова', price: 15000, vehicles: ['Седан', 'Кроссовер'], checked: true },
@@ -295,6 +295,10 @@ const services = [
           price: lead.price,
         };
 
+        if (!quizForm.dataset.endpoint) {
+          statusNode.textContent = 'Приём заявок временно настраивается.';
+          return;
+        }
         statusNode.textContent = 'Отправляем заявку...';
         try {
           const response = await fetch(quizForm.dataset.endpoint, {
@@ -303,9 +307,7 @@ const services = [
             body: JSON.stringify(payload),
           });
           if (!response.ok) throw new Error('Request failed');
-          statusNode.textContent = 'Заявка отправлена.';
-          quizForm.reset();
-          renderSummary();
+          window.location.href = '/spasibo/';
         } catch {
           statusNode.textContent = 'Не удалось отправить. Проверьте Google Sheets endpoint.';
         }

@@ -5,14 +5,18 @@ compatibility_date = "2026-04-23"
 # After deploy, set these as secrets:
 # wrangler secret put TELEGRAM_BOT_TOKEN
 # wrangler secret put TELEGRAM_CHAT_IDS
-# wrangler secret put TELEPASTA_API_KEY
+# wrangler secret put ENABLE_TELEGRAM_LEADS
+# wrangler secret put OPENAI_API_KEY
+# wrangler secret put OPENAI_CHAT_MODEL
 # wrangler secret put CHAT_KNOWLEDGE
 # wrangler secret put GOOGLE_SHEETS_WEBHOOK_URL
 # wrangler secret put GOOGLE_SHEETS_SECRET
 #
 # TELEGRAM_CHAT_IDS supports one or several chat ids separated by comma:
 # 123456789,987654321
+# Set ENABLE_TELEGRAM_LEADS to true only after lead delivery has been verified.
 #
-# TELEPASTA_API_KEY enables the AI chat route at /chat with claude-opus-4-8.
+# OPENAI_API_KEY enables the AI chat route at /chat. The default model is
+# gpt-5-mini; override it with OPENAI_CHAT_MODEL only when required.
 # CHAT_KNOWLEDGE can contain the current Rush Detailing knowledge base until
 # we generate it from site pages automatically.

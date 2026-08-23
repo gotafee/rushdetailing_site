@@ -82,33 +82,28 @@ const buildChatPrompt = (knowledge) => [
   `Данные студии:\n${knowledge}`,
 ].join('\n');
 
-const requestTelepasta = async (env, messages, knowledge) => {
-  if (!env.TELEPASTA_API_KEY) return null;
-  const response = await fetch('https://telepasta.ru/api/v1/chat/completions', {
+const requestOpenAI = async (env, messages, knowledge) => {
+  if (!env.OPENAI_API_KEY) return null;
+  const response = await fetch('https://api.openai.com/v1/responses', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${env.TELEPASTA_API_KEY}`,
+      'Authorization': `Bearer ${env.OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: 'claude-opus-4-8',
-      messages: [{ role: 'system', content: buildChatPrompt(knowledge) }, ...messages],
-      temperature: 0.8,
-      max_tokens: 350,
-      max_completion_tokens: 350,
+      model: env.OPENAI_CHAT_MODEL || 'gpt-5-mini',
+      input: [{ role: 'developer', content: buildChatPrompt(knowledge) }, ...messages],
+      max_output_tokens: 350,
     }),
   });
 
   if (!response.ok) {
-    throw new Error(`Telepasta error: ${response.status}`);
+    const details = (await response.text()).slice(0, 500);
+    throw new Error(`OpenAI error: ${response.status} ${details}`);
   }
 
   const data = await response.json();
-  return String(data?.choices?.[0]?.message?.content || '').trim() || null;
-};
-
-const askTelepasta = async (env, messages, knowledge) => {
-  return requestTelepasta(env, messages, knowledge);
+  return String(data?.output_text || '').trim() || null;
 };
 
 const handleChat = async (request, env) => {
@@ -131,12 +126,12 @@ const handleChat = async (request, env) => {
   const knowledge = SITE_KNOWLEDGE[siteId] || SITE_KNOWLEDGE[SITE_ID];
 
   try {
-    const aiAnswer = await askTelepasta(env, [...history, { role: 'user', content: question }], knowledge);
+    const aiAnswer = await requestOpenAI(env, [...history, { role: 'user', content: question }], knowledge);
     if (aiAnswer) {
-      return Response.json({ ok: true, answer: aiAnswer.slice(0, 500), provider: 'claude-opus-4-8', dialogId }, { headers: corsHeaders });
+      return Response.json({ ok: true, answer: aiAnswer.slice(0, 500), provider: env.OPENAI_CHAT_MODEL || 'gpt-5-mini', dialogId }, { headers: corsHeaders });
     }
   } catch (error) {
-    console.error(error);
+    console.error('AI request failed:', String(error?.message || error));
   }
   return Response.json({ ok: false, error: 'ИИ временно недоступен. Оставьте заявку — менеджер ответит лично.', dialogId }, { status: 503, headers: corsHeaders });
 };
@@ -145,6 +140,7 @@ const getTelegramChatIds = (env) =>
   [
     env.TELEGRAM_CHAT_IDS,
     env.TELEGRAM_CHAT_ID,
+    env.TELEGRAM_CHAT_ID_2,
     env.TELEGRAM_CLIENT_CHAT_ID,
   ]
     .filter(Boolean)
@@ -155,6 +151,9 @@ const getTelegramChatIds = (env) =>
     .filter((chatId, index, chatIds) => chatIds.indexOf(chatId) === index);
 
 const sendTelegram = async (env, text) => {
+  if (env.ENABLE_TELEGRAM_LEADS !== 'true') {
+    return { delivered: 0, failed: 0, configured: false };
+  }
   const chatIds = getTelegramChatIds(env);
   if (!env.TELEGRAM_BOT_TOKEN || chatIds.length === 0) {
     return { delivered: 0, failed: 0 };
@@ -235,15 +234,31 @@ export default {
 
     const text = formatLeadText(normalizedLead);
 
-    try {
-      const [telegram, googleSheets] = await Promise.all([sendTelegram(env, text), sendToGoogleSheets(env, normalizedLead)]);
-      if (!googleSheets.configured) {
-        throw new Error('Google Sheets webhook is not configured');
-      }
-      return Response.json({ ok: true, delivery: { telegram, googleSheets } }, { headers: corsHeaders });
-    } catch (error) {
-      console.error(error);
-      return Response.json({ ok: false, error: 'Lead delivery failed' }, { status: 502, headers: corsHeaders });
+    const [telegramResult, googleSheetsResult] = await Promise.allSettled([
+      sendTelegram(env, text),
+      sendToGoogleSheets(env, normalizedLead),
+    ]);
+
+    const telegram = telegramResult.status === 'fulfilled'
+      ? telegramResult.value
+      : { delivered: 0, failed: getTelegramChatIds(env).length, error: String(telegramResult.reason?.message || telegramResult.reason || 'Telegram delivery failed') };
+
+    const googleSheets = googleSheetsResult.status === 'fulfilled'
+      ? googleSheetsResult.value
+      : { delivered: false, configured: Boolean(env.GOOGLE_SHEETS_WEBHOOK_URL && env.GOOGLE_SHEETS_SECRET), error: String(googleSheetsResult.reason?.message || googleSheetsResult.reason || 'Google Sheets delivery failed') };
+
+    const ok = telegram.delivered > 0 || googleSheets.delivered === true;
+    if (!ok) {
+      console.error('Lead delivery failed', { telegram, googleSheets });
+      return Response.json(
+        { ok: false, error: 'Lead delivery failed', delivery: { telegram, googleSheets } },
+        { status: 502, headers: corsHeaders },
+      );
     }
+
+    if (!telegram.delivered) console.error('Telegram delivery failed', telegram);
+    if (!googleSheets.delivered) console.error('Google Sheets delivery failed', googleSheets);
+
+    return Response.json({ ok: true, delivery: { telegram, googleSheets } }, { headers: corsHeaders });
   },
 };

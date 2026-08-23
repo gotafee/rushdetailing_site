@@ -87,8 +87,7 @@ const services = ['Полировка кузова', 'Предпродажная
       try {
         const response = await fetch(form.dataset.endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ name, contact, email, service:selected.join(', '), carMake:data.get('car'), carModel:data.get('time'), source:location.pathname, leadType:'site_quiz' }) });
         if (!response.ok) throw new Error('Request failed');
-        status.textContent = 'Заявка отправлена. Мы скоро свяжемся с вами.';
-        form.reset(); update();
+        window.location.href = '/spasibo/';
       } catch { status.textContent = 'Не удалось отправить заявку. Позвоните нам или попробуйте еще раз.'; }
     });
     update();

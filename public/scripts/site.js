@@ -317,20 +317,24 @@ document.querySelectorAll('[data-lead-form]').forEach((form) => {
       source: window.location.pathname,
     };
 
-    if (submitMode === 'endpoint' && endpoint) {
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        if (!response.ok) throw new Error(`Lead form submit failed: ${response.status}`);
-      } catch (error) {
-        console.error('Lead form submit failed', error);
-        alert('Не получилось отправить заявку. Пожалуйста, напишите нам в Telegram или позвоните.');
-        submitButton?.removeAttribute('disabled');
-        return;
-      }
+    if (submitMode !== 'endpoint' || !endpoint) {
+      alert('Приём заявок временно настраивается. Позвоните нам или напишите в Telegram.');
+      submitButton?.removeAttribute('disabled');
+      return;
+    }
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error(`Lead form submit failed: ${response.status}`);
+    } catch (error) {
+      console.error('Lead form submit failed', error);
+      alert('Не получилось отправить заявку. Пожалуйста, напишите нам в Telegram или позвоните.');
+      submitButton?.removeAttribute('disabled');
+      return;
     }
 
     window.location.href = new URL(thankYou, window.location.origin).toString();
