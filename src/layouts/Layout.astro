@@ -72,13 +72,22 @@ const orgSchema = {
   currenciesAccepted: 'RUB',
   paymentAccepted: 'Cash, Card',
   floorLevel: siteConfig.location.floor,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: siteConfig.location.street,
-    addressLocality: siteConfig.location.city,
-    addressRegion: siteConfig.location.region,
-    addressCountry: 'RU',
-  },
+  address: [
+    {
+      '@type': 'PostalAddress',
+      streetAddress: siteConfig.location.street,
+      addressLocality: siteConfig.location.city,
+      addressRegion: siteConfig.location.region,
+      addressCountry: 'RU',
+    },
+    ...siteConfig.location.additionalAddresses.map((location) => ({
+      '@type': 'PostalAddress',
+      streetAddress: location.street,
+      addressLocality: siteConfig.location.city,
+      addressRegion: siteConfig.location.region,
+      addressCountry: 'RU',
+    })),
+  ],
   geo: {
     '@type': 'GeoCoordinates',
     latitude: siteConfig.location.latitude,

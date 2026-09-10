@@ -28,6 +28,7 @@ import { siteConfig } from '../data/site';
         <li><a href={siteConfig.social.telegram} target="_blank" rel="noreferrer">Telegram</a></li>
         <li><a href={siteConfig.social.whatsapp} target="_blank" rel="noreferrer">WhatsApp</a></li>
         <li>{siteConfig.location.fullAddress}</li>
+        {siteConfig.location.additionalAddresses.map((address) => <li>{address.fullAddress}</li>)}
         <li>{siteConfig.location.openingHoursHuman}</li>
       </ul>
     </div>

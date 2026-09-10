@@ -24,6 +24,13 @@ export const siteConfig = {
     street: 'ул. Маршала Катукова, 24А, стр. 1',
     floor: 'этаж -1',
     fullAddress: 'Москва, ул. Маршала Катукова, 24А, стр. 1, этаж -1',
+    additionalAddresses: [
+      {
+        street: 'ул. Новотушинская, 1А',
+        fullAddress: 'Москва, ул. Новотушинская, 1А',
+        mapAddress: 'Москва, ул. Новотушинская, 1А',
+      },
+    ],
     mapLabel: 'Rush Detailing',
     mapApiKey: 'e5677280-8ab4-4f6c-88e6-7764edad29da',
     mapAddress: 'Москва, ул. Маршала Катукова, 24А, стр. 1, этаж -1',

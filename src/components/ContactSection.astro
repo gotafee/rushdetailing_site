@@ -17,6 +17,9 @@ import { siteConfig } from '../data/site';
           <li><strong>Telegram</strong> <a href={siteConfig.social.telegram} target="_blank" rel="noreferrer">@rushdetailing</a></li>
           <li><strong>WhatsApp</strong> <a href={siteConfig.social.whatsapp} target="_blank" rel="noreferrer">Написать в WhatsApp</a></li>
           <li><strong>Адрес</strong> <span>{siteConfig.location.street} {siteConfig.location.floor}</span></li>
+          {siteConfig.location.additionalAddresses.map((address) => (
+            <li><strong>Второй адрес</strong> <span>{address.fullAddress}</span></li>
+          ))}
           <li><strong>График</strong> <span>{siteConfig.location.openingHoursHuman}</span></li>
         </ul>
       </div>
