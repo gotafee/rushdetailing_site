@@ -11,7 +11,7 @@ import { siteConfig } from '../data/site';
       <label>Ваше имя<input name="name" data-name-only placeholder="Иван" required /></label>
       <label>Марка вашего авто<input name="car" placeholder="Например: Porsche Macan 2024" required /></label>
       <label>Номер телефона<input name="contact" data-phone-only inputmode="numeric" pattern="[0-9]{10,15}" maxlength="15" placeholder="79000000000" required /></label>
-      <label>Email (необязательно)<input type="email" name="email" data-email-only placeholder="ivan@example.com" /></label>
+      <label>Email (необязательно)<input type="email" name="email" placeholder="ivan@example.com" /></label>
       <button class="button button-primary" type="submit">Отправить заявку <span>→</span></button>
       <small data-quick-lead-status aria-live="polite"></small>
     </form>
@@ -29,7 +29,6 @@ import { siteConfig } from '../data/site';
     const status = quickLeadModal.querySelector('[data-quick-lead-status]');
     form.querySelectorAll('[data-name-only]').forEach((input) => input.addEventListener('input', () => { input.value = input.value.replace(/[^\p{L}\s-]/gu, ''); }));
     form.querySelectorAll('[data-phone-only]').forEach((input) => input.addEventListener('input', () => { input.value = input.value.replace(/\D/g, '').slice(0,15); }));
-    form.querySelectorAll('[data-email-only]').forEach((input) => input.addEventListener('input', () => { input.value = input.value.replace(/[^A-Za-zА-Яа-яЁё@._-]/g, ''); }));
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       if (!form.reportValidity()) return;
@@ -41,7 +40,8 @@ import { siteConfig } from '../data/site';
       status.textContent = 'Отправляем заявку…';
       try {
         const response = await fetch(form.dataset.endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ name, contact, email, carMake:data.get('car'), service:'Запись в студию', source:location.pathname, leadType:'quick_booking' }) });
-        if (!response.ok) throw new Error('Request failed');
+        const result = await response.json().catch(() => null);
+        if (!response.ok || result?.ok !== true) throw new Error('Request failed');
         window.location.href = '/spasibo/';
       } catch { status.textContent = 'Не удалось отправить заявку. Попробуйте еще раз или позвоните нам.'; }
     });

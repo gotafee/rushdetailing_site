@@ -126,7 +126,7 @@ const services = [
                 <div class="contact-grid">
                   <label>Имя<input type="text" name="name" placeholder="Алексей" data-name-only required /></label>
                   <label>Телефон<input type="tel" name="phone" placeholder="79250000000" inputmode="numeric" pattern="[0-9]{10,15}" maxlength="15" data-phone-only required /></label>
-                  <label>Email<input type="email" name="email" placeholder="client@mail.ru" data-email-only required /></label>
+                  <label>Email<input type="email" name="email" placeholder="client@mail.ru" required /></label>
                   <label>
                     Когда удобно
                     <select name="time">
@@ -201,7 +201,7 @@ const services = [
       const chatForm = document.querySelector('[data-chat-form]');
       const serviceLabels = Array.from(quizForm.querySelectorAll('.service-list label'));
       const namePattern = /^[\p{L}\s-]+$/u;
-      const emailPattern = /^[A-Za-zА-Яа-яЁё._-]+@[A-Za-zА-Яа-яЁё-]+(?:\.[A-Za-zА-Яа-яЁё-]+)+$/;
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
 
       quizForm.querySelectorAll('[data-name-only]').forEach((input) => {
         input.addEventListener('input', () => {
@@ -211,11 +211,6 @@ const services = [
       quizForm.querySelectorAll('[data-phone-only]').forEach((input) => {
         input.addEventListener('input', () => {
           input.value = input.value.replace(/\D/g, '').slice(0, 15);
-        });
-      });
-      quizForm.querySelectorAll('[data-email-only]').forEach((input) => {
-        input.addEventListener('input', () => {
-          input.value = input.value.replace(/[^A-Za-zА-Яа-яЁё@._-]/g, '');
         });
       });
 
@@ -280,7 +275,7 @@ const services = [
           return;
         }
         if (!emailPattern.test(lead.email)) {
-          statusNode.textContent = 'Введите корректный email без цифр.';
+          statusNode.textContent = 'Введите корректный email.';
           return;
         }
         const payload = {
@@ -306,7 +301,8 @@ const services = [
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
           });
-          if (!response.ok) throw new Error('Request failed');
+          const result = await response.json().catch(() => null);
+          if (!response.ok || result?.ok !== true) throw new Error('Request failed');
           window.location.href = '/spasibo/';
         } catch {
           statusNode.textContent = 'Не удалось отправить. Проверьте Google Sheets endpoint.';

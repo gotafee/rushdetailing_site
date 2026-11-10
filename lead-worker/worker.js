@@ -12,6 +12,7 @@ const escapeHtml = (value) =>
     .replaceAll('"', '&quot;');
 
 const leadNamePattern = /^[\p{L}\s-]+$/u;
+const leadEmailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
 const SITE_ID = 'rush-detailing';
 const SITE_KNOWLEDGE = {
   [SITE_ID]: `Rush Detailing, Москва, Строгино. Услуги: детейлинг-мойка от 4 500 ₽, химчистка салона от 10 000 ₽, полировка кузова от 15 000 ₽, предпродажная подготовка от 18 000 ₽, оклейка антигравийной плёнкой от 30 000 ₽. Точная цена и срок зависят от автомобиля и состояния. Работаем ежедневно 10:00–21:00.`,
@@ -67,8 +68,8 @@ const sendToGoogleSheets = async (env, lead) => {
     }),
   });
   if (!response.ok) throw new Error(`Google Sheets webhook error: ${response.status}`);
-  const data = await response.json().catch(() => ({}));
-  if (data && data.ok === false) throw new Error(`Google Sheets webhook error: ${data.error || 'Unknown error'}`);
+  const data = await response.json().catch(() => null);
+  if (data?.ok !== true) throw new Error(`Google Sheets webhook error: ${data?.error || 'Delivery was not confirmed'}`);
   return { delivered: true, configured: true };
 };
 
@@ -230,6 +231,10 @@ export default {
 
     if (!leadNamePattern.test(normalizedLead.name)) {
       return Response.json({ ok: false, error: 'Name must contain only letters' }, { status: 400, headers: corsHeaders });
+    }
+
+    if (normalizedLead.email && !leadEmailPattern.test(normalizedLead.email)) {
+      return Response.json({ ok: false, error: 'Введите корректный email.' }, { status: 400, headers: corsHeaders });
     }
 
     const text = formatLeadText(normalizedLead);

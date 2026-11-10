@@ -329,7 +329,8 @@ document.querySelectorAll('[data-lead-form]').forEach((form) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      if (!response.ok) throw new Error(`Lead form submit failed: ${response.status}`);
+      const result = await response.json().catch(() => null);
+      if (!response.ok || result?.ok !== true) throw new Error(`Lead form submit failed: ${response.status}`);
     } catch (error) {
       console.error('Lead form submit failed', error);
       alert('Не получилось отправить заявку. Пожалуйста, напишите нам в Telegram или позвоните.');
